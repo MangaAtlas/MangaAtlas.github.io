@@ -1,5 +1,15 @@
 {
   "cleanUrls": true,
+  "rewrites": [
+    {"source":"/japan","destination":"/?country=JP"},
+    {"source":"/japan/","destination":"/?country=JP"},
+    {"source":"/usa","destination":"/?country=US"},
+    {"source":"/usa/","destination":"/?country=US"},
+    {"source":"/france","destination":"/?country=FR"},
+    {"source":"/france/","destination":"/?country=FR"},
+    {"source":"/brazil","destination":"/?country=BR"},
+    {"source":"/brazil/","destination":"/?country=BR"}
+  ],
   "headers": [
     {
       "source": "/(.*)",
