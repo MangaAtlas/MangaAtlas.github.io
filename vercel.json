@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/japan", "destination": "/country.html?country=JP" },
     { "source": "/usa", "destination": "/country.html?country=US" },
     { "source": "/france", "destination": "/country.html?country=FR" },
