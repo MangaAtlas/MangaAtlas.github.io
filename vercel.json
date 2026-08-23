@@ -1,6 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "cleanUrls": true,
   "rewrites": [
     { "source": "/japan", "destination": "/country.html?country=JP" },
     { "source": "/usa", "destination": "/country.html?country=US" },
