@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   try {
     const headers = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
     const [mangaRes, chapterRes] = await Promise.all([
-      fetch(`${SUPABASE_URL}/rest/v1/manga?select=slug,updated_at`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/manga?select=slug`, { headers }),
       fetch(`${SUPABASE_URL}/rest/v1/chapters?select=url_slug,created_at`, { headers })
     ]);
     if (!mangaRes.ok || !chapterRes.ok) throw new Error('Supabase sitemap query failed');
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     const add = (loc, lastmod) => urls.set(loc, lastmod ? `<lastmod>${new Date(lastmod).toISOString()}</lastmod>` : '');
     add(`${SITE}/`);
     add(`${SITE}/japan`); add(`${SITE}/usa`); add(`${SITE}/france`); add(`${SITE}/brazil`);
-    for (const m of manga) if (m.slug) add(`${SITE}/manga/${encodeURIComponent(m.slug)}`, m.updated_at);
+    for (const m of manga) if (m.slug) add(`${SITE}/manga/${encodeURIComponent(m.slug)}`);
     for (const c of chapters) if (c.url_slug) add(`${SITE}/chapter/${encodeURIComponent(c.url_slug)}`, c.created_at);
     const body = [...urls].map(([loc, lastmod]) => `<url><loc>${loc}</loc>${lastmod}</url>`).join('');
     const xml = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${body}</urlset>`;
