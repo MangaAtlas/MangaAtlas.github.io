@@ -10,7 +10,8 @@
     { "source": "/brazil", "destination": "/country.html?country=BR" },
     { "source": "/brazil/", "destination": "/country.html?country=BR" },
     { "source": "/manga/:slug", "destination": "/manga.html?slug=:slug" },
-    { "source": "/chapter/:slug", "destination": "/chapter.html?slug=:slug" }
+    { "source": "/chapter/:slug", "destination": "/chapter.html?slug=:slug" },
+    { "source": "/:slug", "destination": "/chapter.html?slug=:slug" }
   ],
   "headers": [
     {
