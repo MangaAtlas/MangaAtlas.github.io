@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 
-Sitemap: https://mangaatlas.com/sitemap.xml
+Sitemap: https://manga-atlas.vercel.app/sitemap.xml
