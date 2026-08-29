@@ -3,6 +3,8 @@ name: Deploy MangaAtlas to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '15 2 * * *'
   workflow_dispatch:
 
 permissions:
@@ -23,6 +25,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Generate fresh sitemap
+        run: node scripts/generate-sitemap.mjs
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
