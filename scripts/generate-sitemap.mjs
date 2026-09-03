@@ -17,13 +17,17 @@ const add = (loc, lastmod) => urls.set(loc, lastmod ? new Date(lastmod).toISOStr
 
 add(`${SITE}/`);
 for (const country of ['JP', 'US', 'FR', 'BR']) add(`${SITE}/country.html?country=${country}`);
+add(`${SITE}/blog.html`);
+add(`${SITE}/japan-blog.html`);
+add(`${SITE}/france-blog.html`);
 
 // Keep sitemap URLs identical to the canonical URLs declared by manga/chapter pages.
 const manga = await fetchRows('manga?select=slug,updated_at&slug=not.is.null&order=slug');
 for (const item of manga) add(`${SITE}/manga/${encodeURIComponent(item.slug)}`, item.updated_at);
 
-const chapters = await fetchRows('chapters?select=url_slug,created_at&url_slug=not.is.null&order=created_at.desc');
-for (const item of chapters) add(`${SITE}/chapter/${encodeURIComponent(item.url_slug)}`, item.created_at);
+// Use updated_at so sitemap lastmod reflects chapter edits/re-uploads, not only initial creation.
+const chapters = await fetchRows('chapters?select=url_slug,created_at,updated_at&url_slug=not.is.null&order=updated_at.desc');
+for (const item of chapters) add(`${SITE}/chapter/${encodeURIComponent(item.url_slug)}`, item.updated_at || item.created_at);
 
 const escapeXml = value => String(value)
   .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
