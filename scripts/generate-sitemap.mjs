@@ -25,11 +25,11 @@ add(`${SITE}/france-blog.html`);
 const manga = await fetchRows('manga?select=slug,updated_at&slug=not.is.null&order=slug');
 for (const item of manga) add(`${SITE}/manga/${encodeURIComponent(item.slug)}`, item.updated_at);
 
-// Use updated_at so sitemap lastmod reflects chapter edits/re-uploads, not only initial creation.
+// Chapter pages are served by chapter.html with the slug query parameter.
+// Keep sitemap URLs identical to the real public chapter URLs.
 const chapters = await fetchRows('chapters?select=url_slug,created_at,updated_at&url_slug=not.is.null&order=updated_at.desc');
-for (const item of chapters) add(`${SITE}/chapter/${encodeURIComponent(item.url_slug)}`, item.updated_at || item.created_at);
+for (const item of chapters) add(`${SITE}/chapter.html?slug=${encodeURIComponent(item.url_slug)}`, item.updated_at || item.created_at);
 
-// Refresh is triggered on every main-branch update so recent chapter edits reach the sitemap promptly.
 const escapeXml = value => String(value)
   .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
   .replaceAll('"', '&quot;').replaceAll("'", '&apos;');
