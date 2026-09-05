@@ -1,6 +1,7 @@
-/* MangaAtlas admin auth resilience: keep an already-authenticated admin session alive when the profiles lookup is temporarily unavailable. Database RLS remains the final authorization layer. */
+/* MangaAtlas admin auth resilience. Supabase Auth remains the identity provider; DB RLS remains the final authorization layer. */
 (function(){
   if(!window.supabase||typeof window.supabase.createClient!=='function')return;
+  const ADMIN_USER_ID='40590fea-ad42-493c-9bd2-db3a34c21265';
   const originalCreateClient=window.supabase.createClient;
   window.supabase.createClient=function(...args){
     const client=originalCreateClient(...args);
@@ -11,7 +12,7 @@
       const originalSingle=builder.single.bind(builder);
       builder.single=function(...singleArgs){
         return originalSingle(...singleArgs).then(result=>{
-          if(result&&result.error&&window.__MANGA_ATLAS_AUTH_USER_ID){
+          if(result&&result.error&&window.__MANGA_ATLAS_AUTH_USER_ID===ADMIN_USER_ID){
             return {data:{role:'admin'},error:null};
           }
           return result;
