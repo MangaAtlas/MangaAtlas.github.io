@@ -17,8 +17,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare static chapter fallback
+        run: node scripts/ensure-homepage-static-fallback.mjs
+
       - name: Generate crawlable homepage chapter links
         run: node scripts/refresh-homepage.mjs
+        continue-on-error: true
 
       - name: Ensure site-wide GA4 tracking
         run: node scripts/ensure-analytics.mjs
