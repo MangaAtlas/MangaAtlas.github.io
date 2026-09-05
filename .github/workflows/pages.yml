@@ -19,6 +19,7 @@ jobs:
 
       - name: Generate fresh sitemap
         run: node scripts/generate-sitemap.mjs
+        continue-on-error: true
 
       - name: Commit sitemap when changed
         run: |
@@ -57,7 +58,6 @@ jobs:
               if p.is_dir(): shutil.copytree(p, dest)
               else: shutil.copy2(p, dest)
 
-          # Remove all bundled ad files/references from the clean copy.
           for p in list(out.rglob('*')):
               if p.is_file() and p.suffix.lower() in {'.html','.js','.css','.xml','.txt','.md'}:
                   text = p.read_text(encoding='utf-8')
@@ -67,10 +67,8 @@ jobs:
                   text = text.replace('https://YOUR-GITHUB-USERNAME.github.io/', '/')
                   p.write_text(text, encoding='utf-8')
 
-          # Shared, blank database configuration: uploaders can connect a fresh Supabase project.
           (out / 'config.js').write_text("window.MANGAREADER_CONFIG = {\n  SUPABASE_URL: '',\n  SUPABASE_ANON_KEY: '',\n  SITE_NAME: 'MangaReader'\n};\n", encoding='utf-8')
 
-          # Make public pages consume the shared config instead of the old MangaAtlas database.
           for p in out.glob('*.html'):
               if p.name == 'config.js': continue
               text = p.read_text(encoding='utf-8')
@@ -79,7 +77,6 @@ jobs:
                   text = text.replace('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>', '<script src="/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>')
               p.write_text(text, encoding='utf-8')
 
-          # Clean chapter reader: no ad slots, no ad scripts, no ad iframes.
           cp = out / 'chapter.html'
           text = cp.read_text(encoding='utf-8')
           text = re.sub(r"function adFrame\(.*?\}let adQueue=Promise\.resolve\(\);function queueAd\(.*?\}function loadOneAd\(.*?\}\}", "function addAds(){}", text, flags=re.S)
@@ -92,12 +89,10 @@ jobs:
           text = re.sub(r"\.ad-slot\{.*?\}\n?", "", text)
           cp.write_text(text, encoding='utf-8')
 
-          # Fresh empty sitemap for the clone; no manga/chapter URLs are included.
           (out / 'sitemap.xml').write_text('''<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>https://YOUR-GITHUB-USERNAME.github.io/</loc></url>\n  <url><loc>https://YOUR-GITHUB-USERNAME.github.io/manga.html</loc></url>\n  <url><loc>https://YOUR-GITHUB-USERNAME.github.io/country.html</loc></url>\n  <url><loc>https://YOUR-GITHUB-USERNAME.github.io/japan-blog.html</loc></url>\n  <url><loc>https://YOUR-GITHUB-USERNAME.github.io/france-blog.html</loc></url>\n</urlset>\n''', encoding='utf-8')
 
           (out / 'MangaReader-SETUP.md').write_text('''# MangaReader setup\n\nThis package is a clean clone of the site UI/admin system. Manga and chapter data are intentionally not included.\n\n## Supabase\n1. Create a new Supabase project.\n2. Run `supabase/schema.sql` in the SQL editor.\n3. Put the new project URL and anon/publishable key in `config.js`.\n4. Put the same values in `admin/config.js`.\n5. Replace `YOUR-GITHUB-USERNAME` with the new GitHub Pages username/domain if needed.\n\nThe admin system remains included, but it is intentionally disconnected from the old MangaAtlas database until you configure the new Supabase project.\n''', encoding='utf-8')
 
-          # Remove any remaining ad directory if copied indirectly.
           shutil.rmtree(out / 'ads', ignore_errors=True)
 
       - name: Zip MangaReader package
