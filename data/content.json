@@ -103,7 +103,7 @@
       "native_title": "桃源暗鬼",
       "country": "JP",
       "language": "ja",
-      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/tougen-anki/cover-1788581611879.webp",
+      "cover": "https://placehold.co/300x400",
       "slug": "tougen-anki"
     },
     {
@@ -244,7 +244,26 @@
       "number": 1191,
       "slug": "One-Piec-1191",
       "country": "JP",
-      "pages": []
+      "pages": [
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0001-1788581678761-0.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0002-1788581681009-1.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0003-1788581684221-2.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0004-1788581686975-3.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0005-1788581690057-4.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0006-1788581693462-5.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0007-1788581696707-6.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0008-1788581699475-7.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0009-1788581703097-8.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0010-1788581710478-9.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0011-1788581714665-10.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0012-1788581719660-11.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0013-1788581723960-12.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0014-1788581728452-13.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0015-1788581733348-14.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0016-1788581748633-15.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0017-1788581754424-16.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0018-1788581759025-17.webp"
+      ]
     },
     {
       "id": "restored-10",
