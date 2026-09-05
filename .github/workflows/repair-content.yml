@@ -36,7 +36,8 @@ jobs:
           a=pathlib.Path('admin/index.html')
           s=a.read_text(encoding='utf-8')
           s=s.replace("if(!r.content?.path)throw Error('GitHub did not confirm '+path+' was uploaded.');return RAW+path.split('/').map(encodeURIComponent).join('/')", "if(!r.content?.path)throw Error('GitHub did not confirm '+path+' was uploaded.');await api('/contents/'+path+'?ref='+BRANCH);return path")
-          s=s.replace("if(files.length){c.pages=[];for(let i=0;i<files.length;i++){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){")
+          s=s.replace("if(files.length){c.pages=[];for(let i=0;i<files.length;i++){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i(){")
+          s=s.replace("if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i(){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){")
           s=s.replace("c.pages.push(await uploadFile(path,f))}}if(!editChapterId)data.chapters.push(c)", "uploadedPages.push(await uploadFile(path,f))}c.pages=uploadedPages}if(!editChapterId)data.chapters.push(c)")
           a.write_text(s,encoding='utf-8')
 
@@ -44,12 +45,24 @@ jobs:
           h=i.read_text(encoding='utf-8')
           h=h.replace('.filter(hasPages)', ".filter(c=>hasPages(c)||c.slug==='Hun-x-Hun-420-Raw')")
           i.write_text(h,encoding='utf-8')
+
+          sm=pathlib.Path('sitemap.xml')
+          text=sm.read_text(encoding='utf-8')
+          url='https://mangaatlas.github.io/chapter.html?slug=Hun-x-Hun-420-Raw'
+          if url not in text:
+            marker='  <url><loc>https://mangaatlas.github.io/chapter.html?slug=Hun%20x%20Hun%20420</loc>'
+            if marker in text:
+              pos=text.index(marker)
+              text=text[:pos]+'  <url><loc>'+url+'</loc><lastmod>2026-09-05T00:00:00Z</lastmod></url>\n'+text[pos:]
+            else:
+              text=text.replace('</urlset>', '  <url><loc>'+url+'</loc><lastmod>2026-09-05T00:00:00Z</lastmod></url>\n</urlset>')
+            sm.write_text(text,encoding='utf-8')
           PY
       - name: Commit repairs
         run: |
           git config user.name "MangaAtlas Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/content.json admin/index.html index.html
+          git add data/content.json admin/index.html index.html sitemap.xml
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git commit -m "MangaAtlas repair complete"
           git push
