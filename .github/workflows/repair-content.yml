@@ -18,43 +18,28 @@ jobs:
           p=pathlib.Path('data/content.json')
           d=json.loads(p.read_text(encoding='utf-8'))
           chapters=d.setdefault('chapters',[])
-          # Restore One Piece 1192 references from files already stored in GitHub.
           root=pathlib.Path('chapter-images/one-piece/chapter-1192')
           files=[]
           if root.exists():
             by_page={}
             for f in root.iterdir():
               m=re.match(r'^(\d{4})-',f.name)
-              if m and f.is_file():
-                by_page.setdefault(int(m.group(1)),f)
+              if m and f.is_file(): by_page.setdefault(int(m.group(1)),f)
             files=[by_page[k] for k in sorted(by_page)]
           op=next((c for c in chapters if c.get('slug')=='one-piece-en-raw-1192'),None)
           if op is not None and files:
             op['pages']=['https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/'+str(f).replace('\\','/') for f in files]
-          # Add Japanese Hunter x Hunter 420 only once; user will upload its pages in Admin.
           if not any(c.get('id')=='hunter-420-raw' for c in chapters):
-            chapters.append({
-              'id':'hunter-420-raw',
-              'mangaId':'hunter-x-hunter',
-              'title':'ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw',
-              'number':420,
-              'slug':'Hun-x-Hun-420-Raw',
-              'country':'JP',
-              'pages':[]
-            })
+            chapters.append({'id':'hunter-420-raw','mangaId':'hunter-x-hunter','title':'ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw','number':420,'slug':'Hun-x-Hun-420-Raw','country':'JP','pages':[]})
           p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
-          # Make Admin uploads transactional: don't erase old pages before uploads succeed,
-          # store repository-relative paths, and verify each uploaded file.
           a=pathlib.Path('admin/index.html')
           s=a.read_text(encoding='utf-8')
           s=s.replace("if(!r.content?.path)throw Error('GitHub did not confirm '+path+' was uploaded.');return RAW+path.split('/').map(encodeURIComponent).join('/')", "if(!r.content?.path)throw Error('GitHub did not confirm '+path+' was uploaded.');await api('/contents/'+path+'?ref='+BRANCH);return path")
-          s=s.replace("if(files.length){c.pages=[];for(let i=0;i<files.length;i++){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++{")
+          s=s.replace("if(files.length){c.pages=[];for(let i=0;i<files.length;i++){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){")
           s=s.replace("c.pages.push(await uploadFile(path,f))}}if(!editChapterId)data.chapters.push(c)", "uploadedPages.push(await uploadFile(path,f))}c.pages=uploadedPages}if(!editChapterId)data.chapters.push(c)")
           a.write_text(s,encoding='utf-8')
 
-          # Keep intentionally empty chapters hidden, but allow the newly-created
-          # Hunter x Hunter 420 Raw entry to appear on the homepage before images are uploaded.
           i=pathlib.Path('index.html')
           h=i.read_text(encoding='utf-8')
           h=h.replace('.filter(hasPages)', ".filter(c=>hasPages(c)||c.slug==='Hun-x-Hun-420-Raw')")
