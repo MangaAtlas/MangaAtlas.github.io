@@ -385,12 +385,33 @@
     },
     {
       "id": "restored-23",
-      "mangaId": "blue-lock-ja",
+      "mangaId": "blue-lock",
       "title": "ブルーロック raw ( Blue Lock raw ) 第359話",
       "number": 359,
       "slug": "blue-loc-raw-359",
       "country": "JP",
-      "pages": []
+      "pages": [
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0001-1788582210287-0.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0002-1788582212815-1.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0003-1788582215777-2.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0004-1788582218179-3.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0005-1788582220849-4.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0006-1788582223599-5.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0007-1788582226041-6.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0008-1788582228429-7.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0009-1788582231313-8.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0010-1788582233876-9.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0011-1788582236863-10.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0012-1788582240694-11.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0013-1788582243781-12.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0014-1788582247931-13.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0015-1788582253567-14.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0016-1788582257108-15.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0017-1788582261397-16.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0018-1788582265977-17.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0019-1788582274030-18.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-359/0020-1788582280545-19.webp"
+      ]
     },
     {
       "id": "restored-24",
