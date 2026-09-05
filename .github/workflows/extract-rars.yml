@@ -1,0 +1,92 @@
+name: Extract manga RAR archives
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.rar'
+      - '.github/workflows/extract-rars.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install RAR extractor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full
+
+      - name: Extract all RAR archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p chapter-images
+          found=0
+          : > chapter-images/manifest.jsonl
+          while IFS= read -r -d '' archive; do
+            found=1
+            base="$(basename "$archive")"
+            stem="${base%.*}"
+            slug="$(printf '%s' "$stem" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//' | cut -c1-120)"
+            [ -n "$slug" ] || slug="archive"
+            out="chapter-images/$slug"
+            rm -rf "$out"
+            mkdir -p "$out"
+            echo "Extracting: $archive -> $out"
+            7z x -y "$archive" -o"$out" >/tmp/7z.log
+            find "$out" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.gif' \) -print0 \
+              | sort -z -V \
+              | while IFS= read -r -d '' img; do
+                  rel="${img#"$out"/}"
+                  printf '%s\t%s\n' "$rel" "$img"
+                done > "$out/.image-list"
+            # Flatten images into deterministic numbered filenames.
+            n=0
+            while IFS=$'\t' read -r rel img; do
+              [ -n "${img:-}" ] || continue
+              n=$((n+1))
+              ext="${img##*.}"
+              ext="$(printf '%s' "$ext" | tr '[:upper:]' '[:lower:]')"
+              target="$out/$(printf '%04d' "$n").$ext"
+              if [ "$img" != "$target" ]; then cp "$img" "$target"; fi
+            done < "$out/.image-list"
+            find "$out" -mindepth 1 -type f ! -regex '.*\/.[0-9][0-9][0-9][0-9]\\.[A-Za-z0-9]+$' -delete || true
+            count=$(find "$out" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.gif' \) | wc -l)
+            printf '{"archive":"%s","slug":"%s","images":%s}\n' "$base" "$slug" "$count" >> chapter-images/manifest.jsonl
+          done < <(find . -type f -iname '*.rar' -not -path './.git/*' -print0)
+          if [ "$found" -eq 0 ]; then echo 'No RAR archives found.'; fi
+          rm -f chapter-images/*/.image-list
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          src=Path('chapter-images/manifest.jsonl')
+          rows=[]
+          if src.exists():
+              for line in src.read_text(encoding='utf-8').splitlines():
+                  if line.strip(): rows.append(json.loads(line))
+          Path('chapter-images/manifest.json').write_text(json.dumps({'archives':rows},ensure_ascii=False,indent=2),encoding='utf-8')
+          src.unlink(missing_ok=True)
+          PY
+
+      - name: Commit extracted images
+        shell: bash
+        run: |
+          set -e
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add chapter-images
+          if git diff --cached --quiet; then
+            echo 'No extracted-image changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Extract manga images from RAR archives'
+          git push
