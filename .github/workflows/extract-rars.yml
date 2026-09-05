@@ -36,9 +36,11 @@ jobs:
             found=1
             base="$(basename "$archive")"
             stem="${base%.*}"
-            slug="$(printf '%s' "$stem" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//' | cut -c1-120)"
+            slug="$(printf '%s' "$stem" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//' | cut -c1-100)"
             [ -n "$slug" ] || slug="archive"
-            out="chapter-images/$slug"
+            # Include a stable suffix so different RARs with similar names never overwrite each other.
+            suffix="$(printf '%s' "$base" | sha256sum | cut -c1-10)"
+            out="chapter-images/${slug}-${suffix}"
             rm -rf "$out"
             mkdir -p "$out"
             echo "Extracting: $archive -> $out"
@@ -59,10 +61,10 @@ jobs:
             done < "$out/.image-list"
             find "$out" -mindepth 1 -type f ! -regex '.*/[0-9][0-9][0-9][0-9]\.[A-Za-z0-9]+$' -delete || true
             count=$(find "$out" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.gif' \) | wc -l)
-            printf '{"archive":"%s","slug":"%s","images":%s}\n' "$base" "$slug" "$count" >> chapter-images/manifest.jsonl
+            printf '{"archive":"%s","slug":"%s","images":%s}\n' "$base" "${slug}-${suffix}" "$count" >> chapter-images/manifest.jsonl
           done < <(find . -type f -iname '*.rar' -not -path './.git/*' -print0)
           if [ "$found" -eq 0 ]; then echo 'No RAR archives found.'; fi
-          rm -f chapter-images/*/.image-list
+          find chapter-images -type f -name '.image-list' -delete
           python3 - <<'PY'
           import json
           from pathlib import Path
