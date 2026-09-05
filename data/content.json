@@ -448,7 +448,23 @@
       "number": 1192,
       "slug": "one-piece-en-raw-1192",
       "country": "US",
-      "pages": []
+      "pages": [
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0001-1788582496502-0.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0002-1788583411470-1.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0003-1788577435363-2.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0004-1788579446424-3.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0005-1788583421070-4.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0006-1788579456544-5.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0007-1788577443834-6.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0008-1788582653381-7.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0009-1788579470577-8.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0010-1788579475763-9.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0011-1788582662214-10.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0012-1788579485120-11.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0013-1788579488494-12.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0014-1788577459166-13.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0015-1788577548790-14.jpg"
+      ]
     },
     {
       "id": "restored-26",
@@ -758,6 +774,15 @@
         "https://mangaatlas.github.io/chapter-images/886-raw-files-09d4b22796/0018.webp",
         "https://mangaatlas.github.io/chapter-images/886-raw-files-09d4b22796/0019.webp"
       ]
+    },
+    {
+      "id": "hunter-420-raw",
+      "mangaId": "hunter-x-hunter",
+      "title": "ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw",
+      "number": 420,
+      "slug": "Hun-x-Hun-420-Raw",
+      "country": "JP",
+      "pages": []
     }
   ]
 }
