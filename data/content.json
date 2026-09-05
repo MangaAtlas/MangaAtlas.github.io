@@ -16,7 +16,7 @@
       "native_title": "ブルーロック",
       "country": "JP",
       "language": "ja",
-      "cover": "https://mangaatlas.github.io/manga-covers/blue-lock/cover-1788579031675.webp",
+      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/blue-lock/cover-1788579266374.webp",
       "slug": "blue-lock"
     },
     {
@@ -60,8 +60,9 @@
       "title": "DAYS",
       "country": "JP",
       "language": "ja",
-      "cover": "https://placehold.co/300x400",
-      "slug": "days"
+      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/days/cover-1788579905381.webp",
+      "slug": "days",
+      "native_title": ""
     },
     {
       "id": "mairimashita-iruma-kun",
@@ -150,9 +151,8 @@
       "title": "Mokushiroku no Yonkishi",
       "country": "JP",
       "language": "ja",
-      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/mokushiroku-no-yon-kishi/cover-1788580322019.webp",
-      "slug": "mokushiroku-no-yon-kishi",
-      "native_title": ""
+      "cover": "https://placehold.co/300x400",
+      "slug": "mokushiroku-no-yon-kishi"
     },
     {
       "id": "shuumatsu-no-valkyrie",
@@ -383,26 +383,12 @@
     },
     {
       "id": "one-piece-1192",
-      "mangaId": "one-piece",
+      "mangaId": "one-piece-en",
       "title": "ONE PIECE raw 第1192話 (One Piece raw Chapter 1192 English)",
       "number": 1192,
       "slug": "one-piece-en-raw-1192",
       "country": "US",
-      "pages": [
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0001-1788579436591-0.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0002-1788579439555-1.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0003-1788579442935-2.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0004-1788579446424-3.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0005-1788579451045-4.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0006-1788579456544-5.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0007-1788579459957-6.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0008-1788579465301-7.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0009-1788579470577-8.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0010-1788579475763-9.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0011-1788579480181-10.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0012-1788579485120-11.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0013-1788579488494-12.webp"
-      ]
+      "pages": []
     },
     {
       "id": "restored-26",
@@ -411,7 +397,28 @@
       "number": 251,
       "slug": "mokushiroku-no-yon-kishi-raw-251",
       "country": "JP",
-      "pages": []
+      "pages": [
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0001-1788580423530-0.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0002-1788580425990-1.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0003-1788580428333-2.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0004-1788580430924-3.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0005-1788580433472-4.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0006-1788580435903-5.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0007-1788580438428-6.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0008-1788580440852-7.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0009-1788580443284-8.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0010-1788580445637-9.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0011-1788580448393-10.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0012-1788580450948-11.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0013-1788580453306-12.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0014-1788580455847-13.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0015-1788580458707-14.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0016-1788580461285-15.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0017-1788580463687-16.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0018-1788580466314-17.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0019-1788580468710-18.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-251/0020-1788580471126-19.webp"
+      ]
     },
     {
       "id": "restored-27",
