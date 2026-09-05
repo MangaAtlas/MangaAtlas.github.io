@@ -264,7 +264,26 @@
       "number": 1191,
       "slug": "One-Piec-1191",
       "country": "JP",
-      "pages": []
+      "pages": [
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0001-1788582788867-0.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0002-1788582791246-1.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0003-1788582794513-2.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0004-1788582798364-3.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0005-1788582801989-4.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0006-1788582807498-5.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0007-1788582820636-6.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0008-1788582824442-7.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0009-1788582827296-8.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0010-1788582831090-9.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0011-1788582834182-10.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0012-1788582837599-11.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0013-1788582840832-12.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0014-1788582846195-13.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0015-1788582850836-14.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0016-1788582855867-15.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0017-1788582859593-16.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1191/0018-1788582863436-17.webp"
+      ]
     },
     {
       "id": "restored-10",
@@ -424,26 +443,12 @@
     },
     {
       "id": "one-piece-1192",
-      "mangaId": "one-piece",
+      "mangaId": "one-piece-en",
       "title": "ONE PIECE raw 第1192話 (One Piece raw Chapter 1192 English)",
       "number": 1192,
       "slug": "one-piece-en-raw-1192",
       "country": "US",
-      "pages": [
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0001-1788582635774-0.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0002-1788582638340-1.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0003-1788582640501-2.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0004-1788582643001-3.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0005-1788582645095-4.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0006-1788582647461-5.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0007-1788582650495-6.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0008-1788582653381-7.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0009-1788582656760-8.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0010-1788582659651-9.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0011-1788582662214-10.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0012-1788582664754-11.webp",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1192/0013-1788582667699-12.webp"
-      ]
+      "pages": []
     },
     {
       "id": "restored-26",
