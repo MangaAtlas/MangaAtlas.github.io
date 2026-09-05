@@ -34,7 +34,7 @@
       "native_title": "ワンピース",
       "country": "JP",
       "language": "ja",
-      "cover": "https://placehold.co/300x400",
+      "cover": "https://mangaatlas.github.io/manga-covers/one-piece/cover-1788578265830.webp",
       "slug": "one-piece"
     },
     {
@@ -52,7 +52,7 @@
       "native_title": "カグラバチ",
       "country": "JP",
       "language": "ja",
-      "cover": "https://mangaatlas.github.io/manga-covers/kagurabachi/cover-1788577987115.webp",
+      "cover": "https://mangaatlas.github.io/manga-covers/kagurabachi/cover-1788578413437.webp",
       "slug": "kagurabachi"
     },
     {
@@ -611,21 +611,7 @@
       "number": 131,
       "slug": "Kagurab-131",
       "country": "JP",
-      "pages": [
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0001-1788578314959-0.webp",
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0002-1788578317510-1.webp",
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0003-1788578319543-2.webp",
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0004-1788578321463-3.webp",
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0005-1788578323155-4.webp",
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0006-1788578325075-5.webp",
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0007-1788578327055-6.webp",
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0008-1788578329050-7.webp",
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0009-1788578331102-8.webp",
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0010-1788578332899-9.webp",
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0011-1788578334789-10.webp",
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0012-1788578336620-11.webp",
-        "https://mangaatlas.github.io/chapter-images/kagurabachi/chapter-131/0013-1788578338170-12.webp"
-      ]
+      "pages": []
     },
     {
       "id": "kingdom-886",
