@@ -1,0 +1,72 @@
+name: Extract RAR images to GitHub Pages
+
+on:
+  push:
+    paths:
+      - '**/*.rar'
+      - '**/*.RAR'
+      - '.github/workflows/extract-rar-images.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install RAR extractor
+        run: sudo apt-get update && sudo apt-get install -y p7zip-full
+
+      - name: Extract all RAR archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _rar_extract
+          found=0
+          while IFS= read -r -d '' archive; do
+            found=1
+            name="$(basename "$archive")"
+            slug="${name%.*}"
+            slug="$(printf '%s' "$slug" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')"
+            [ -n "$slug" ] || slug="archive"
+            dest="chapter-images/$slug"
+            mkdir -p "$dest"
+            echo "Extracting: $archive -> $dest"
+            7z x -y -o"$dest" "$archive" >/dev/null
+          done < <(find . -type f \( -iname '*.rar' \) -not -path './.git/*' -print0)
+
+          if [ "$found" -eq 0 ]; then
+            echo 'No RAR archives found.'
+            exit 0
+          fi
+
+          # Flatten nested folders while preserving image order/names.
+          find chapter-images -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.gif' \) -print0 | while IFS= read -r -d '' f; do
+            echo "Image: $f"
+          done
+
+      - name: Remove non-image extraction leftovers
+        shell: bash
+        run: |
+          find chapter-images -type f ! \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.gif' \) -delete || true
+          find chapter-images -type d -empty -delete || true
+
+      - name: Commit extracted images
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain -- chapter-images)" ]; then
+            echo 'No new extracted images to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add chapter-images
+          git commit -m 'Auto-extract RAR chapter images'
+          git push
