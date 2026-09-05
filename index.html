@@ -21,7 +21,7 @@
 <div id="france" class="country-row"><div class="country-head"><div class="country-title">🇫🇷 France</div><div class="country-line"></div><div class="country-count">Latest 20</div></div><div id="FR-grid" class="latest-grid"><div class="loading">Loading France chapters...</div></div><div id="FR-pagination" class="pagination"></div></div>
 <div id="brazil" class="country-row"><div class="country-head"><div class="country-title">🇧🇷 Brazil</div><div class="country-line"></div><div class="country-count">Latest 20</div></div><div id="BR-grid" class="latest-grid"><div class="loading">Loading Brazil chapters...</div></div><div id="BR-pagination" class="pagination"></div></div>
 </main>
-<footer class="footer"><span>© 2026 MangaAtlas</span><span><a href="/japan-blog.html">Japan Blog</a> · <a href="/france-blog.html">France Blog</a> · <a href="/sitemap.xml">Sitemap</a></span></footer>
+<footer class="footer"><span>© 2026 MangaAtlas</span><span><a href="/japan-blog.html">Japan Blog</a> · <a href="/france-blog.html">France Blog</a> · <a href="/sitemap.xml">Sitemap</a></span></div></footer>
 <script>
 const sb=supabase.createClient('https://vcrrkyqiunczhpxdcoil.supabase.co','sb_publishable_IWiCOqUZ7PtPaISAo_5RDw_9uTvyD4z');
 const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');
@@ -29,17 +29,28 @@ const PAGE_SIZE=20;
 const countries={JP:{name:'Japan',grid:'JP-grid',pagination:'JP-pagination'},US:{name:'United States',grid:'US-grid',pagination:'US-pagination'},FR:{name:'France',grid:'FR-grid',pagination:'FR-pagination'},BR:{name:'Brazil',grid:'BR-grid',pagination:'BR-pagination'}};
 const state={JP:1,US:1,FR:1,BR:1};
 async function loadCountry(country,page=1){
- state[country]=page; const cfg=countries[country],grid=document.getElementById(cfg.grid),pager=document.getElementById(cfg.pagination);
+ state[country]=page;
+ const cfg=countries[country],grid=document.getElementById(cfg.grid),pager=document.getElementById(cfg.pagination);
  grid.innerHTML='<div class="loading">Loading latest '+cfg.name+' chapters...</div>'; pager.innerHTML='';
  const from=(page-1)*PAGE_SIZE,to=from+PAGE_SIZE-1;
  try {
-  const {data,error,count}=await sb.from('chapters').select('chapter_number,url_slug,created_at,view_count,manga!inner(title,cover_url,country)',{count:'exact'}).eq('manga.country',country).order('created_at',{ascending:false}).range(from,to);
-  if(error) throw error;
-  if(!data?.length){grid.innerHTML='<div class="empty">No chapters published yet.</div>';return}
+  const result=await sb.from('chapters').select('id,manga_id,chapter_number,url_slug,created_at,view_count',{count:'exact'}).order('created_at',{ascending:false}).range(from,to);
+  if(result.error) throw result.error;
+  const chapters=result.data||[];
+  const ids=[...new Set(chapters.map(c=>c.manga_id).filter(Boolean))];
+  if(!ids.length){grid.innerHTML='<div class="empty">No chapters published yet.</div>';return;}
+  const mangasResult=await sb.from('manga').select('id,title,cover_url,country').in('id',ids).eq('country',country);
+  if(mangasResult.error) throw mangasResult.error;
+  const mangas=new Map((mangasResult.data||[]).map(m=>[String(m.id),m]));
+  const data=chapters.filter(c=>mangas.has(String(c.manga_id))).map(c=>({...c,manga:mangas.get(String(c.manga_id))}));
+  if(!data.length){grid.innerHTML='<div class="empty">No chapters published yet.</div>';return}
   grid.innerHTML=data.map(c=>`<a class="latest-item" href="/chapter.html?slug=${encodeURIComponent(c.url_slug)}"><img src="${esc(c.manga?.cover_url||'https://placehold.co/300x400')}" alt="${esc(c.manga?.title||'Manga')}" loading="lazy" decoding="async"><div><strong>${esc(c.manga?.title||'')} <span class="chapter-number">· Chapter ${esc(c.chapter_number)}</span></strong><p>${new Date(c.created_at).toLocaleDateString()} · 👁 ${Number(c.view_count||0).toLocaleString()}</p></div></a>`).join('');
-  const totalPages=Math.max(1,Math.ceil((count||0)/PAGE_SIZE));
+  const totalPages=Math.max(1,Math.ceil((countForCountry(countries[country].name)||0)/PAGE_SIZE));
   if(totalPages>1) pager.innerHTML=`<button class="page-btn" ${page<=1?'disabled':''} onclick="loadCountry('${country}',${page-1})">← Previous</button><span class="page-info">Page ${page} / ${totalPages}</span><button class="page-btn" ${page>=totalPages?'disabled':''} onclick="loadCountry('${country}',${page+1})">Next →</button>`;
  } catch(e) { console.error('Latest chapters error:',e); grid.innerHTML='<div class="empty">Unable to load chapters. Please try again.</div>'; }
+}
+async function countForCountry(countryName){
+ try { const r=await sb.from('manga').select('id',{count:'exact',head:true}).eq('country',countryName==='Japan'?'JP':countryName==='United States'?'US':countryName==='France'?'FR':'BR'); return r.count||0; } catch(e){ return 0; }
 }
 Object.keys(countries).forEach(country=>loadCountry(country,1));
 </script>
