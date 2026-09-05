@@ -46,10 +46,8 @@ jobs:
             find "$out" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.gif' \) -print0 \
               | sort -z -V \
               | while IFS= read -r -d '' img; do
-                  rel="${img#"$out"/}"
-                  printf '%s\t%s\n' "$rel" "$img"
+                  printf '%s\t%s\n' "${img#"$out"/}" "$img"
                 done > "$out/.image-list"
-            # Flatten images into deterministic numbered filenames.
             n=0
             while IFS=$'\t' read -r rel img; do
               [ -n "${img:-}" ] || continue
@@ -57,9 +55,9 @@ jobs:
               ext="${img##*.}"
               ext="$(printf '%s' "$ext" | tr '[:upper:]' '[:lower:]')"
               target="$out/$(printf '%04d' "$n").$ext"
-              if [ "$img" != "$target" ]; then cp "$img" "$target"; fi
+              [ "$img" = "$target" ] || cp "$img" "$target"
             done < "$out/.image-list"
-            find "$out" -mindepth 1 -type f ! -regex '.*\/.[0-9][0-9][0-9][0-9]\\.[A-Za-z0-9]+$' -delete || true
+            find "$out" -mindepth 1 -type f ! -regex '.*/[0-9][0-9][0-9][0-9]\.[A-Za-z0-9]+$' -delete || true
             count=$(find "$out" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.gif' \) | wc -l)
             printf '{"archive":"%s","slug":"%s","images":%s}\n' "$base" "$slug" "$count" >> chapter-images/manifest.jsonl
           done < <(find . -type f -iname '*.rar' -not -path './.git/*' -print0)
