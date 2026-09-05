@@ -1,48 +1,14 @@
-name: Refresh MangaAtlas content
-
+name: GitHub-only content refresh
 on:
+  workflow_dispatch:
   push:
     branches: [main]
-  schedule:
-    - cron: '*/15 * * * *'
-  workflow_dispatch:
-
 permissions:
-  contents: write
-
-concurrency:
-  group: mangaatlas-content-refresh
-  cancel-in-progress: false
-
+  contents: read
 jobs:
-  refresh:
+  validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Prepare static chapter fallback
-        run: node scripts/ensure-homepage-static-fallback.mjs
-
-      - name: Generate crawlable homepage chapter links
-        run: node scripts/refresh-homepage.mjs
-        continue-on-error: true
-
-      - name: Ensure site-wide GA4 tracking
-        run: node scripts/ensure-analytics.mjs
-
-      - name: Improve chapter ad loading
-        run: node scripts/ensure-ad-loading.mjs
-
-      - name: Commit refreshed content
-        run: |
-          if git diff --quiet -- index.html -- '*.html'; then
-            echo "Content is already up to date."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html '*.html'
-          git commit -m "Refresh crawlable homepage, analytics and ad loading"
-          git pull --rebase origin main
-          git push
+      - uses: actions/checkout@v4
+      - name: Validate GitHub content
+        run: node -e "const fs=require('fs'); const d=JSON.parse(fs.readFileSync('data/content.json','utf8')); if(!Array.isArray(d.mangas)||!Array.isArray(d.chapters)) process.exit(1); console.log('GitHub-only content OK:',d.mangas.length,'manga,',d.chapters.length,'chapters')"
