@@ -1,0 +1,33 @@
+name: Refresh MangaAtlas content
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate crawlable homepage chapter links
+        run: node scripts/refresh-homepage.mjs
+
+      - name: Commit refreshed homepage
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "Homepage is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Refresh homepage chapter links"
+          git push
