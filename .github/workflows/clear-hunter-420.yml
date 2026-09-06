@@ -39,3 +39,5 @@ jobs:
           git add data/content.json sitemap.xml
           git diff --cached --quiet || git commit -m 'MangaAtlas repair complete - permanently remove Hunter x Hunter 420'
           git push
+
+# retrigger cleanup after manual image deletion
