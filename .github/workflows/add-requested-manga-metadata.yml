@@ -1,0 +1,141 @@
+name: Add requested manga metadata
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  add-metadata:
+    if: startsWith(github.event.head_commit.message, 'Add requested manga metadata')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add manga and chapter records
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('data/content.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          mangas = data.setdefault('mangas', [])
+          chapters = data.setdefault('chapters', [])
+
+          requested = [
+            {
+              'id': 'akane-banashi',
+              'title': 'Akane-banashi',
+              'native_title': 'あかね噺',
+              'country': 'JP', 'language': 'ja',
+              'cover': 'https://placehold.co/300x400',
+              'slug': 'akane-banashi'
+            },
+            {
+              'id': 'under-doctor',
+              'title': 'UNDER DOCTOR',
+              'native_title': 'アンダードクター',
+              'country': 'JP', 'language': 'ja',
+              'cover': 'https://placehold.co/300x400',
+              'slug': 'under-doctor'
+            },
+            {
+              'id': 'witch-watch',
+              'title': 'Witch Watch',
+              'native_title': 'ウィッチウォッチ',
+              'country': 'JP', 'language': 'ja',
+              'cover': 'https://placehold.co/300x400',
+              'slug': 'witch-watch'
+            },
+            {
+              'id': 'boku-to-roboko',
+              'title': 'BOKU TO ROBOKO',
+              'native_title': '僕とロボコ',
+              'country': 'JP', 'language': 'ja',
+              'cover': 'https://placehold.co/300x400',
+              'slug': 'boku-to-roboko'
+            },
+            {
+              'id': 'ultimate-exorcist-kiyoshi',
+              'title': 'Ultimate Exorcist Kiyoshi',
+              'native_title': '悪祓士のキヨシくん',
+              'country': 'JP', 'language': 'ja',
+              'cover': 'https://placehold.co/300x400',
+              'slug': 'ultimate-exorcist-kiyoshi'
+            },
+            {
+              'id': 'nezumis-first-love',
+              'title': "Nezumi's First Love",
+              'native_title': 'ねずみの初恋',
+              'country': 'JP', 'language': 'ja',
+              'cover': 'https://placehold.co/300x400',
+              'slug': 'nezumis-first-love'
+            },
+            {
+              'id': 'shinobi-undercover',
+              'title': 'Shinobi Undercover',
+              'native_title': 'しのびごと',
+              'country': 'JP', 'language': 'ja',
+              'cover': 'https://placehold.co/300x400',
+              'slug': 'shinobi-undercover'
+            },
+            {
+              'id': 'ruridragon',
+              'title': 'RuriDragon',
+              'native_title': 'ルリドラゴン',
+              'country': 'JP', 'language': 'ja',
+              'cover': 'https://placehold.co/300x400',
+              'slug': 'ruridragon'
+            },
+            {
+              'id': 'the-exiled-heavy-knight-knows-how-to-game-the-system',
+              'title': 'The Exiled Heavy Knight Knows How to Game the System',
+              'native_title': '追放された転生重騎士はゲーム知識で無双する',
+              'country': 'JP', 'language': 'ja',
+              'cover': 'https://placehold.co/300x400',
+              'slug': 'the-exiled-heavy-knight-knows-how-to-game-the-system'
+            }
+          ]
+
+          chapter_numbers = {
+            'akane-banashi': 221,
+            'under-doctor': 31,
+            'witch-watch': 261,
+            'boku-to-roboko': 296,
+            'ultimate-exorcist-kiyoshi': 107,
+            'nezumis-first-love': 118,
+            'shinobi-undercover': 96,
+            'ruridragon': 51,
+            'the-exiled-heavy-knight-knows-how-to-game-the-system': 178,
+          }
+
+          for manga in requested:
+            if not any(m.get('id') == manga['id'] or m.get('slug') == manga['slug'] for m in mangas):
+              mangas.append(manga)
+
+          for manga in requested:
+            mid = manga['id']
+            number = chapter_numbers[mid]
+            slug = f'{manga["slug"]}-raw-{number}'
+            if not any(c.get('mangaId') == mid and c.get('number') == number for c in chapters):
+              chapters.append({
+                'id': f'{mid}-chapter-{number}',
+                'mangaId': mid,
+                'title': f'{manga["native_title"]} raw ( {manga["title"]} raw ) 第{number}話',
+                'number': number,
+                'slug': slug,
+                'country': 'JP',
+                'pages': []
+              })
+
+          path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+      - name: Commit metadata
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/content.json
+          git diff --cached --quiet || git commit -m 'chore: add requested manga and chapters'
+          git push
