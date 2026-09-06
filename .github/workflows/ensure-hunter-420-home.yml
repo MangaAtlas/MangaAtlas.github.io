@@ -1,0 +1,41 @@
+name: Ensure Hunter x Hunter 420 on homepage
+on:
+  push:
+    branches: [main]
+jobs:
+  ensure:
+    if: ${{ !contains(github.event.head_commit.message, 'MangaAtlas repair complete') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure chapter entry
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/content.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          chapters=d.setdefault('chapters',[])
+          slug='Hun-x-Hun-420-Raw'
+          chapters[:]=[c for c in chapters if c.get('slug')!=slug]
+          chapters.append({
+            'id':'hunter-420-raw',
+            'mangaId':'hunter-x-hunter',
+            'title':'ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw',
+            'number':420,
+            'slug':slug,
+            'country':'JP',
+            'pages':[],
+            'createdAt':'2026-09-07T00:00:00Z'
+          })
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/content.json
+          git diff --cached --quiet || git commit -m 'MangaAtlas repair complete - show Hunter x Hunter 420 on homepage'
+          git push
