@@ -1,0 +1,101 @@
+name: Remove bad 900x24641 single-image chapters
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/remove-bad-long-single-images.yml
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Find and remove bad images
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          from PIL import Image
+
+          BAD_W, BAD_H = 900, 24641
+          tracked = subprocess.check_output(['git','ls-files','chapter-images'], text=True).splitlines()
+          bad = []
+
+          for p in tracked:
+              path = Path(p)
+              try:
+                  with Image.open(path) as im:
+                      w, h = im.size
+              except Exception:
+                  continue
+              if (w, h) == (BAD_W, BAD_H):
+                  bad.append(p)
+
+          print(f'Found {len(bad)} bad 900x24641 image(s).')
+          for p in bad:
+              print('REMOVE', p)
+
+          if not bad:
+              raise SystemExit(0)
+
+          bad_set = set(bad)
+          content_path = Path('data/content.json')
+          data = json.loads(content_path.read_text(encoding='utf-8'))
+          removed_refs = 0
+          affected = []
+
+          def normalize(ref):
+              if not isinstance(ref, str):
+                  return None
+              if '/chapter-images/' in ref:
+                  return ref.split('/chapter-images/', 1)[1]
+              if ref.startswith('chapter-images/'):
+                  return ref[len('chapter-images/'):]
+              return None
+
+          for chapter in data.get('chapters', []):
+              pages = chapter.get('pages') or []
+              if len(pages) != 1:
+                  continue
+              rel = normalize(pages[0])
+              if rel and ('chapter-images/' + rel) in bad_set:
+                  chapter['pages'] = []
+                  removed_refs += 1
+                  affected.append((chapter.get('id'), chapter.get('slug'), pages[0]))
+
+          content_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          for p in bad:
+              Path(p).unlink(missing_ok=True)
+
+          print(f'Cleared pages from {removed_refs} chapter(s).')
+          print(f'Deleted {len(bad)} image file(s).')
+          for item in affected:
+              print('AFFECTED CHAPTER', item)
+          PY
+
+      - name: Install Pillow
+        run: |
+          python -m pip install --quiet Pillow
+
+      - name: Commit cleanup
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A chapter-images data/content.json
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git commit -m "Remove bad 900x24641 single-image chapters"
+          git push
