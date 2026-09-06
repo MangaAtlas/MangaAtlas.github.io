@@ -1,0 +1,48 @@
+name: Clear Hunter x Hunter 420 Images Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/clear-hxh420-now.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  clear:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Delete all chapter 420 image files and clear references
+        shell: bash
+        run: |
+          set -e
+          rm -rf chapter-images/hunter-x-hunter/chapter-420
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/content.json')
+          obj=json.loads(p.read_text(encoding='utf-8'))
+          found=False
+          for c in obj.get('chapters',[]):
+              if c.get('mangaId')=='hunter-x-hunter' and (str(c.get('number'))=='420' or c.get('slug')=='Hun-x-Hun-420-Raw'):
+                  c['pages']=[]
+                  found=True
+          if not found:
+              raise SystemExit('Hunter x Hunter chapter 420 was not found in content.json')
+          p.write_text(json.dumps(obj,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          rm -f .github/workflows/clear-hxh420-now.yml
+
+      - name: Commit deletion
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A chapter-images/hunter-x-hunter/chapter-420 data/content.json .github/workflows/clear-hxh420-now.yml
+          git commit -m 'Clear old Hunter x Hunter chapter 420 images'
+          git push origin HEAD:main
