@@ -1,0 +1,52 @@
+name: Fix reader image order
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-reader-image-order.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix chapter image ordering and layout
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          p=Path('chapter.html')
+          s=p.read_text(encoding='utf-8')
+          old=".page{display:block;width:100%;height:auto;margin:0 auto;background:#111}"
+          new=".page{display:block;width:100%;height:auto;margin:0 auto;background:#111;vertical-align:top;float:none;position:relative}"
+          if old in s:
+              s=s.replace(old,new,1)
+          old2="const pages=(c.pages||[]).map(p=>typeof p==='string'?p:p.url).filter(Boolean).map(imageUrl);"
+          new2="const rawPages=(c.pages||[]).map(p=>typeof p==='string'?p:p.url).filter(Boolean);const pages=rawPages.map((p,i)=>({p,i,n:(String(p).match(/(?:^|[\\/_-])p?(\\d{1,4})(?:[._/-]|$)/i)||[])[1]})).sort((a,b)=>a.n&&b.n?(Number(a.n)-Number(b.n)||a.i-b.i):a.n?-1:b.n?1:a.i-b.i).map(x=>imageUrl(x.p));"
+          if old2 in s:
+              s=s.replace(old2,new2,1)
+          old3='loading="${i?\'lazy\':\'eager\'}" decoding="async"'
+          new3='loading="eager" decoding="async"'
+          if old3 in s:
+              s=s.replace(old3,new3,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Validate
+        run: |
+          python3 <<'PY' > /tmp/chapter.js
+          from pathlib import Path
+          import re
+          s=Path('chapter.html').read_text(encoding='utf-8')
+          print('\n'.join(re.findall(r'<script(?: [^>]*)?>(.*?)</script>',s,re.S)))
+          PY
+          node --check /tmp/chapter.js
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add chapter.html
+          git diff --cached --quiet || git commit -m 'MangaAtlas repair complete - fix reader image order'
+          git push
