@@ -17,13 +17,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Delete DAYS chapter 274 images
+      - name: Clear old DAYS 274 and Hunter x Hunter 420 images
         shell: bash
         run: |
           set -e
-          if [ -d "chapter-images/days/chapter-274" ]; then
-            git rm -r "chapter-images/days/chapter-274"
-          fi
+          for d in "chapter-images/days/chapter-274" "chapter-images/hunter-x-hunter/chapter-420"; do
+            if [ -d "$d" ]; then
+              git rm -r "$d"
+            fi
+          done
           python - <<'PY'
           import json
           from pathlib import Path
@@ -31,21 +33,21 @@ jobs:
           data=json.loads(p.read_text(encoding='utf-8'))
           changed=False
           for c in data.get('chapters',[]):
-              if c.get('slug') == 'days-ch-274':
-                  c['pages']=[]
-                  changed=True
+              if c.get('slug') in {'days-ch-274','Hun-x-Hun-420-Raw'} or c.get('id') == 'hunter-420-raw':
+                  if c.get('pages') != []:
+                      c['pages']=[]
+                      changed=True
           if changed:
               p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
           git add data/content.json
-          git diff --cached --quiet || git commit -m 'Clear DAYS chapter 274 old images [skip ci]'
+          git diff --cached --quiet || git commit -m 'Clear old DAYS 274 and Hunter x Hunter 420 images [skip ci]'
           git push origin HEAD:main
 
       - name: Patch whole-chapter clear logic
         shell: python
         run: |
           from pathlib import Path
-          import re
           p = Path('admin/index.html')
           s = p.read_text(encoding='utf-8')
           start = s.find('async function clearPart(which){')
