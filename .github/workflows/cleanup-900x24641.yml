@@ -1,0 +1,57 @@
+name: Cleanup 900x24641 single-image chapters
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/cleanup-900x24641.yml
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scan and delete bad single images
+        shell: bash
+        run: |
+          python -m pip install --quiet Pillow
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          from PIL import Image
+          bad=[]
+          for p in subprocess.check_output(['git','ls-files','chapter-images'], text=True).splitlines():
+              try:
+                  with Image.open(p) as im:
+                      if im.size == (900,24641): bad.append(p)
+              except Exception:
+                  pass
+          print('BAD_IMAGES', len(bad))
+          if not bad: raise SystemExit(0)
+          bad_set=set(bad)
+          data=json.loads(Path('data/content.json').read_text(encoding='utf-8'))
+          cleared=0
+          for c in data.get('chapters',[]):
+              pages=c.get('pages') or []
+              if len(pages)!=1: continue
+              ref=pages[0]
+              rel=ref.split('/chapter-images/',1)[1] if '/chapter-images/' in ref else (ref[len('chapter-images/'):] if ref.startswith('chapter-images/') else None)
+              if rel and 'chapter-images/'+rel in bad_set:
+                  c['pages']=[]
+                  cleared+=1
+          Path('data/content.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          for p in bad: Path(p).unlink(missing_ok=True)
+          print('CHAPTERS_CLEARED', cleared)
+          print('FILES_DELETED', len(bad))
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A chapter-images data/content.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Remove bad 900x24641 single-image chapters'
+          git push
