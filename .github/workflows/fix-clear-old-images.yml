@@ -1,0 +1,136 @@
+name: Fix Clear Old Images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-clear-old-images.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch admin clear logic
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('admin/index.html')
+          s = p.read_text(encoding='utf-8')
+
+          start = s.find('async function clearPart(which){')
+          end = s.find("$('cPages1').onchange", start)
+          if start < 0 or end < 0:
+              raise SystemExit('clearPart block not found')
+
+          new = r'''async function clearPart(which){
+          try{
+            if(!editChapterId)throw Error('Pehle chapter select karo.');
+            const c=data.chapters.find(x=>x.id===editChapterId);
+            if(!c)throw Error('Chapter not found.');
+            const min=which==='1'?1:11,max=which==='1'?10:20;
+            if(!confirm('Part '+which+' ki PURANI tamam images delete karni hain?'))return;
+            const progress=$(which==='1'?'part1Progress':'part2Progress');
+            progress.textContent='Finding old image files…';
+
+            const pathFromRef=ref=>{
+              let u=decodeURIComponent(String(ref||'').split('?')[0]);
+              let m=u.match(/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/[^/]+\/(.+)$/i);
+              if(m)return m[1];
+              m=u.match(/cdn\.jsdelivr\.net\/gh\/[^/]+\/[^@]+@[^/]+\/(.+)$/i);
+              if(m)return m[1];
+              m=u.match(/github\.com\/[^/]+\/[^/]+\/blob\/[^/]+\/(.+)$/i);
+              if(m)return m[1];
+              return u.replace(/^https?:\/\/[^/]+\//,'').replace(/^\/+/, '');
+            };
+            const pageNo=path=>{
+              const name=String(path).split('/').pop().replace(/\.[^.]+$/,'');
+              const ms=[...name.matchAll(/(?:^|[^0-9])(\d{1,4})(?:[^0-9]|$)/g)].map(x=>Number(x[1])).filter(Number.isFinite);
+              return ms.length?ms[ms.length-1]:null;
+            };
+
+            const targets=new Set();
+            const refs=[...(c.pages||[])];
+            for(let i=min-1;i<Math.min(max,refs.length);i++){
+              const path=pathFromRef(refs[i]);
+              if(path)targets.add(path);
+            }
+
+            const dir='chapter-images/'+c.mangaId+'/chapter-'+c.number;
+            try{
+              const listing=await api('/contents/'+dir+'?ref='+BRANCH);
+              if(Array.isArray(listing)){
+                for(const item of listing){
+                  if(item.type!=='file')continue;
+                  const n=pageNo(item.path);
+                  if(n>=min&&n<=max)targets.add(item.path);
+                }
+              }
+            }catch(e){
+              if(!/GitHub 404/.test(e.message))throw e;
+            }
+
+            if(!targets.size){
+              const latest=await readData(),fresh=latest.data.chapters.find(x=>x.id===editChapterId);
+              if(fresh){
+                const next=[...(fresh.pages||[])];
+                for(let i=min-1;i<Math.min(max,next.length);i++)next[i]=null;
+                while(next.length&&next[next.length-1]==null)next.pop();
+                fresh.pages=next;
+                await writeData(latest.data,latest.sha,'Clear chapter part '+which);
+                data=latest.data;renderLists();
+              }
+              progress.textContent='✓ Part '+which+' references cleared. No old file was found.';
+              setStatus('Part '+which+' clear ho gaya.');
+              return;
+            }
+
+            let deleted=0,missing=0;
+            for(const path of targets){
+              progress.textContent=`Deleting old image ${deleted+missing+1}/${targets.size}…`;
+              try{
+                const meta=await api('/contents/'+path+'?ref='+BRANCH);
+                if(meta?.sha){
+                  await api('/contents/'+path,{method:'DELETE',body:JSON.stringify({message:'Clear old chapter part '+which+' image',sha:meta.sha,branch:BRANCH})});
+                  deleted++;
+                }else missing++;
+              }catch(e){
+                if(/GitHub 404/.test(e.message))missing++;
+                else throw e;
+              }
+            }
+
+            const latest=await readData(),fresh=latest.data.chapters.find(x=>x.id===editChapterId);
+            if(!fresh)throw Error('Chapter not found after refresh.');
+            const next=[...(fresh.pages||[])];
+            for(let i=min-1;i<Math.min(max,next.length);i++)next[i]=null;
+            while(next.length&&next[next.length-1]==null)next.pop();
+            fresh.pages=next;
+            await writeData(latest.data,latest.sha,'Clear chapter part '+which);
+            data=latest.data;renderLists();
+            progress.textContent=`✓ Part ${which} cleared: ${deleted} old file(s) deleted.`;
+            setStatus(`Part ${which} ki purani images GitHub se delete aur chapter references se clear ho gayi hain. Part ${which==='1'?'2':'1'} untouched hai.`);
+          }catch(e){
+            $(which==='1'?'part1Progress':'part2Progress').textContent='Error: '+e.message;
+            setStatus('Error: '+e.message);
+          }
+        }
+          '''
+
+          p.write_text(s[:start] + new + s[end:], encoding='utf-8')
+      - name: Commit patched admin
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add admin/index.html
+          if git diff --cached --quiet; then
+            echo 'No admin changes needed'
+          else
+            git commit -m 'Fix Clear Part old image deletion [skip ci]'
+            git push
+          fi
