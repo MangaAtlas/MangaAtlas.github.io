@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - '.github/workflows/fix-ad-rendering.yml'
+      - 'ads/.ad-fix-trigger'
 
 permissions:
   contents: write
@@ -20,7 +21,6 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import re
 
           for name in ['ads/728.html', 'ads/300.html']:
               p = Path(name)
@@ -38,14 +38,11 @@ jobs:
           if 'function watchAd(slot)' not in s:
               s = s.replace(marker, watcher + marker, 1)
 
-          # Every ad loader gets a delayed empty-slot check. This prevents the fixed
-          # 50/60/90/250px placeholders from remaining when the network returns no ad.
           s = s.replace("slot.dataset.adLoaded='yes';return}const code=", "slot.dataset.adLoaded='yes';watchAd(slot);return}const code=", 1)
           s = s.replace("adFrame(slot,code,height);slot.dataset.adLoaded='yes'", "adFrame(slot,code,height);slot.dataset.adLoaded='yes';watchAd(slot)", 1)
           s = s.replace("setTimeout(()=>{if(slot.dataset.adLoaded==='loading')slot.dataset.adLoaded='yes'},3000)", "setTimeout(()=>{if(slot.dataset.adLoaded==='loading')slot.dataset.adLoaded='yes';watchAd(slot)},3000)", 1)
           s = s.replace("slot.appendChild(f);slot.dataset.adLoaded='yes'", "slot.appendChild(f);slot.dataset.adLoaded='yes';watchAd(slot)", 1)
 
-          # Hide the reserved area completely when no ad content was injected.
           css = '.ad-slot.ad-empty{display:none!important;min-height:0!important;height:0!important;margin:0!important;padding:0!important}'
           if css not in s:
               s = s.replace('</style>', css + '</style>', 1)
