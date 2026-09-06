@@ -1,0 +1,60 @@
+name: Add Hunter x Hunter 420 article
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  add-article:
+    if: ${{ !contains(github.event.head_commit.message, 'MangaAtlas repair complete - add Hunter x Hunter 420') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add Hunter x Hunter 420
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          p = Path('data/content.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          chapters = data.setdefault('chapters', [])
+
+          chapter = {
+              'id': 'hunter-420-raw',
+              'mangaId': 'hunter-x-hunter',
+              'title': 'ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw',
+              'number': 420,
+              'slug': 'Hun-x-Hun-420-Raw',
+              'country': 'JP',
+              'pages': []
+          }
+
+          chapters[:] = [c for c in chapters if c.get('id') != 'hunter-420-raw' and c.get('slug') != 'Hun-x-Hun-420-Raw']
+          chapters.append(chapter)
+          p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          s = Path('sitemap.xml')
+          if s.exists():
+              text = s.read_text(encoding='utf-8')
+              url = 'https://mangaatlas.github.io/chapter.html?slug=Hun-x-Hun-420-Raw'
+              if url not in text:
+                  text = text.replace('</urlset>', f'  <url><loc>{url}</loc></url>\n</urlset>')
+              s.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/content.json sitemap.xml
+          if git diff --cached --quiet; then
+            echo 'No changes needed.'
+            exit 0
+          fi
+          git commit -m 'MangaAtlas repair complete - add Hunter x Hunter 420'
+          git push
