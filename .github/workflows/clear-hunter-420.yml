@@ -1,0 +1,41 @@
+name: Permanently remove Hunter x Hunter 420
+on:
+  push:
+    paths:
+      - '.github/workflows/clear-hunter-420.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  clear:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove chapter, images and sitemap URLs
+        run: |
+          python3 <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/content.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          before=len(data.get('chapters',[]))
+          data['chapters']=[c for c in data.get('chapters',[]) if not (
+              str(c.get('slug','')) in {'Hun-x-Hun-420-Raw','Hun x Hun 420'} or
+              (c.get('mangaId')=='hunter-x-hunter' and str(c.get('number'))=='420')
+          )]
+          if len(data['chapters'])==before:
+              raise SystemExit('Hunter x Hunter chapter 420 entry not found')
+          p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          s=Path('sitemap.xml')
+          text=s.read_text(encoding='utf-8')
+          text='\n'.join(line for line in text.splitlines() if 'slug=Hun-x-Hun-420-Raw' not in line and 'slug=Hun%20x%20Hun%20420' not in line)+'\n'
+          s.write_text(text,encoding='utf-8')
+          PY
+          if [ -d chapter-images/hunter-x-hunter/chapter-420 ]; then git rm -r chapter-images/hunter-x-hunter/chapter-420; fi
+      - name: Commit permanent removal
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/content.json sitemap.xml
+          git diff --cached --quiet || git commit -m 'MangaAtlas repair complete - permanently remove Hunter x Hunter 420'
+          git push
