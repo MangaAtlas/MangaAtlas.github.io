@@ -1,0 +1,111 @@
+name: Fix long chapter image uploads
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fix-long-chapter-images.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Patch admin uploader
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('admin/index.html')
+          s = p.read_text(encoding='utf-8')
+
+          start = s.index('async function prepareImage(')
+          end = s.index('async function uploadFile(', start)
+          new_prepare = r'''async function prepareImage(file,max=1600,quality=.76){
+          if(!file||!/^image\/(jpeg|png|webp)$/i.test(file.type))throw Error(file?.name+' is not a JPG, PNG or WebP image.');
+          if(file.size>40*1024*1024)throw Error(file.name+' is over 40MB.');
+          const src=URL.createObjectURL(file);
+          try{
+            const img=await new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(Error('Could not decode '+file.name));i.src=src});
+            const scale=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight)),w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale));
+            const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+            const ctx=canvas.getContext('2d');if(!ctx)throw Error('Image canvas is unavailable.');ctx.drawImage(img,0,0,w,h);
+            let blob=null;for(const q of [quality,.68,.58]){blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('Image compression failed.')),'image/webp',q));if(blob.size<=8*1024*1024)break}
+            if(!blob||blob.size>8*1024*1024)throw Error(file.name+' is still too large after compression.');
+            return new File([blob],file.name.replace(/\.[^.]+$/,'')+'.webp',{type:'image/webp'})
+          }finally{URL.revokeObjectURL(src)}
+          }
+
+          async function prepareChapterImages(file){
+          if(!file||!/^image\/(jpeg|png|webp)$/i.test(file.type))throw Error(file?.name+' is not a JPG, PNG or WebP image.');
+          if(file.size>80*1024*1024)throw Error(file.name+' is over 80MB.');
+          const src=URL.createObjectURL(file);
+          try{
+            const img=await new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(Error('Could not decode '+file.name));i.src=src});
+            const long=img.naturalHeight>6000 || (img.naturalHeight/Math.max(1,img.naturalWidth))>=4;
+            if(!long)return [await prepareImage(file,2000,.9)];
+            const targetW=Math.min(img.naturalWidth,1600),scale=targetW/img.naturalWidth,totalH=Math.round(img.naturalHeight*scale),chunkH=5000;
+            const out=[];
+            for(let top=0,n=0;top<totalH;top+=chunkH,n++){
+              const h=Math.min(chunkH,totalH-top),canvas=document.createElement('canvas');canvas.width=targetW;canvas.height=h;
+              const ctx=canvas.getContext('2d');if(!ctx)throw Error('Image canvas is unavailable.');
+              ctx.drawImage(img,0,Math.round(top/scale),img.naturalWidth,Math.round(h/scale),0,0,targetW,h);
+              let blob=null;for(const q of [.92,.86,.78,.7]){blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('Long image compression failed.')),'image/webp',q));if(blob.size<=7.5*1024*1024)break}
+              if(!blob||blob.size>8*1024*1024)throw Error(file.name+' chunk '+(n+1)+' is still too large.');
+              out.push(new File([blob],file.name.replace(/\.[^.]+$/,'')+'-part-'+String(n+1).padStart(3,'0')+'.webp',{type:'image/webp'}));
+            }
+            return out;
+          }finally{URL.revokeObjectURL(src)}
+          }
+          '''
+          s = s[:start] + new_prepare + s[end:]
+
+          start = s.index('async function uploadPart(')
+          end = s.index("$('uploadPart1').onclick", start)
+          new_upload = r'''async function uploadPart(which){try{
+          const input=$(which==='1'?'cPages1':'cPages2'),progress=$(which==='1'?'part1Progress':'part2Progress'),files=[...input.files];
+          if(!editChapterId)throw Error('Pehle chapter ko Save chapter details se create karo, phir Part 1/Part 2 upload karo.');
+          if(!files.length)throw Error('Is part ke liye images select karo.');
+          if(files.length>10)throw Error('Ek part mein maximum 10 images upload karo.');
+          const c=data.chapters.find(x=>x.id===editChapterId);if(!c)throw Error('Chapter not found.');
+          const existing=[...(c.pages||[])],newPages=[...existing];let added=0,replaced=0,pageCursor=1;
+          for(let i=0;i<files.length;i++){
+            progress.textContent=`Preparing image ${i+1}/${files.length}…`;
+            const prepared=await prepareChapterImages(files[i]);
+            let pageNo=pageNumberFromName(files[i].name);const min=which==='1'?1:11,max=which==='1'?10:20;
+            if(!(pageNo>=min&&pageNo<=max))pageNo=null;
+            for(let j=0;j<prepared.length;j++){
+              let target=pageNo!==null?pageNo+j:(which==='1'?Math.max(1,existing.length+pageCursor):Math.max(11,existing.length+pageCursor));
+              while(newPages[target-1])target++;
+              const f=prepared[j];
+              const path=`chapter-images/${c.mangaId}/chapter-${c.number}/${String(target).padStart(4,'0')}-${Date.now()}-${i}-${j}.webp`;
+              progress.textContent=`Uploading ${i+1}/${files.length}${prepared.length>1?' · long image part '+(j+1)+'/'+prepared.length:''}…`;
+              const uploaded=await uploadFile(path,f);
+              if(newPages[target-1]){newPages[target-1]=uploaded;replaced++}else{newPages[target-1]=uploaded;added++}
+              pageCursor=Math.max(pageCursor,target+1);
+            }
+          }
+          const x=await readData();const latest=x.data.chapters.find(z=>z.id===c.id);if(!latest)throw Error('Chapter disappeared from content data.');
+          latest.pages=newPages.filter(Boolean);await writeData(x.data,x.sha,`Upload chapter ${c.number} part ${which}`);data=x.data;renderLists();
+          progress.textContent=`✓ Part ${which}: ${added} page(s) added, ${replaced} page(s) updated.`;setStatus(`Part ${which} complete. Long single images are automatically split into readable pages.`)
+          }catch(e){$(which==='1'?'part1Progress':'part2Progress').textContent='Error: '+e.message;setStatus('Error: '+e.message)}}
+          '''
+          s = s[:start] + new_upload + s[end:]
+
+          p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Commit patched admin
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add admin/index.html
+          git diff --cached --quiet || git commit -m 'Fix long single-image chapter uploads'
+          git push
