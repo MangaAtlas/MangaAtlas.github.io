@@ -1,0 +1,35 @@
+name: Clear Ultimate Exorcist Kiyoshi 107
+on:
+  push:
+    paths:
+      - '.github/workflows/clear-ultimate-exorcist-107.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  clear:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Delete chapter images and clear page references
+        run: |
+          python3 <<'PY'
+          import json
+          from pathlib import Path
+          data_path=Path('data/content.json')
+          data=json.loads(data_path.read_text(encoding='utf-8'))
+          matches=[c for c in data.get('chapters',[]) if str(c.get('slug',''))=='ultimate-exorcist-kiyoshi-raw-107' or (c.get('mangaId')=='ultimate-exorcist-kiyoshi' and str(c.get('number'))=='107')]
+          if not matches:
+              raise SystemExit('Chapter ultimate-exorcist-kiyoshi-raw-107 not found')
+          for c in matches:
+              c['pages']=[]
+          data_path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          if [ -d chapter-images/ultimate-exorcist-kiyoshi/chapter-107 ]; then git rm -r chapter-images/ultimate-exorcist-kiyoshi/chapter-107; fi
+      - name: Commit cleanup
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/content.json
+          git diff --cached --quiet || git commit -m 'MangaAtlas repair complete - clear Ultimate Exorcist Kiyoshi 107'
+          git push
