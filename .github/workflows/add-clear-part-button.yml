@@ -1,0 +1,61 @@
+name: Add clear buttons for chapter parts
+
+on:
+  push:
+    paths:
+      - '.github/workflows/add-clear-part-button.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch admin
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          p=Path('admin/index.html')
+          s=p.read_text(encoding='utf-8')
+          old1='<button id="uploadPart1">Upload Part 1</button>'
+          old2='<button id="uploadPart2">Upload Part 2</button>'
+          if old1 in s and 'id="clearPart1"' not in s:
+              s=s.replace(old1,old1+'<button class="danger" id="clearPart1">Clear Part 1</button>',1)
+          if old2 in s and 'id="clearPart2"' not in s:
+              s=s.replace(old2,old2+'<button class="danger" id="clearPart2">Clear Part 2</button>',1)
+          marker='async function uploadPart(which)'
+          if 'async function clearPart(which)' not in s:
+              if marker not in s: raise SystemExit('uploadPart marker not found')
+              fn=r'''async function clearPart(which){try{if(!editChapterId)throw Error('Pehle chapter select karo.');const c=data.chapters.find(x=>x.id===editChapterId);if(!c)throw Error('Chapter not found.');const min=which==='1'?1:11,max=which==='1'?10:20,pages=[...(c.pages||[])],old=pages.slice(min-1,max).filter(Boolean);if(!old.length){setStatus('Part '+which+' mein purani images nahi hain.');return}if(!confirm('Part '+which+' ki tamam purani images delete karni hain?'))return;const progress=$(which==='1'?'part1Progress':'part2Progress');progress.textContent='Deleting old images…';for(const ref of old){let path=String(ref||'');const m=path.match(/@[^/]+\/(.+)$/);if(m)path=m[1];path=decodeURIComponent(path).replace(/^\/+/, '');try{const meta=await api('/contents/'+path+'?ref='+BRANCH);if(meta?.sha)await api('/contents/'+path,{method:'DELETE',body:JSON.stringify({message:'Clear chapter part '+which,sha:meta.sha,branch:BRANCH})})}catch(e){if(!/GitHub 404/.test(e.message))throw e}}const latest=await readData(),fresh=latest.data.chapters.find(x=>x.id===editChapterId);if(!fresh)throw Error('Chapter not found after refresh.');const next=[...(fresh.pages||[])];for(let i=min-1;i<Math.min(max,next.length);i++)next[i]=null;while(next.length&&next[next.length-1]==null)next.pop();fresh.pages=next;await writeData(latest.data,latest.sha,'Clear chapter part '+which);data=latest.data;renderLists();progress.textContent='✓ Part '+which+' cleared.';setStatus('Part '+which+' ki purani images GitHub aur chapter data dono se clear ho gayi hain. Doosra part untouched hai.')}catch(e){$(which==='1'?'part1Progress':'part2Progress').textContent='Error: '+e.message;setStatus('Error: '+e.message)}}
+          '''
+              s=s.replace(marker,fn+marker,1)
+          if "$('clearPart1').onclick=()=>clearPart('1')" not in s:
+              anchor="$('uploadPart1').onclick=()=>uploadPart('1')"
+              if anchor in s:
+                  s=s.replace(anchor,anchor+";$('clearPart1').onclick=()=>clearPart('1');$('clearPart2').onclick=()=>clearPart('2')",1)
+              else:
+                  s=s.replace('</script>',"$('clearPart1').onclick=()=>clearPart('1');$('clearPart2').onclick=()=>clearPart('2');</script>",1)
+          s=s.replace("if(file.size>40*1024*1024)","if(file.size>7*1024*1024)",1)
+          s=s.replace("if(blob.size<=8*1024*1024)","if(blob.size<=7*1024*1024)",1)
+          s=s.replace("blob.size>8*1024*1024","blob.size>7*1024*1024",1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Validate
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('admin/index.html').read_text(encoding='utf-8')
+          for x in ['id="clearPart1"','id="clearPart2"','async function clearPart(which)',"clearPart('1')","clearPart('2')"]:
+              assert x in s, x
+          print('Clear buttons OK')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add admin/index.html
+          git diff --cached --quiet || git commit -m 'Add clear buttons for chapter image parts'
+          git push
