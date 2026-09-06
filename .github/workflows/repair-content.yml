@@ -47,11 +47,13 @@ jobs:
           i.write_text(h,encoding='utf-8')
 
           ch=pathlib.Path('chapter.html')
-          s=ch.read_text(encoding='utf-8')
-          s=s.replace('pl29176333.profitableratecpmnetwork.com/e37cafb809028dfd79839ebe63f4a0e4/invoke.js','pl31214808.profitableratecpmnetwork.com/86f019b80a98d0c1a36bff26f5f7dfcd/invoke.js')
-          s=s.replace('container-e37cafb809028dfd79839ebe63f4a0e4','container-86f019b80a98d0c1a36bff26f5f7dfcd')
-          s=s.replace("addContainerAd(slot,'e37cafb809028dfd79839ebe63f4a0e4')", "addContainerAd(slot,'86f019b80a98d0c1a36bff26f5f7dfcd')")
-          ch.write_text(s,encoding='utf-8')
+          h=ch.read_text(encoding='utf-8')
+          h=h.replace("if(kind==='728')return addHighRevenue(slot,'5a6c64cb9575c309f734f8923695283f',728,90);if(kind==='320')return addHighRevenue(slot,'23c41132d95748e456a7a25b71fe13b8',320,50);if(kind==='container')return addContainerAd(slot,'86f019b80a98d0c1a36bff26f5f7dfcd');if(kind==='300')return add300Ad(slot)", "if(kind==='728new')return addHighRevenue(slot,'048f6a8cdac82999df32c58fd9268909',728,90);if(kind==='728')return addHighRevenue(slot,'5a6c64cb9575c309f734f8923695283f',728,90);if(kind==='320new')return addHighRevenue(slot,'df64d8d9d0abc24ab2cc65c3dd3761eb',320,50);if(kind==='320')return addHighRevenue(slot,'23c41132d95748e456a7a25b71fe13b8',320,50);if(kind==='468new')return addHighRevenue(slot,'dfed786cfb88cd3143bae074860d3711',468,60);if(kind==='468')return addHighRevenue(slot,'dfed786cfb88cd3143bae074860d3711',468,60);if(kind==='container')return addContainerAd(slot,'86f019b80a98d0c1a36bff26f5f7dfcd');if(kind==='300')return add300Ad(slot)")
+          h=h.replace(".ad-50{min-height:50px}", ".ad-50{min-height:50px}.ad-60{min-height:60px}")
+          h=h.replace("let ad728Count=0;pages.forEach((p,i)=>", "let ad728Count=0;let new728Count=0;let new320Count=0;let new468Count=0;pages.forEach((p,i)=>")
+          h=h.replace("if(ad728Count<6&&i<11){html+='<div class=\"ad-slot ad-90\" data-ad=\"728\"></div>';ad728Count++}", "if(ad728Count<6&&i<11){html+='<div class=\"ad-slot ad-90\" data-ad=\"'+(new728Count<3?'728new':'728')+'\"></div>';if(new728Count<3)new728Count++;ad728Count++}")
+          h=h.replace("if(i===2||i===7)html+='<div class=\"ad-slot ad-container\" data-ad=\"container\"></div>';if(i===5)html+='<div class=\"ad-slot ad-50\" data-ad=\"320\"></div>'", "if(i===2||i===7)html+='<div class=\"ad-slot ad-container\" data-ad=\"container\"></div>';if(i===3||i===9||i===15){html+='<div class=\"ad-slot ad-60\" data-ad=\"468new\"></div>';new468Count++}if(i===5||i===11||i===17){html+='<div class=\"ad-slot ad-50\" data-ad=\"'+(new320Count<3?'320new':'320')+'\"></div>';if(new320Count<3)new320Count++}")
+          ch.write_text(h,encoding='utf-8')
 
           sm=pathlib.Path('sitemap.xml')
           text=sm.read_text(encoding='utf-8')
