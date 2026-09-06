@@ -46,6 +46,13 @@ jobs:
           h=h.replace('.filter(hasPages)', ".filter(c=>hasPages(c)||c.slug==='Hun-x-Hun-420-Raw')")
           i.write_text(h,encoding='utf-8')
 
+          ch=pathlib.Path('chapter.html')
+          s=ch.read_text(encoding='utf-8')
+          s=s.replace('pl29176333.profitableratecpmnetwork.com/e37cafb809028dfd79839ebe63f4a0e4/invoke.js','pl31214808.profitableratecpmnetwork.com/86f019b80a98d0c1a36bff26f5f7dfcd/invoke.js')
+          s=s.replace('container-e37cafb809028dfd79839ebe63f4a0e4','container-86f019b80a98d0c1a36bff26f5f7dfcd')
+          s=s.replace("addContainerAd(slot,'e37cafb809028dfd79839ebe63f4a0e4')", "addContainerAd(slot,'86f019b80a98d0c1a36bff26f5f7dfcd')")
+          ch.write_text(s,encoding='utf-8')
+
           sm=pathlib.Path('sitemap.xml')
           text=sm.read_text(encoding='utf-8')
           url='https://mangaatlas.github.io/chapter.html?slug=Hun-x-Hun-420-Raw'
@@ -62,7 +69,7 @@ jobs:
         run: |
           git config user.name "MangaAtlas Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/content.json admin/index.html index.html sitemap.xml
+          git add data/content.json admin/index.html index.html chapter.html ads/profit.html sitemap.xml
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git commit -m "MangaAtlas repair complete"
           git push
