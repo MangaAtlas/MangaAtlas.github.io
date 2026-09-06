@@ -1,0 +1,58 @@
+name: Build chapter publish dates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/content.json'
+      - '.github/workflows/build-chapter-dates.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build chapter date index
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+
+          content = json.loads(Path('data/content.json').read_text(encoding='utf-8'))
+          dates = {}
+          for ch in content.get('chapters', []):
+              cid = str(ch.get('id', '')).strip()
+              if not cid:
+                  continue
+              needle = f'"id": "{cid}"'
+              p = subprocess.run(
+                  ['git', 'log', '--reverse', '--format=%H|%cI', '-S', needle, '--', 'data/content.json'],
+                  text=True, capture_output=True, check=True
+              )
+              rows = [x for x in p.stdout.splitlines() if x.strip()]
+              if rows:
+                  sha, dt = rows[0].split('|', 1)
+                  dates[cid] = {'createdAt': dt, 'commit': sha}
+
+          out = {'version': 1, 'generatedAt': subprocess.check_output(['git','log','-1','--format=%cI'], text=True).strip(), 'chapters': dates}
+          Path('data/chapter-dates.json').write_text(json.dumps(out, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit chapter date index
+        run: |
+          git config user.name 'MangaAtlas'
+          git config user.email '140010326+MangaAtlas@users.noreply.github.com'
+          git add data/chapter-dates.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Build chapter publish date index'
+          git push
