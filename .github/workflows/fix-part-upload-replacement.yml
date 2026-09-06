@@ -1,0 +1,63 @@
+name: Fix part upload replacement
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-part-upload-replacement.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch admin uploader
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('admin/index.html')
+          s = p.read_text(encoding='utf-8')
+
+          old_prepare = re.search(r'async function prepareImage\(file,max=1600,quality=\.76\)\{.*?\}\s*async function uploadFile', s)
+          if not old_prepare:
+              raise SystemExit('prepareImage block not found')
+          new_prepare = r'''async function prepareImage(file,max=1600,quality=.76){if(!file||!/^image\/(jpeg|png|webp)$/i.test(file.type))throw Error(file?.name+' is not a JPG, PNG or WebP image.');if(file.size>5*1024*1024)throw Error(file.name+' is over 5MB.');const src=URL.createObjectURL(file);try{const img=await new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(Error('Could not decode '+file.name));i.src=src});const nw=img.naturalWidth,nh=img.naturalHeight,isLong=nh/nw>=3;let scale=isLong?Math.min(1,max/nw):Math.min(1,max/Math.max(nw,nh));const w=Math.max(1,Math.round(nw*scale)),h=Math.max(1,Math.round(nh*scale));const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');if(!ctx)throw Error('Image canvas is unavailable.');ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(img,0,0,w,h);let blob=null;const qualities=isLong?[quality,.88,.82,.76,.7,.64,.58]:[quality,.68,.58,.5,.42];for(const q of qualities){blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(Error('Image compression failed.')),'image/webp',q));if(blob.size<=5*1024*1024)break}if(!blob||blob.size>5*1024*1024)throw Error(file.name+' is still too large after compression (5MB max).');return new File([blob],file.name.replace(/\.[^.]+$/,'')+'.webp',{type:'image/webp'})}finally{URL.revokeObjectURL(src)}}async function uploadFile'''
+          s = s[:old_prepare.start()] + new_prepare + s[old_prepare.end()-len('async function uploadFile'):]
+
+          helper = r'''async function deleteRepoFile(ref){let clean=String(ref||'').trim();if(!clean)return;try{const u=clean.match(/^https?:\/\/[^/]+\/(.*)$/);if(u)clean=u[1];const at=clean.indexOf('@main/');if(at>=0)clean=clean.slice(at+6);clean=decodeURIComponent(clean).replace(/^\/+/, '');const r=await api('/contents/'+clean+'?ref='+BRANCH);if(r?.sha)await api('/contents/'+clean,{method:'DELETE',body:JSON.stringify({message:'Remove replaced chapter image '+clean,sha:r.sha,branch:BRANCH})})}catch(e){if(!/GitHub 404/.test(e.message))throw e}}'''
+          marker = 'async function uploadFile'
+          if 'async function deleteRepoFile' not in s:
+              s = s.replace(marker, helper+marker, 1)
+
+          pat = re.search(r'async function uploadPart\(which\)\{.*?\}\s*\$\(\'uploadPart1\'\)', s)
+          if not pat:
+              raise SystemExit('uploadPart block not found')
+          new_upload = r'''async function uploadPart(which){try{const input=$(which==='1'?'cPages1':'cPages2'),progress=$(which==='1'?'part1Progress':'part2Progress'),files=[...input.files];if(!editChapterId)throw Error('Pehle chapter ko Save chapter details se create karo, phir Part 1/Part 2 upload karo.');if(!files.length)throw Error('Is part ke liye images select karo.');if(files.length>10)throw Error('Ek part mein maximum 10 images upload karo.');const c=data.chapters.find(x=>x.id===editChapterId);if(!c)throw Error('Chapter not found.');const existing=[...(c.pages||[])],min=which==='1'?1:11,max=which==='1'?10:20;const oldPart=existing.slice(min-1,max);const newPages=existing.slice();for(let i=min-1;i<max;i++)newPages[i]=null;let added=0;const uploadedPaths=[];for(let i=0;i<files.length;i++){progress.textContent=`Preparing image ${i+1}/${files.length}…`;const f=await prepareImage(files[i]);let pageNo=pageNumberFromName(files[i].name);if(!(pageNo>=min&&pageNo<=max))pageNo=min+i;if(pageNo>max)throw Error('Part '+which+' mein page number '+pageNo+' allowed nahi hai.');const path=`chapter-images/${c.mangaId}/chapter-${c.number}/${String(pageNo).padStart(4,'0')}-${Date.now()}-${i}.webp`;progress.textContent=`Uploading image ${i+1}/${files.length} (${Math.round(f.size/1024)} KB)…`;await uploadFile(path,f);newPages[pageNo-1]=path;uploadedPaths.push(path);added++}progress.textContent='Removing old images from this part…';for(const old of oldPart){if(old&&!uploadedPaths.includes(old))await deleteRepoFile(old)}const x=await readData();const latest=x.data.chapters.find(z=>z.id===c.id);if(!latest)throw Error('Chapter disappeared from content data.');latest.pages=newPages.map(v=>v||null).filter((v,i,a)=>v||i<max).slice(0,Math.max(max,aLastNonEmpty(a)));await writeData(x.data,x.sha,`Replace chapter ${c.number} part ${which}`);data=x.data;renderLists();progress.textContent=`✓ Part ${which}: ${added} image(s) uploaded. Old images in pages ${min}–${max} were removed/replaced.`;setStatus(`Part ${which} complete. Is part ki purani images remove ho gayi hain; doosra part bilkul untouched hai.`)}catch(e){$(which==='1'?'part1Progress':'part2Progress').textContent='Error: '+e.message;setStatus('Error: '+e.message)}}function aLastNonEmpty(a){for(let i=a.length-1;i>=0;i--)if(a[i])return i+1;return 0}'''
+          # simplify the page assignment in case the compact expression is too clever
+          new_upload = new_upload.replace("latest.pages=newPages.map(v=>v||null).filter((v,i,a)=>v||i<max).slice(0,Math.max(max,aLastNonEmpty(a)));", "latest.pages=newPages.slice(0,Math.max(max,aLastNonEmpty(newPages)));" )
+          new_upload += "\n"
+          s = s[:pat.start()] + new_upload + s[pat.end()-len("$('uploadPart1')"):]
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Validate HTML script
+        run: |
+          node --check <(python3 - <<'PY'
+          import re
+          from pathlib import Path
+          s=Path('admin/index.html').read_text()
+          m=re.search(r'<script>(.*)</script>',s)
+          print(m.group(1))
+          PY
+          )
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add admin/index.html
+          git diff --cached --quiet || git commit -m 'Fix part upload replacement behavior'
+          git push
