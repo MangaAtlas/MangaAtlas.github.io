@@ -30,7 +30,7 @@ jobs:
           if 'async function clearPart(which)' not in s:
               if marker not in s: raise SystemExit('uploadPart marker not found')
               fn=r'''async function clearPart(which){try{if(!editChapterId)throw Error('Pehle chapter select karo.');const c=data.chapters.find(x=>x.id===editChapterId);if(!c)throw Error('Chapter not found.');const min=which==='1'?1:11,max=which==='1'?10:20,pages=[...(c.pages||[])],old=pages.slice(min-1,max).filter(Boolean);if(!old.length){setStatus('Part '+which+' mein purani images nahi hain.');return}if(!confirm('Part '+which+' ki tamam purani images delete karni hain?'))return;const progress=$(which==='1'?'part1Progress':'part2Progress');progress.textContent='Deleting old images…';for(const ref of old){let path=String(ref||'');const m=path.match(/@[^/]+\/(.+)$/);if(m)path=m[1];path=decodeURIComponent(path).replace(/^\/+/, '');try{const meta=await api('/contents/'+path+'?ref='+BRANCH);if(meta?.sha)await api('/contents/'+path,{method:'DELETE',body:JSON.stringify({message:'Clear chapter part '+which,sha:meta.sha,branch:BRANCH})})}catch(e){if(!/GitHub 404/.test(e.message))throw e}}const latest=await readData(),fresh=latest.data.chapters.find(x=>x.id===editChapterId);if(!fresh)throw Error('Chapter not found after refresh.');const next=[...(fresh.pages||[])];for(let i=min-1;i<Math.min(max,next.length);i++)next[i]=null;while(next.length&&next[next.length-1]==null)next.pop();fresh.pages=next;await writeData(latest.data,latest.sha,'Clear chapter part '+which);data=latest.data;renderLists();progress.textContent='✓ Part '+which+' cleared.';setStatus('Part '+which+' ki purani images GitHub aur chapter data dono se clear ho gayi hain. Doosra part untouched hai.')}catch(e){$(which==='1'?'part1Progress':'part2Progress').textContent='Error: '+e.message;setStatus('Error: '+e.message)}}
-          '''
+              '''
               s=s.replace(marker,fn+marker,1)
           if "$('clearPart1').onclick=()=>clearPart('1')" not in s:
               anchor="$('uploadPart1').onclick=()=>uploadPart('1')"
@@ -59,3 +59,5 @@ jobs:
           git add admin/index.html
           git diff --cached --quiet || git commit -m 'Add clear buttons for chapter image parts'
           git push
+
+# force workflow rerun
