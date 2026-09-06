@@ -162,6 +162,87 @@
       "language": "ja",
       "cover": "https://placehold.co/300x400",
       "slug": "shuumatsu-no-valkyrie"
+    },
+    {
+      "id": "akane-banashi",
+      "title": "Akane-banashi",
+      "native_title": "あかね噺",
+      "country": "JP",
+      "language": "ja",
+      "cover": "https://placehold.co/300x400",
+      "slug": "akane-banashi"
+    },
+    {
+      "id": "under-doctor",
+      "title": "UNDER DOCTOR",
+      "native_title": "アンダードクター",
+      "country": "JP",
+      "language": "ja",
+      "cover": "https://placehold.co/300x400",
+      "slug": "under-doctor"
+    },
+    {
+      "id": "witch-watch",
+      "title": "Witch Watch",
+      "native_title": "ウィッチウォッチ",
+      "country": "JP",
+      "language": "ja",
+      "cover": "https://placehold.co/300x400",
+      "slug": "witch-watch"
+    },
+    {
+      "id": "boku-to-roboko",
+      "title": "BOKU TO ROBOKO",
+      "native_title": "僕とロボコ",
+      "country": "JP",
+      "language": "ja",
+      "cover": "https://placehold.co/300x400",
+      "slug": "boku-to-roboko"
+    },
+    {
+      "id": "ultimate-exorcist-kiyoshi",
+      "title": "Ultimate Exorcist Kiyoshi",
+      "native_title": "悪祓士のキヨシくん",
+      "country": "JP",
+      "language": "ja",
+      "cover": "https://placehold.co/300x400",
+      "slug": "ultimate-exorcist-kiyoshi"
+    },
+    {
+      "id": "nezumis-first-love",
+      "title": "Nezumi's First Love",
+      "native_title": "ねずみの初恋",
+      "country": "JP",
+      "language": "ja",
+      "cover": "https://placehold.co/300x400",
+      "slug": "nezumis-first-love"
+    },
+    {
+      "id": "shinobi-undercover",
+      "title": "Shinobi Undercover",
+      "native_title": "しのびごと",
+      "country": "JP",
+      "language": "ja",
+      "cover": "https://placehold.co/300x400",
+      "slug": "shinobi-undercover"
+    },
+    {
+      "id": "ruridragon",
+      "title": "RuriDragon",
+      "native_title": "ルリドラゴン",
+      "country": "JP",
+      "language": "ja",
+      "cover": "https://placehold.co/300x400",
+      "slug": "ruridragon"
+    },
+    {
+      "id": "the-exiled-heavy-knight-knows-how-to-game-the-system",
+      "title": "The Exiled Heavy Knight Knows How to Game the System",
+      "native_title": "追放された転生重騎士はゲーム知識で無双する",
+      "country": "JP",
+      "language": "ja",
+      "cover": "https://placehold.co/300x400",
+      "slug": "the-exiled-heavy-knight-knows-how-to-game-the-system"
     }
   ],
   "chapters": [
@@ -841,6 +922,87 @@
         "chapter-images/hunter-x-hunter/chapter-420/0037-1788712000147-7.webp",
         "chapter-images/hunter-x-hunter/chapter-420/0038-1788712002468-8.webp"
       ]
+    },
+    {
+      "id": "akane-banashi-chapter-221",
+      "mangaId": "akane-banashi",
+      "title": "あかね噺 raw ( Akane-banashi raw ) 第221話",
+      "number": 221,
+      "slug": "akane-banashi-raw-221",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "under-doctor-chapter-31",
+      "mangaId": "under-doctor",
+      "title": "アンダードクター raw ( UNDER DOCTOR raw ) 第31話",
+      "number": 31,
+      "slug": "under-doctor-raw-31",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "witch-watch-chapter-261",
+      "mangaId": "witch-watch",
+      "title": "ウィッチウォッチ raw ( Witch Watch raw ) 第261話",
+      "number": 261,
+      "slug": "witch-watch-raw-261",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "boku-to-roboko-chapter-296",
+      "mangaId": "boku-to-roboko",
+      "title": "僕とロボコ raw ( BOKU TO ROBOKO raw ) 第296話",
+      "number": 296,
+      "slug": "boku-to-roboko-raw-296",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "ultimate-exorcist-kiyoshi-chapter-107",
+      "mangaId": "ultimate-exorcist-kiyoshi",
+      "title": "悪祓士のキヨシくん raw ( Ultimate Exorcist Kiyoshi raw ) 第107話",
+      "number": 107,
+      "slug": "ultimate-exorcist-kiyoshi-raw-107",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "nezumis-first-love-chapter-118",
+      "mangaId": "nezumis-first-love",
+      "title": "ねずみの初恋 raw ( Nezumi's First Love raw ) 第118話",
+      "number": 118,
+      "slug": "nezumis-first-love-raw-118",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "shinobi-undercover-chapter-96",
+      "mangaId": "shinobi-undercover",
+      "title": "しのびごと raw ( Shinobi Undercover raw ) 第96話",
+      "number": 96,
+      "slug": "shinobi-undercover-raw-96",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "ruridragon-chapter-51",
+      "mangaId": "ruridragon",
+      "title": "ルリドラゴン raw ( RuriDragon raw ) 第51話",
+      "number": 51,
+      "slug": "ruridragon-raw-51",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "the-exiled-heavy-knight-knows-how-to-game-the-system-chapter-178",
+      "mangaId": "the-exiled-heavy-knight-knows-how-to-game-the-system",
+      "title": "追放された転生重騎士はゲーム知識で無双する raw ( The Exiled Heavy Knight Knows How to Game the System raw ) 第178話",
+      "number": 178,
+      "slug": "the-exiled-heavy-knight-knows-how-to-game-the-system-raw-178",
+      "country": "JP",
+      "pages": []
     }
   ]
 }
