@@ -31,6 +31,8 @@ jobs:
             op['pages']=['https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/'+str(f).replace('\\','/') for f in files]
           if not any(c.get('id')=='hunter-420-raw' for c in chapters):
             chapters.append({'id':'hunter-420-raw','mangaId':'hunter-x-hunter','title':'ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw','number':420,'slug':'Hun-x-Hun-420-Raw','country':'JP','pages':[]})
+          if not any(c.get('id')=='blue-lock-360-raw' or (c.get('mangaId')=='blue-lock' and c.get('number')==360) for c in chapters):
+            chapters.append({'id':'blue-lock-360-raw','mangaId':'blue-lock','title':'ブルーロック raw ( Blue Lock raw ) 第360話','number':360,'slug':'blue-lock-raw-360','country':'JP','pages':[]})
           p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
           a=pathlib.Path('admin/index.html')
@@ -38,6 +40,14 @@ jobs:
           s=s.replace("if(!r.content?.path)throw Error('GitHub did not confirm '+path+' was uploaded.');return RAW+path.split('/').map(encodeURIComponent).join('/')", "if(!r.content?.path)throw Error('GitHub did not confirm '+path+' was uploaded.');await api('/contents/'+path+'?ref='+BRANCH);return path")
           s=s.replace("if(files.length){c.pages=[];for(let i=0;i<files.length;i++){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i(){")
           s=s.replace("if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i(){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){")
+          s=s.replace("if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i(){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){")
+          s=s.replace("if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i(){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){")
+          s=s.replace("if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i(){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){")
+          s=s.replace("if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i(){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){")
+          s=s.replace("if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i(){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){")
+          s=s.replace("if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i(){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){")
+          s=s.replace("if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i(){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){")
+          s=s.replace("if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){", "if(files.length){const uploadedPages=[];for(let i=0;i<files.length;i++){")
           s=s.replace("c.pages.push(await uploadFile(path,f))}}if(!editChapterId)data.chapters.push(c)", "uploadedPages.push(await uploadFile(path,f))}c.pages=uploadedPages}if(!editChapterId)data.chapters.push(c)")
           a.write_text(s,encoding='utf-8')
 
