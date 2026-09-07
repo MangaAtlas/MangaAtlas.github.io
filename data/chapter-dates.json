@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-07T18:34:53+05:00",
+  "generatedAt": "2026-09-07T18:41:39+05:00",
   "chapters": {
     "restored-1": {
       "createdAt": "2026-09-05T08:04:24+05:00",
@@ -213,10 +213,6 @@
     "the-exiled-heavy-knight-knows-how-to-game-the-system-chapter-178": {
       "createdAt": "2026-09-06T17:13:55Z",
       "commit": "514aa7f6f94d3f810daa9477229bd5094c011881"
-    },
-    "hunter-420-raw": {
-      "createdAt": "2026-09-05T04:44:13Z",
-      "commit": "904679422d8e625fa5576bb7abb0db9cc0badd8c"
     },
     "blue-lock-360-raw": {
       "createdAt": "2026-09-07T13:32:13Z",
