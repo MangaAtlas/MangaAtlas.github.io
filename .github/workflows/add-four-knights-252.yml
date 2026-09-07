@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  FORCE_SYNC_252: '2026-09-07'
+  FORCE_SYNC_252: '2026-09-07-2'
 
 jobs:
   sync:
@@ -23,9 +23,7 @@ jobs:
           from pathlib import Path
 
           p = Path('data/content.json')
-          raw = p.read_text(encoding='utf-8')
-          data = json.loads(raw)
-
+          data = json.loads(p.read_text(encoding='utf-8'))
           chapter = {
               'id': 'mokushiroku-no-yon-kishi-252-raw',
               'mangaId': 'mokushiroku-no-yon-kishi',
@@ -35,24 +33,14 @@ jobs:
               'country': 'JP',
               'pages': []
           }
-
           chapters = data.setdefault('chapters', [])
-          existing = None
-          for c in chapters:
-              if c.get('id') == chapter['id'] or (c.get('mangaId') == chapter['mangaId'] and c.get('number') == 252):
-                  existing = c
-                  break
-
-          if existing is None:
+          found = next((c for c in chapters if c.get('id') == chapter['id'] or (c.get('mangaId') == chapter['mangaId'] and c.get('number') == 252)), None)
+          if found is None:
               chapters.append(chapter)
           else:
-              existing.update({k: v for k, v in chapter.items() if k != 'pages'})
-              if not isinstance(existing.get('pages'), list):
-                  existing['pages'] = []
-
+              found.update(chapter)
           p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
-
       - name: Commit chapter entry
         run: |
           git config user.name 'github-actions[bot]'
