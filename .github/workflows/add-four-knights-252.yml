@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  FORCE_SYNC_252: '2026-09-07-2'
+  FORCE_SYNC_252: '2026-09-07-3'
 
 jobs:
   sync:
@@ -21,30 +21,33 @@ jobs:
           python3 - <<'PY'
           import json
           from pathlib import Path
-
-          p = Path('data/content.json')
-          data = json.loads(p.read_text(encoding='utf-8'))
-          chapter = {
-              'id': 'mokushiroku-no-yon-kishi-252-raw',
-              'mangaId': 'mokushiroku-no-yon-kishi',
-              'title': '黙示録の四騎士 Raw ( THE FOUR KNIGHTS OF THE APOCALYPSE raw ) 第252話',
-              'number': 252,
-              'slug': 'the-four-knights-of-the-apocalypse-raw-252',
-              'country': 'JP',
-              'pages': []
-          }
-          chapters = data.setdefault('chapters', [])
-          found = next((c for c in chapters if c.get('id') == chapter['id'] or (c.get('mangaId') == chapter['mangaId'] and c.get('number') == 252)), None)
-          if found is None:
-              chapters.append(chapter)
-          else:
-              found.update(chapter)
-          p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          p=Path('data/content.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          chapter={'id':'mokushiroku-no-yon-kishi-252-raw','mangaId':'mokushiroku-no-yon-kishi','title':'黙示録の四騎士 Raw ( THE FOUR KNIGHTS OF THE APOCALYPSE raw ) 第252話','number':252,'slug':'the-four-knights-of-the-apocalypse-raw-252','country':'JP','pages':[]}
+          chapters=data.setdefault('chapters',[])
+          found=next((c for c in chapters if c.get('id')==chapter['id'] or (c.get('mangaId')==chapter['mangaId'] and c.get('number')==252)),None)
+          if found is None: chapters.append(chapter)
+          else: found.update(chapter)
+          p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
-      - name: Commit chapter entry
+      - name: Commit chapter entry safely against latest main
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git reset --hard origin/main
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/content.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          chapter={'id':'mokushiroku-no-yon-kishi-252-raw','mangaId':'mokushiroku-no-yon-kishi','title':'黙示録の四騎士 Raw ( THE FOUR KNIGHTS OF THE APOCALYPSE raw ) 第252話','number':252,'slug':'the-four-knights-of-the-apocalypse-raw-252','country':'JP','pages':[]}
+          chapters=data.setdefault('chapters',[])
+          found=next((c for c in chapters if c.get('id')==chapter['id'] or (c.get('mangaId')==chapter['mangaId'] and c.get('number')==252)),None)
+          if found is None: chapters.append(chapter)
+          else: found.update(chapter)
+          p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
           git add data/content.json
           git diff --cached --quiet || git commit -m 'Add The Four Knights of the Apocalypse chapter 252'
-          git push
+          git push origin HEAD:main
