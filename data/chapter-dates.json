@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-07T00:24:44+05:00",
+  "generatedAt": "2026-09-07T18:34:53+05:00",
   "chapters": {
     "restored-1": {
       "createdAt": "2026-09-05T08:04:24+05:00",
@@ -217,6 +217,10 @@
     "hunter-420-raw": {
       "createdAt": "2026-09-05T04:44:13Z",
       "commit": "904679422d8e625fa5576bb7abb0db9cc0badd8c"
+    },
+    "blue-lock-360-raw": {
+      "createdAt": "2026-09-07T13:32:13Z",
+      "commit": "a8e23202df330117c3fdbbd3965e7fce21354e34"
     }
   }
 }
