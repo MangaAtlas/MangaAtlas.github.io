@@ -19,77 +19,52 @@ jobs:
           d=json.loads(p.read_text(encoding='utf-8'))
           chapters=d.setdefault('chapters',[])
 
-          # Correct Four Knights Chapter 252 and keep it on the correct manga.
-          fk=next((c for c in chapters if c.get('id')=='mokushiroku-no-yon-kishi-252-raw' or c.get('slug')=='the-four-knights-of-the-apocalypse-raw-252'),None)
+          # Force Four Knights 252 to be a real homepage chapter entry.
+          fk=next((c for c in chapters if c.get('id')=='mokushiroku-no-yon-kishi-252-raw' or c.get('slug')=='the-four-knights-of-the-apocalypse-raw-252' or (c.get('mangaId')=='mokushiroku-no-yon-kishi' and c.get('number')==252)),None)
           if fk is None:
             fk={'id':'mokushiroku-no-yon-kishi-252-raw','mangaId':'mokushiroku-no-yon-kishi','title':'黙示録の四騎士 Raw ( THE FOUR KNIGHTS OF THE APOCALYPSE raw ) 第252話','number':252,'slug':'the-four-knights-of-the-apocalypse-raw-252','country':'JP','pages':[]}
             chapters.append(fk)
           else:
-            fk['id']='mokushiroku-no-yon-kishi-252-raw'
-            fk['mangaId']='mokushiroku-no-yon-kishi'
-            fk['title']='黙示録の四騎士 Raw ( THE FOUR KNIGHTS OF THE APOCALYPSE raw ) 第252話'
-            fk['number']=252
-            fk['slug']='the-four-knights-of-the-apocalypse-raw-252'
-            fk['country']='JP'
+            fk.update({'id':'mokushiroku-no-yon-kishi-252-raw','mangaId':'mokushiroku-no-yon-kishi','title':'黙示録の四騎士 Raw ( THE FOUR KNIGHTS OF THE APOCALYPSE raw ) 第252話','number':252,'slug':'the-four-knights-of-the-apocalypse-raw-252','country':'JP'})
+          fk['createdAt']='2026-09-07T19:00:00+05:00'
+          fk['updatedAt']='2026-09-07T19:00:00+05:00'
 
-          # Sync Four Knights 252 images, preserving every real page (max 20).
           root=pathlib.Path('chapter-images/mokushiroku-no-yon-kishi/chapter-252')
-          files=[]
+          by_page={}
           if root.exists():
-            by_page={}
-            for f in root.iterdir():
-              m=re.match(r'^(\d{4})-',f.name)
-              if m and f.is_file(): by_page[int(m.group(1))]=f
-            files=[by_page[k] for k in sorted(by_page)][:20]
-          fk['pages']=['https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/'+str(f).replace('\\','/') for f in files]
-          fk['updatedAt']='2026-09-07T00:00:00Z'
-
-          # Sync One Piece 1192 from its actual files.
-          root=pathlib.Path('chapter-images/one-piece/chapter-1192')
-          files=[]
-          if root.exists():
-            by_page={}
             for f in root.iterdir():
               m=re.match(r'^(\d{4})-',f.name)
               if m and f.is_file(): by_page.setdefault(int(m.group(1)),f)
-            files=[by_page[k] for k in sorted(by_page)]
-          op=next((c for c in chapters if c.get('slug')=='one-piece-en-raw-1192'),None)
-          if op is not None and files:
-            op['pages']=['https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/'+str(f).replace('\\','/') for f in files]
+          fk['pages']=['https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/'+str(by_page[k]).replace('\\','/') for k in sorted(by_page)[:20]]
 
-          # Ensure Hunter 420 Raw exists.
-          if not any(c.get('id')=='hunter-420-raw' for c in chapters):
-            chapters.append({'id':'hunter-420-raw','mangaId':'hunter-x-hunter','title':'ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw','number':420,'slug':'Hun-x-Hun-420-Raw','country':'JP','pages':[]})
-
-          # Ensure Blue Lock 360 exists and sync ALL actual chapter images.
+          # Sync Blue Lock 360 without changing its manga association.
           bl=next((c for c in chapters if c.get('id')=='blue-lock-360-raw' or c.get('slug')=='blue-lock-raw-360' or (c.get('mangaId')=='blue-lock' and c.get('number')==360)),None)
           if bl is None:
             bl={'id':'blue-lock-360-raw','mangaId':'blue-lock','title':'ブルーロック raw ( Blue Lock raw ) 第360話','number':360,'slug':'blue-lock-raw-360','country':'JP','pages':[]}
             chapters.append(bl)
           else:
-            bl['id']='blue-lock-360-raw'; bl['mangaId']='blue-lock'; bl['title']='ブルーロック raw ( Blue Lock raw ) 第360話'; bl['number']=360; bl['slug']='blue-lock-raw-360'; bl['country']='JP'
+            bl.update({'id':'blue-lock-360-raw','mangaId':'blue-lock','title':'ブルーロック raw ( Blue Lock raw ) 第360話','number':360,'slug':'blue-lock-raw-360','country':'JP'})
           blroot=pathlib.Path('chapter-images/blue-lock/chapter-360')
-          blfiles=[]
+          bpf={}
           if blroot.exists():
-            by_page={}
             for f in blroot.iterdir():
               m=re.match(r'^(\d{4})-',f.name)
-              if m and f.is_file(): by_page[int(m.group(1))]=f
-            blfiles=[by_page[k] for k in sorted(by_page)]
-          bl['pages']=['https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/'+str(f).replace('\\','/') for f in blfiles[:20]]
+              if m and f.is_file(): bpf.setdefault(int(m.group(1)),f)
+          bl['pages']=['https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/'+str(bpf[k]).replace('\\','/') for k in sorted(bpf)[:20]]
+
+          # Keep Hunter 420 Raw available.
+          if not any(c.get('id')=='hunter-420-raw' for c in chapters):
+            chapters.append({'id':'hunter-420-raw','mangaId':'hunter-x-hunter','title':'ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw','number':420,'slug':'Hun-x-Hun-420-Raw','country':'JP','pages':[],'createdAt':'2026-09-07T18:00:00+05:00'})
 
           p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-
-          # Keep the homepage data-driven; Four Knights 252 is visible in Japan.
-          i=pathlib.Path('index.html')
-          h=i.read_text(encoding='utf-8')
-          i.write_text(h,encoding='utf-8')
           PY
       - name: Commit repairs
         run: |
           git config user.name "MangaAtlas Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/content.json index.html
+          git add data/content.json
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git commit -m "MangaAtlas repair complete"
           git push
+
+# force homepage chapter repair v2
