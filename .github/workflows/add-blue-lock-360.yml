@@ -1,0 +1,38 @@
+name: Add Blue Lock 360
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  add-chapter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add chapter 360 if missing
+        run: |
+          python - <<'PY'
+          import json
+          p='data/content.json'
+          with open(p,'r',encoding='utf-8') as f: d=json.load(f)
+          chapters=d.setdefault('chapters',[])
+          target='blue-lock-raw-360'
+          if not any(c.get('slug')==target or (c.get('mangaId')=='blue-lock' and c.get('number')==360) for c in chapters):
+              chapters.append({
+                'id':'blue-lock-360-raw',
+                'mangaId':'blue-lock',
+                'title':'ブルーロック raw ( Blue Lock raw ) 第360話',
+                'number':360,
+                'slug':target,
+                'country':'JP',
+                'pages':[]
+              })
+              with open(p,'w',encoding='utf-8') as f: json.dump(d,f,ensure_ascii=False,indent=2); f.write('\n')
+          PY
+      - name: Commit chapter
+        run: |
+          git config user.name 'MangaAtlas Bot'
+          git config user.email 'bot@mangaatlas.local'
+          git add data/content.json
+          git diff --cached --quiet || git commit -m 'Add Blue Lock raw chapter 360'
+          git push
