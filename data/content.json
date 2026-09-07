@@ -951,23 +951,32 @@
       "slug": "blue-lock-raw-360",
       "country": "JP",
       "pages": [
-        "chapter-images/blue-lock/chapter-360/0001-1788788478405-0.webp",
-        "chapter-images/blue-lock/chapter-360/0002-1788788480713-1.webp",
-        "chapter-images/blue-lock/chapter-360/0003-1788788484650-3.webp",
-        "chapter-images/blue-lock/chapter-360/0004-1788788486915-4.webp",
-        "chapter-images/blue-lock/chapter-360/0005-1788788489265-5.webp",
-        "chapter-images/blue-lock/chapter-360/0006-1788788491632-6.webp",
-        "chapter-images/blue-lock/chapter-360/0007-1788788493903-7.webp",
-        "chapter-images/blue-lock/chapter-360/0008-1788788496210-8.webp",
-        "chapter-images/blue-lock/chapter-360/0011-1788788591884-2.webp",
-        "chapter-images/blue-lock/chapter-360/0012-1788788594400-3.webp",
-        "chapter-images/blue-lock/chapter-360/0013-1788788597033-4.webp",
-        "chapter-images/blue-lock/chapter-360/0014-1788788599066-5.webp",
-        "chapter-images/blue-lock/chapter-360/0015-1788788601637-6.webp",
-        "chapter-images/blue-lock/chapter-360/0016-1788788603964-7.webp",
-        "chapter-images/blue-lock/chapter-360/0017-1788788606094-8.webp"
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0001-1788788478405-0.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0002-1788788480713-1.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0003-1788788482758-2.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0004-1788788486915-4.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0005-1788788489265-5.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0006-1788788491632-6.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0007-1788788493903-7.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0008-1788788496210-8.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0011-1788788587194-0.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0012-1788788589486-1.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0013-1788788597033-4.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0014-1788788599066-5.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0015-1788788601637-6.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0016-1788788603964-7.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0017-1788788606094-8.webp"
       ],
       "updatedAt": "2026-09-07T13:43:28.013Z"
+    },
+    {
+      "id": "hunter-420-raw",
+      "mangaId": "hunter-x-hunter",
+      "title": "ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw",
+      "number": 420,
+      "slug": "Hun-x-Hun-420-Raw",
+      "country": "JP",
+      "pages": []
     }
   ]
 }
