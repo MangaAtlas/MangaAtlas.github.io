@@ -6,6 +6,9 @@ on:
       - '.github/workflows/add-four-knights-252.yml'
   workflow_dispatch:
 
+env:
+  FORCE_SYNC_252: '2026-09-07'
+
 jobs:
   sync:
     runs-on: ubuntu-latest
