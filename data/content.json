@@ -972,7 +972,17 @@
       "number": 360,
       "slug": "blue-lock-raw-360",
       "country": "JP",
-      "pages": []
+      "pages": [
+        "chapter-images/blue-lock/chapter-360/0001-1788788035706-0.webp",
+        "chapter-images/blue-lock/chapter-360/0002-1788788037725-1.webp",
+        "chapter-images/blue-lock/chapter-360/0003-1788788042622-3.webp",
+        "chapter-images/blue-lock/chapter-360/0004-1788788044908-4.webp",
+        "chapter-images/blue-lock/chapter-360/0005-1788788047270-5.webp",
+        "chapter-images/blue-lock/chapter-360/0006-1788788049586-6.webp",
+        "chapter-images/blue-lock/chapter-360/0007-1788788051942-7.webp",
+        "chapter-images/blue-lock/chapter-360/0008-1788788054294-8.webp"
+      ],
+      "updatedAt": "2026-09-07T13:34:15.963Z"
     }
   ]
 }
