@@ -1,0 +1,64 @@
+name: Force Four Knights 252
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: force-four-knights-252
+  cancel-in-progress: false
+jobs:
+  repair:
+    if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, 'Force Four Knights 252 complete') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Repair and push with retry
+        shell: bash
+        run: |
+          set -e
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 - <<'PY'
+          import json, pathlib, re
+          p=pathlib.Path('data/content.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          chapters=d.setdefault('chapters', [])
+          fk=next((c for c in chapters if c.get('id')=='mokushiroku-no-yon-kishi-252-raw' or c.get('slug')=='the-four-knights-of-the-apocalypse-raw-252' or (c.get('mangaId')=='mokushiroku-no-yon-kishi' and str(c.get('number'))=='252')), None)
+          if fk is None:
+            fk={}
+            chapters.append(fk)
+          fk.update({
+            'id':'mokushiroku-no-yon-kishi-252-raw',
+            'mangaId':'mokushiroku-no-yon-kishi',
+            'title':'黙示録の四騎士 Raw ( THE FOUR KNIGHTS OF THE APOCALYPSE raw ) 第252話',
+            'number':252,
+            'slug':'the-four-knights-of-the-apocalypse-raw-252',
+            'country':'JP'
+          })
+          fk['createdAt']='2026-09-07T19:00:00+05:00'
+          fk['updatedAt']='2026-09-07T19:00:00+05:00'
+          root=pathlib.Path('chapter-images/mokushiroku-no-yon-kishi/chapter-252')
+          files=[]
+          if root.exists():
+            for f in root.iterdir():
+              m=re.match(r'^(\d{4})-',f.name)
+              if m and f.is_file(): files.append((int(m.group(1)),f))
+          files.sort(key=lambda x:x[0])
+          fk['pages']=['https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/'+str(f).replace('\\','/') for _,f in files[:20]]
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+            git config user.name "MangaAtlas Bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/content.json
+            if git diff --cached --quiet; then echo '252 already correct'; exit 0; fi
+            git commit -m 'Force Four Knights 252 complete'
+            if git push origin HEAD:main; then exit 0; fi
+            git reset --hard origin/main
+            sleep $((attempt * 3))
+          done
+          exit 1
