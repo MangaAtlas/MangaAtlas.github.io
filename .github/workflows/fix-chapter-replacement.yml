@@ -1,0 +1,78 @@
+name: Fix MangaAtlas chapter uploader and old pages
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: ${{ !contains(github.event.head_commit.message, 'MangaAtlas repair complete') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix admin and clean oversized chapter page lists
+        run: |
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          a=Path('admin/index.html')
+          s=a.read_text(encoding='utf-8')
+          s=s.replace('<button class="danger" id="clearPart1">Clear Part 1</button>','')
+          s=s.replace('<button class="danger" id="clearPart2">Clear Part 2</button>','')
+          marker='<div id="existingPages" class="muted" style="margin-top:12px"></div>'
+          if 'id="clearChapter"' not in s:
+              s=s.replace(marker,'<div class="actions"><button class="danger" id="clearChapter">Clear Entire Chapter</button></div>'+marker)
+          s=s.replace('Part 1 = pages 1–10 · Part 2 = pages 11–20.','Part 1 = pages 1–10 · Part 2 = pages 11–20. Clear Entire Chapter removes all old chapter images before a fresh update.')
+          start=s.find('async function clearPart(')
+          end=s.find("$('cPages1').onchange", start)
+          if start>=0 and end>start:
+              fn="""async function clearChapter(){try{if(!editChapterId)throw Error('Pehle chapter select karo.');const c=data.chapters.find(x=>x.id===editChapterId);if(!c)throw Error('Chapter not found.');if(!confirm('Is chapter ki TAMAM purani images delete karni hain? Manga cover delete nahi hoga.'))return;setStatus('Deleting all old chapter images…');const prefix=`chapter-images/${c.mangaId}/chapter-${c.number}/`;let items=[];try{items=await api('/contents/'+prefix+'?ref='+BRANCH)}catch(e){if(!/GitHub 404/.test(e.message))throw e}for(const item of Array.isArray(items)?items:[]){if(item.type==='file'){await api('/contents/'+item.path,{method:'DELETE',body:JSON.stringify({message:`Clear entire chapter ${c.number}`,sha:item.sha,branch:BRANCH})})}}const latest=await readData(),fresh=latest.data.chapters.find(x=>x.id===editChapterId);if(!fresh)throw Error('Chapter not found after refresh.');fresh.pages=[];await writeData(latest.data,latest.sha,`Clear entire chapter ${c.number}`);data=latest.data;renderLists();$('existingPages').textContent='0 existing page(s). Chapter completely cleared. Ab fresh Part 1/Part 2 upload karo.';setStatus('✓ Complete chapter cleared. Cover untouched.')}catch(e){setStatus('Error: '+e.message)}}"""
+              s=s[:start]+fn+s[end:]
+          s=s.replace("$('clearPart1').onclick=()=>clearPart('1');$('clearPart2').onclick=()=>clearPart('2');", "$('clearChapter').onclick=clearChapter;")
+          start=s.find('async function uploadPart(')
+          end=s.find("$('uploadPart1').onclick", start)
+          if start>=0 and end>start:
+              fn="""async function uploadPart(which){try{const input=$(which==='1'?'cPages1':'cPages2'),progress=$(which==='1'?'part1Progress':'part2Progress'),files=[...input.files];if(!editChapterId)throw Error('Pehle chapter ko Save chapter details se create karo.');if(!files.length)throw Error('Is part ke liye images select karo.');if(files.length>10)throw Error('Ek part mein maximum 10 images upload karo.');const c=data.chapters.find(x=>x.id===editChapterId);if(!c)throw Error('Chapter not found.');const min=which==='1'?1:11,max=which==='1'?10:20;const latest=await readData(),fresh=latest.data.chapters.find(x=>x.id===c.id);if(!fresh)throw Error('Chapter disappeared from content data.');const pages=[...(fresh.pages||[])].slice(0,20);while(pages.length<20)pages.push(null);for(let i=min-1;i<max;i++)pages[i]=null;for(let i=0;i<files.length;i++){progress.textContent=`Preparing image ${i+1}/${files.length}…`;const f=await prepareImage(files[i]);let pageNo=pageNumberFromName(files[i].name);if(!(pageNo>=min&&pageNo<=max))pageNo=min+i;if(pageNo>max)throw Error('Part mein maximum 10 images allowed hain.');const path=`chapter-images/${c.mangaId}/chapter-${c.number}/${String(pageNo).padStart(4,'0')}-${Date.now()}-${i}.webp`;progress.textContent=`Uploading image ${i+1}/${files.length}…`;pages[pageNo-1]=await uploadFile(path,f)}fresh.pages=pages.filter(Boolean);await writeData(latest.data,latest.sha,`Upload chapter ${c.number} part ${which}`);data=latest.data;renderLists();progress.textContent=`✓ Part ${which} uploaded. Chapter now has ${fresh.pages.length} page(s).`;setStatus(`Part ${which} updated. Old pages in this part were removed from chapter data before new images were saved. Use Clear Entire Chapter before a complete chapter replacement.`)}catch(e){$(which==='1'?'part1Progress':'part2Progress').textContent='Error: '+e.message;setStatus('Error: '+e.message)}}"""
+              s=s[:start]+fn+s[end:]
+          p=Path('data/content.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          for c in d.get('chapters',[]):
+              pages=list(c.get('pages') or [])
+              clean=[]; seen=set()
+              for ref in pages:
+                  if not ref: continue
+                  m=re.search(r'/(\d{4})-',str(ref))
+                  n=int(m.group(1)) if m else None
+                  if n is not None and n>25: continue
+                  key=n if n is not None else str(ref)
+                  if key in seen: continue
+                  seen.add(key); clean.append(ref)
+              if len(clean)>25: clean=clean[:25]
+              c['pages']=clean
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          root=Path('chapter-images')
+          for rd in root.glob('*'):
+              if not rd.is_dir(): continue
+              for cd in rd.glob('chapter-*'):
+                  if not cd.is_dir(): continue
+                  keep={}
+                  for f in sorted(cd.iterdir()):
+                      if not f.is_file(): continue
+                      m=re.match(r'^(\d{4})-',f.name)
+                      if not m: continue
+                      n=int(m.group(1))
+                      if n>25:
+                          f.unlink(); continue
+                      if n in keep:
+                          f.unlink()
+                      else: keep[n]=f
+          a.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'MangaAtlas Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add admin/index.html data/content.json chapter-images
+          if git diff --cached --quiet; then echo 'No changes'; exit 0; fi
+          git commit -m 'MangaAtlas repair complete - fix chapter replacement and clear all'
+          git push
