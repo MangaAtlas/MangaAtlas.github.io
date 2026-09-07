@@ -964,6 +964,15 @@
       "country": "JP",
       "pages": [],
       "createdAt": "2026-09-07T00:00:00Z"
+    },
+    {
+      "id": "blue-lock-360-raw",
+      "mangaId": "blue-lock",
+      "title": "ブルーロック raw ( Blue Lock raw ) 第360話",
+      "number": 360,
+      "slug": "blue-lock-raw-360",
+      "country": "JP",
+      "pages": []
     }
   ]
 }
