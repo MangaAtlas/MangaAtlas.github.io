@@ -17,24 +17,26 @@ jobs:
           import re
           p=Path('admin/index.html')
           s=p.read_text(encoding='utf-8')
+          # Remove BOTH old clear buttons and any stale new clear button.
           s=re.sub(r'<button class="danger" id="clearPart1">.*?</button>', '', s)
           s=re.sub(r'<button class="danger" id="clearPart2">.*?</button>', '', s)
           s=re.sub(r'<button class="danger" id="clearChapter">.*?</button>', '', s)
           marker='<div id="existingPages" class="muted" style="margin-top:12px"></div>'
           s=s.replace(marker,'<div class="actions"><button class="danger" id="clearChapter">Clear Entire Chapter</button></div>'+marker,1)
+          # Replace the old clearPart implementation.
           a=s.find('async function clearPart(')
           b=s.find("$('cPages1').onchange", a)
           if a>=0 and b>a:
               fn="""async function clearChapter(){try{if(!editChapterId)throw Error('Pehle chapter select karo.');const c=data.chapters.find(x=>x.id===editChapterId);if(!c)throw Error('Chapter not found.');if(!confirm('Is chapter ki TAMAM purani images delete karni hain? Manga cover delete nahi hoga.'))return;setStatus('Deleting all old chapter images…');const prefix=`chapter-images/${c.mangaId}/chapter-${c.number}/`;let items=[];try{items=await api('/contents/'+prefix+'?ref='+BRANCH)}catch(e){if(!/GitHub 404/.test(e.message))throw e}for(const item of Array.isArray(items)?items:[]){if(item.type==='file'){await api('/contents/'+item.path,{method:'DELETE',body:JSON.stringify({message:`Clear entire chapter ${c.number}`,sha:item.sha,branch:BRANCH})})}}const latest=await readData(),fresh=latest.data.chapters.find(x=>x.id===editChapterId);if(!fresh)throw Error('Chapter not found after refresh.');fresh.pages=[];fresh.updatedAt=new Date().toISOString();await writeData(latest.data,latest.sha,`Clear entire chapter ${c.number}`);data=latest.data;renderLists();$('existingPages').textContent='0 existing page(s). Chapter completely cleared. Ab fresh Part 1/Part 2 upload karo.';setStatus('✓ Complete chapter cleared. Cover untouched.')}catch(e){setStatus('Error: '+e.message)}}"""
               s=s[:a]+fn+s[b:]
           s=s.replace("$('clearPart1').onclick=()=>clearPart('1');$('clearPart2').onclick=()=>clearPart('2');", "$('clearChapter').onclick=clearChapter;")
+          # Replace old uploader if still present.
           a=s.find('async function uploadPart(')
           b=s.find("$('uploadPart1').onclick", a)
           if a>=0 and b>a:
               fn="""async function uploadPart(which){try{const input=$(which==='1'?'cPages1':'cPages2'),progress=$(which==='1'?'part1Progress':'part2Progress'),files=[...input.files];if(!editChapterId)throw Error('Pehle chapter ko Save chapter details se create karo.');if(!files.length)throw Error('Is part ke liye images select karo.');if(files.length>10)throw Error('Ek part mein maximum 10 images upload karo.');const c=data.chapters.find(x=>x.id===editChapterId);if(!c)throw Error('Chapter not found.');const min=which==='1'?1:11,max=which==='1'?10:20;const latest=await readData(),fresh=latest.data.chapters.find(z=>z.id===c.id);if(!fresh)throw Error('Chapter disappeared from content data.');const pages=[...(fresh.pages||[])].slice(0,20);while(pages.length<20)pages.push(null);for(let i=min-1;i<max;i++)pages[i]=null;for(let i=0;i<files.length;i++){progress.textContent=`Preparing image ${i+1}/${files.length}…`;const f=await prepareImage(files[i]);let pageNo=pageNumberFromName(files[i].name);if(!(pageNo>=min&&pageNo<=max))pageNo=min+i;if(pageNo>max)throw Error('Part mein maximum 10 images allowed hain.');const path=`chapter-images/${c.mangaId}/chapter-${c.number}/${String(pageNo).padStart(4,'0')}-${Date.now()}-${i}.webp`;progress.textContent=`Uploading image ${i+1}/${files.length}…`;pages[pageNo-1]=await uploadFile(path,f)}fresh.pages=pages.filter(Boolean);fresh.updatedAt=new Date().toISOString();await writeData(latest.data,latest.sha,`Upload chapter ${c.number} part ${which}`);data=latest.data;renderLists();progress.textContent=`✓ Part ${which} uploaded. Chapter now has ${fresh.pages.length} page(s).`;setStatus(`Part ${which} updated. Purane pages isi part se remove ho gaye; doosra part untouched hai. Complete replacement ke liye pehle Clear Entire Chapter use karo.`)}catch(e){$(which==='1'?'part1Progress':'part2Progress').textContent='Error: '+e.message;setStatus('Error: '+e.message)}}"""
               s=s[:a]+fn+s[b:]
           s=s.replace('Part 1 = pages 1–10 · Part 2 = pages 11–20.','Part 1 = pages 1–10 · Part 2 = pages 11–20. Complete update ke liye pehle Clear Entire Chapter karo, phir fresh Part 1/Part 2 upload karo.')
-          s=s.replace('Save chapter details</button>', 'Save chapter details</button>')
           p.write_text(s,encoding='utf-8')
           PY
       - name: Commit admin fix
