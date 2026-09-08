@@ -10,28 +10,56 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Ensure Blue Lock 360 exists
+      - name: Ensure required chapters exist
         run: |
           python - <<'PY'
           import json
+
           p='data/content.json'
           with open(p,'r',encoding='utf-8') as f:
               d=json.load(f)
+
           chapters=d.setdefault('chapters',[])
-          target='blue-lock-raw-360'
-          if not any(c.get('slug')==target or (c.get('mangaId') in ('blue-lock','blue-lock-ja') and c.get('number')==360) for c in chapters):
-              chapters.append({
+          required=[
+              {
                   'id':'blue-lock-360-raw',
                   'mangaId':'blue-lock',
                   'title':'ブルーロック raw ( Blue Lock raw ) 第360話',
                   'number':360,
-                  'slug':target,
+                  'slug':'blue-lock-raw-360',
                   'country':'JP',
                   'pages':[]
-              })
+              },
+              {
+                  'id':'the-four-knights-of-the-apocalypse-252-raw',
+                  'mangaId':'mokushiroku-no-yon-kishi',
+                  'title':'Mokushiroku no Yonkishi raw ( The Four Knights of the Apocalypse raw ) 第252話',
+                  'number':252,
+                  'slug':'the-four-knights-of-the-apocalypse-raw-252',
+                  'country':'JP',
+                  'pages':[]
+              }
+          ]
+
+          changed=False
+          for target in required:
+              same_slug=next((c for c in chapters if c.get('slug')==target['slug']),None)
+              same_chapter=next((c for c in chapters if c.get('mangaId')==target['mangaId'] and str(c.get('number'))==str(target['number'])),None)
+              existing=same_slug or same_chapter
+              if existing is None:
+                  chapters.append(target)
+                  changed=True
+              elif existing.get('slug') != target['slug']:
+                  existing['slug']=target['slug']
+                  changed=True
+
+          if changed:
               with open(p,'w',encoding='utf-8') as f:
                   json.dump(d,f,ensure_ascii=False,indent=2)
                   f.write('\n')
+              print('content.json updated with required chapters')
+          else:
+              print('Required chapters already present')
           PY
 
       - name: Rebuild chapter URLs in sitemap
@@ -39,13 +67,14 @@ jobs:
           python - <<'PY'
           import json
           import re
+          import os
           from datetime import datetime, timezone
           from urllib.parse import quote
           from xml.sax.saxutils import escape
 
           data=json.load(open('data/content.json','r',encoding='utf-8'))
           sitemap_path='sitemap.xml'
-          old=open(sitemap_path,'r',encoding='utf-8').read() if __import__('os').path.exists(sitemap_path) else '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>'
+          old=open(sitemap_path,'r',encoding='utf-8').read() if os.path.exists(sitemap_path) else '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>'
 
           old_dates={}
           for block in re.findall(r'<url>.*?</url>', old, flags=re.S):
