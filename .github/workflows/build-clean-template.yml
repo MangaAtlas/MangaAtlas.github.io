@@ -1,0 +1,34 @@
+name: Build clean MangaAtlas template
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make clean template
+        shell: bash
+        run: |
+          set -e
+          rm -rf clean-template
+          mkdir -p clean-template
+          rsync -a --exclude='.git' --exclude='clean-template' --exclude='chapter-images' --exclude='manga-covers' --exclude='data/content.json' --exclude='.github/workflows/build-clean-template.yml' ./ clean-template/
+          mkdir -p clean-template/chapter-images clean-template/manga-covers clean-template/data
+          cat > clean-template/data/content.json <<'JSON'
+          {
+            "version": 1,
+            "mangas": [],
+            "chapters": []
+          }
+          JSON
+          cd clean-template
+          zip -r ../MangaAtlas-clean-template.zip . -x '*.git*'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MangaAtlas-clean-template
+          path: MangaAtlas-clean-template.zip
+          retention-days: 30
