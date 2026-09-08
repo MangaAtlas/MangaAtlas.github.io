@@ -1,38 +1,99 @@
-name: Add Blue Lock 360
+name: Sync chapters and sitemap
 on:
   push:
     branches: [main]
 permissions:
   contents: write
 jobs:
-  add-chapter:
+  sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Add chapter 360 if missing
+
+      - name: Ensure Blue Lock 360 exists
         run: |
           python - <<'PY'
           import json
           p='data/content.json'
-          with open(p,'r',encoding='utf-8') as f: d=json.load(f)
+          with open(p,'r',encoding='utf-8') as f:
+              d=json.load(f)
           chapters=d.setdefault('chapters',[])
           target='blue-lock-raw-360'
-          if not any(c.get('slug')==target or (c.get('mangaId')=='blue-lock' and c.get('number')==360) for c in chapters):
+          if not any(c.get('slug')==target or (c.get('mangaId') in ('blue-lock','blue-lock-ja') and c.get('number')==360) for c in chapters):
               chapters.append({
-                'id':'blue-lock-360-raw',
-                'mangaId':'blue-lock',
-                'title':'ブルーロック raw ( Blue Lock raw ) 第360話',
-                'number':360,
-                'slug':target,
-                'country':'JP',
-                'pages':[]
+                  'id':'blue-lock-360-raw',
+                  'mangaId':'blue-lock',
+                  'title':'ブルーロック raw ( Blue Lock raw ) 第360話',
+                  'number':360,
+                  'slug':target,
+                  'country':'JP',
+                  'pages':[]
               })
-              with open(p,'w',encoding='utf-8') as f: json.dump(d,f,ensure_ascii=False,indent=2); f.write('\n')
+              with open(p,'w',encoding='utf-8') as f:
+                  json.dump(d,f,ensure_ascii=False,indent=2)
+                  f.write('\n')
           PY
-      - name: Commit chapter
+
+      - name: Rebuild chapter URLs in sitemap
+        run: |
+          python - <<'PY'
+          import json
+          import re
+          from datetime import datetime, timezone
+          from urllib.parse import quote
+          from xml.sax.saxutils import escape
+
+          data=json.load(open('data/content.json','r',encoding='utf-8'))
+          sitemap_path='sitemap.xml'
+          old=open(sitemap_path,'r',encoding='utf-8').read() if __import__('os').path.exists(sitemap_path) else '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>'
+
+          old_dates={}
+          for block in re.findall(r'<url>.*?</url>', old, flags=re.S):
+              m=re.search(r'<loc>(.*?)</loc>', block)
+              if not m:
+                  continue
+              loc=m.group(1)
+              if '/chapter.html?slug=' in loc:
+                  d=re.search(r'<lastmod>(.*?)</lastmod>', block)
+                  if d:
+                      old_dates[loc]=d.group(1)
+
+          static=[]
+          for block in re.findall(r'<url>.*?</url>', old, flags=re.S):
+              m=re.search(r'<loc>(.*?)</loc>', block)
+              if m and '/chapter.html?slug=' not in m.group(1):
+                  static.append(block)
+
+          now=datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
+          chapters=[]
+          seen=set()
+          for c in data.get('chapters',[]):
+              slug=str(c.get('slug') or '').strip()
+              if not slug or slug in seen:
+                  continue
+              seen.add(slug)
+              loc='https://mangaatlas.github.io/chapter.html?slug='+quote(slug,safe='-._~')
+              lastmod=old_dates.get(loc,now)
+              chapters.append(f'  <url><loc>{escape(loc)}</loc><lastmod>{escape(lastmod)}</lastmod></url>')
+
+          out='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+          out+='\n'.join(static)
+          if static and chapters:
+              out+='\n'
+          out+='\n'.join(chapters)
+          out+='\n</urlset>\n'
+          open(sitemap_path,'w',encoding='utf-8').write(out)
+          print(f'Sitemap synced: {len(chapters)} chapter URLs')
+          PY
+
+      - name: Commit synced data
         run: |
           git config user.name 'MangaAtlas Bot'
           git config user.email 'bot@mangaatlas.local'
-          git add data/content.json
-          git diff --cached --quiet || git commit -m 'Add Blue Lock raw chapter 360'
-          git push
+          git add data/content.json sitemap.xml
+          if git diff --cached --quiet; then
+            echo 'No chapter or sitemap changes.'
+          else
+            git commit -m 'Auto-sync chapters to sitemap'
+            git push
+          fi
