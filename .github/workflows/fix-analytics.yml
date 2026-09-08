@@ -1,0 +1,61 @@
+name: Fix GA4 tracking
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Normalize GA4 installation
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          files=['index.html','chapter.html','manga.html','country.html','404.html']
+          old_comment=re.compile(r'<!-- MangaAtlas GA4 -->\s*<script async src="https://www\.googletagmanager\.com/gtag/js\?id=G-50N8R6DVZH"></script>\s*<script>.*?</script>',re.S)
+          old_pair=re.compile(r'<script async src="https://www\.googletagmanager\.com/gtag/js\?id=G-50N8R6DVZH"></script>\s*<script>.*?</script>',re.S)
+          replacement='<script src="/analytics.js"></script>'
+          changed=[]
+          for name in files:
+              p=Path(name)
+              if not p.exists():
+                  continue
+              text=p.read_text(encoding='utf-8')
+              new=old_comment.sub(replacement,text,count=1)
+              if new==text:
+                  new=old_pair.sub(replacement,text,count=1)
+              if new!=text:
+                  p.write_text(new,encoding='utf-8')
+                  changed.append(name)
+          print('Patched:', ', '.join(changed) if changed else 'none')
+          PY
+      - name: Remove duplicate chapter pageview
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('chapter.html')
+          if not p.exists(): raise SystemExit(0)
+          text=p.read_text(encoding='utf-8')
+          marker="gtag('event','page_view',{page_title:pageTitle,page_location:location.href,page_path:location.pathname+location.search,chapter_slug:String(c.slug||''),chapter_number:String(c.number??''),manga_id:String(c.mangaId||''),manga_title:String(m.title||'')});"
+          replacement="(window.mangaAtlasAnalytics?window.mangaAtlasAnalytics.pageView({chapter_slug:c.slug,chapter_number:c.number,manga_id:c.mangaId,manga_title:m.title}):gtag('event','page_view',{page_title:pageTitle,page_location:location.href,page_path:location.pathname+location.search,chapter_slug:String(c.slug||''),chapter_number:String(c.number??''),manga_id:String(c.mangaId||''),manga_title:String(m.title||'')}));"
+          if marker in text:
+              p.write_text(text.replace(marker,replacement,1),encoding='utf-8')
+              print('Chapter analytics call normalized')
+          else:
+              print('Chapter analytics call already normalized or not found')
+          PY
+      - name: Commit analytics fix
+        run: |
+          git config user.name 'MangaAtlas Bot'
+          git config user.email 'bot@mangaatlas.local'
+          git add analytics.js index.html chapter.html manga.html country.html 404.html
+          if git diff --cached --quiet; then
+            echo 'No analytics changes needed.'
+          else
+            git commit -m 'Fix GA4 tracking across MangaAtlas pages'
+            git push
+          fi
