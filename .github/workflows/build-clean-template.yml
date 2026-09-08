@@ -16,7 +16,7 @@ jobs:
           set -e
           rm -rf clean-template /tmp/MangaAtlas-clean-template.zip
           mkdir -p clean-template
-          rsync -a --exclude='.git' --exclude='clean-template' --exclude='chapter-images' --exclude='manga-covers' --exclude='data/content.json' --exclude='.github/workflows/build-clean-template.yml' --exclude='*.zip' ./ clean-template/
+          rsync -a --exclude='.git' --exclude='clean-template' --exclude='chapter-images' --exclude='manga-covers' --exclude='data/content.json' --exclude='sitemap.xml' --exclude='supabase' --exclude='.github/workflows/build-clean-template.yml' --exclude='*.zip' --exclude='*.rar' ./ clean-template/
           mkdir -p clean-template/chapter-images clean-template/manga-covers clean-template/data
           cat > clean-template/data/content.json <<'JSON'
           {
@@ -25,10 +25,12 @@ jobs:
             "chapters": []
           }
           JSON
+          cat > clean-template/sitemap.xml <<'XML'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>
+          XML
           cd clean-template
-          zip -r /tmp/MangaAtlas-clean-template.zip . -x '*.git*' '*.zip'
-          cd ..
-          cp /tmp/MangaAtlas-clean-template.zip ./MangaAtlas-clean-template.zip
+          zip -r /tmp/MangaAtlas-clean-template.zip . -x '*.git*' '*.zip' '*.rar'
       - uses: actions/upload-artifact@v4
         with:
           name: MangaAtlas-clean-template
