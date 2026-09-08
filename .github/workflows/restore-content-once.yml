@@ -13,9 +13,9 @@ jobs:
           fetch-depth: 0
       - name: Restore previous content.json
         run: |
-          git checkout 20590963503e4f2cf404fcc3c08390e194950264 -- data/content.json
+          git checkout 74b42fc1db1c8be347238c72c551c2572ec8694d -- data/content.json
           git config user.name 'MangaAtlas Bot'
           git config user.email 'bot@mangaatlas.local'
           git add data/content.json
-          git commit -m 'Restore full chapter database after accidental overwrite'
+          git commit -m 'Restore full chapter database'
           git push
