@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Restore previous content.json
+      - name: Restore full historical content database
         run: |
           git checkout 74b42fc1db1c8be347238c72c551c2572ec8694d -- data/content.json
           git config user.name 'MangaAtlas Bot'
