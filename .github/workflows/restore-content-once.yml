@@ -6,7 +6,6 @@ permissions:
   contents: write
 jobs:
   restore:
-    if: github.sha == '22354da78b71c1a6724521911f47ab381c434461'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
