@@ -38,6 +38,15 @@ jobs:
                   'slug':'the-four-knights-of-the-apocalypse-raw-252',
                   'country':'JP',
                   'pages':[]
+              },
+              {
+                  'id':'kingdom-887-raw',
+                  'mangaId':'kingdom',
+                  'title':'キングダム raw ( Kingdom Raw ) 第887話',
+                  'number':887,
+                  'slug':'kingdom-raw-887',
+                  'country':'JP',
+                  'pages':[]
               }
           ]
 
