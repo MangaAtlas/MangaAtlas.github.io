@@ -1,1 +1,64 @@
-{"version":1,"mangas":[],"chapters":[]}
+{
+  "version": 1,
+  "mangas": [],
+  "chapters": [
+    {
+      "id": "mokushiroku-no-yon-kishi-252-raw",
+      "mangaId": "mokushiroku-no-yon-kishi",
+      "title": "黙示録の四騎士 Raw ( THE FOUR KNIGHTS OF THE APOCALYPSE raw ) 第252話",
+      "number": 252,
+      "slug": "the-four-knights-of-the-apocalypse-raw-252",
+      "country": "JP",
+      "pages": [
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-252/0001-1788792692376-0.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-252/0002-1788792694855-1.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-252/0003-1788792697897-2.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-252/0004-1788792699912-3.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-252/0005-1788792703155-4.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-252/0006-1788792705238-5.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-252/0007-1788792707392-6.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-252/0008-1788792710422-7.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-252/0009-1788792714575-8.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-252/0011-1788792777614-0.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/mokushiroku-no-yon-kishi/chapter-252/0012-1788792781744-2.webp"
+      ],
+      "createdAt": "2026-09-07T19:00:00+05:00",
+      "updatedAt": "2026-09-07T19:00:00+05:00"
+    },
+    {
+      "id": "blue-lock-360-raw",
+      "mangaId": "blue-lock",
+      "title": "ブルーロック raw ( Blue Lock raw ) 第360話",
+      "number": 360,
+      "slug": "blue-lock-raw-360",
+      "country": "JP",
+      "pages": [
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0001-1788788478405-0.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0002-1788788480713-1.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0003-1788788482758-2.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0004-1788788486915-4.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0005-1788788489265-5.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0006-1788788491632-6.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0007-1788788493903-7.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0008-1788788496210-8.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0011-1788788587194-0.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0012-1788788589486-1.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0013-1788788597033-4.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0014-1788788599066-5.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0015-1788788601637-6.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0016-1788788603964-7.webp",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-360/0017-1788788606094-8.webp"
+      ]
+    },
+    {
+      "id": "hunter-420-raw",
+      "mangaId": "hunter-x-hunter",
+      "title": "ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw",
+      "number": 420,
+      "slug": "Hun-x-Hun-420-Raw",
+      "country": "JP",
+      "pages": [],
+      "createdAt": "2026-09-07T18:00:00+05:00"
+    }
+  ]
+}
