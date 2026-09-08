@@ -55,13 +55,6 @@ jobs:
               latest_snapshot.get('chapters', [])
           )
 
-          # Hunter x Hunter chapter 420 was intentionally deleted and must stay deleted.
-          chapters = [
-              c for c in chapters
-              if c.get('id') != 'hunter-420-raw'
-              and c.get('slug') != 'Hun-x-Hun-420-Raw'
-          ]
-
           result = {
               'version': max(historical.get('version', 1), current.get('version', 1), latest_snapshot.get('version', 1)),
               'mangas': mangas,
@@ -74,7 +67,7 @@ jobs:
 
           print('Mangas:', len(mangas))
           print('Chapters:', len(chapters))
-          for slug in ['the-four-knights-of-the-apocalypse-raw-252', 'blue-lock-raw-360', 'kingdom-raw-887']:
+          for slug in ['the-four-knights-of-the-apocalypse-raw-252', 'blue-lock-raw-360', 'kingdom-raw-887', 'Hun-x-Hun-420-Raw']:
               print(slug, 'FOUND' if any(c.get('slug') == slug for c in chapters) else 'MISSING')
           PY
       - name: Remove one-time restore workflow and commit merged database
@@ -87,5 +80,5 @@ jobs:
             echo 'No changes needed.'
             exit 0
           fi
-          git commit -m 'Restore full chapter database and preserve latest chapters'
+          git commit -m 'Restore full chapter database including Hunter x Hunter 420'
           git push
