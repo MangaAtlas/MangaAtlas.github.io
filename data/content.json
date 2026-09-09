@@ -1034,7 +1034,17 @@
       "number": 887,
       "slug": "kingdom-raw-887",
       "country": "JP",
-      "pages": [],
+      "pages": [
+        "chapter-images/kingdom/chapter-887/0001-1788971208942-0.webp",
+        "chapter-images/kingdom/chapter-887/0002-1788971211786-1.webp",
+        "chapter-images/kingdom/chapter-887/0003-1788971214976-2.webp",
+        "chapter-images/kingdom/chapter-887/0004-1788971218210-3.webp",
+        "chapter-images/kingdom/chapter-887/0005-1788971220804-4.webp",
+        "chapter-images/kingdom/chapter-887/0006-1788971223770-5.webp",
+        "chapter-images/kingdom/chapter-887/0007-1788971226801-6.webp",
+        "chapter-images/kingdom/chapter-887/0008-1788971229749-7.webp",
+        "chapter-images/kingdom/chapter-887/0009-1788971233369-8.webp"
+      ],
       "updatedAt": "2026-09-09T16:24:47.575Z"
     }
   ]
