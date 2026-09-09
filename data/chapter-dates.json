@@ -1,14 +1,238 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-08T14:31:27+05:00",
+  "generatedAt": "2026-09-09T21:28:00+05:00",
   "chapters": {
-    "kingdom-887-raw": {
-      "createdAt": "2026-09-08T14:29:09+05:00",
-      "commit": "7da0b089d54313af2b9c4def13d7ef2cd08396c9"
+    "restored-1": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-2": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-3": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-4": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-5": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-6": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-7": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-8": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-9": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-10": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-11": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-12": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-13": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-14": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-15": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-16": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-17": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-18": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-19": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-20": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-21": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-22": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-23": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-24": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "one-piece-1192": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-26": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-27": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-28": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-29": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-30": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-31": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-32": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-33": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-34": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-35": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-36": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-37": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-38": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-39": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-40": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "restored-41": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "hunter-420": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "fragrant-200": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "kagurabachi-131": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "kingdom-886": {
+      "createdAt": "2026-09-05T08:04:24+05:00",
+      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
+    },
+    "hunter-420-raw": {
+      "createdAt": "2026-09-05T04:44:13Z",
+      "commit": "904679422d8e625fa5576bb7abb0db9cc0badd8c"
+    },
+    "akane-banashi-chapter-221": {
+      "createdAt": "2026-09-06T17:13:55Z",
+      "commit": "514aa7f6f94d3f810daa9477229bd5094c011881"
+    },
+    "under-doctor-chapter-31": {
+      "createdAt": "2026-09-06T17:13:55Z",
+      "commit": "514aa7f6f94d3f810daa9477229bd5094c011881"
+    },
+    "witch-watch-chapter-261": {
+      "createdAt": "2026-09-06T17:13:55Z",
+      "commit": "514aa7f6f94d3f810daa9477229bd5094c011881"
+    },
+    "boku-to-roboko-chapter-296": {
+      "createdAt": "2026-09-06T17:13:55Z",
+      "commit": "514aa7f6f94d3f810daa9477229bd5094c011881"
+    },
+    "ultimate-exorcist-kiyoshi-chapter-107": {
+      "createdAt": "2026-09-06T17:13:55Z",
+      "commit": "514aa7f6f94d3f810daa9477229bd5094c011881"
+    },
+    "nezumis-first-love-chapter-118": {
+      "createdAt": "2026-09-06T17:13:55Z",
+      "commit": "514aa7f6f94d3f810daa9477229bd5094c011881"
+    },
+    "shinobi-undercover-chapter-96": {
+      "createdAt": "2026-09-06T17:13:55Z",
+      "commit": "514aa7f6f94d3f810daa9477229bd5094c011881"
+    },
+    "ruridragon-chapter-51": {
+      "createdAt": "2026-09-06T17:13:55Z",
+      "commit": "514aa7f6f94d3f810daa9477229bd5094c011881"
+    },
+    "the-exiled-heavy-knight-knows-how-to-game-the-system-chapter-178": {
+      "createdAt": "2026-09-06T17:13:55Z",
+      "commit": "514aa7f6f94d3f810daa9477229bd5094c011881"
     },
     "mokushiroku-no-yon-kishi-252-raw": {
       "createdAt": "2026-09-07T14:50:17Z",
       "commit": "08fe7250d805cea6f178345b06d1e8e9fd8df62b"
+    },
+    "blue-lock-360-raw": {
+      "createdAt": "2026-09-07T13:32:13Z",
+      "commit": "a8e23202df330117c3fdbbd3965e7fce21354e34"
+    },
+    "kingdom-887-raw": {
+      "createdAt": "2026-09-08T14:29:09+05:00",
+      "commit": "7da0b089d54313af2b9c4def13d7ef2cd08396c9"
     }
   }
 }
