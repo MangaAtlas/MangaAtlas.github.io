@@ -770,6 +770,32 @@
       ]
     },
     {
+      "id": "hunter-420",
+      "mangaId": "hunter-x-hunter",
+      "title": "ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話",
+      "number": 420,
+      "slug": "Hun x Hun 420",
+      "country": "JP",
+      "pages": [
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0001.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0002.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0003.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0004.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0005.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0006.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0007.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0008.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0009.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0010.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0011.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0012.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0013.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0014.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0015.jpg",
+        "https://mangaatlas.github.io/chapter-images/hunter-x-hunter-english-rawbaka-files/0016.jpg"
+      ]
+    },
+    {
       "id": "fragrant-200",
       "mangaId": "the-fragrant-flowers-bloom-dignifiedly",
       "title": "薫る花は凛と咲く raw 第200話",
@@ -829,6 +855,16 @@
         "https://mangaatlas.github.io/chapter-images/886-raw-files-09d4b22796/0018.webp",
         "https://mangaatlas.github.io/chapter-images/886-raw-files-09d4b22796/0019.webp"
       ]
+    },
+    {
+      "id": "hunter-420-raw",
+      "mangaId": "hunter-x-hunter",
+      "title": "ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw",
+      "number": 420,
+      "slug": "Hun-x-Hun-420-Raw",
+      "country": "JP",
+      "pages": [],
+      "createdAt": "2026-09-07T00:00:00Z"
     },
     {
       "id": "akane-banashi-chapter-221",
@@ -1000,16 +1036,6 @@
       "country": "JP",
       "pages": [],
       "updatedAt": "2026-09-09T16:24:47.575Z"
-    },
-    {
-      "id": "hunter-420-raw",
-      "mangaId": "hunter-x-hunter",
-      "title": "ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw",
-      "number": 420,
-      "slug": "Hun-x-Hun-420-Raw",
-      "country": "JP",
-      "pages": [],
-      "createdAt": "2026-09-07T00:00:00Z"
     }
   ]
 }
