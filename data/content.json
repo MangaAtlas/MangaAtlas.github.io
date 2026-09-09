@@ -857,16 +857,6 @@
       ]
     },
     {
-      "id": "hunter-420-raw",
-      "mangaId": "hunter-x-hunter",
-      "title": "ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw",
-      "number": 420,
-      "slug": "Hun-x-Hun-420-Raw",
-      "country": "JP",
-      "pages": [],
-      "createdAt": "2026-09-07T00:00:00Z"
-    },
-    {
       "id": "akane-banashi-chapter-221",
       "mangaId": "akane-banashi",
       "title": "あかね噺 raw ( Akane-banashi raw ) 第221話",
@@ -1054,6 +1044,16 @@
         "chapter-images/kingdom/chapter-887/0018-1788971275949-8.webp"
       ],
       "updatedAt": "2026-09-09T16:24:47.575Z"
+    },
+    {
+      "id": "hunter-420-raw",
+      "mangaId": "hunter-x-hunter",
+      "title": "ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話 Raw",
+      "number": 420,
+      "slug": "Hun-x-Hun-420-Raw",
+      "country": "JP",
+      "pages": [],
+      "createdAt": "2026-09-07T00:00:00Z"
     }
   ]
 }
