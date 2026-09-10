@@ -1,0 +1,75 @@
+name: Add One Piece 1193 + Sakamoto Days 275 and fix chapter images
+
+on:
+  push:
+    paths:
+      - '.github/workflows/add-1193-275-and-fix-images.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch content and image URLs
+        run: |
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+
+          p=Path('data/content.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          chapters=d.setdefault('chapters',[])
+
+          wanted=[
+            {
+              'id':'one-piece-1193-raw',
+              'mangaId':'one-piece',
+              'title':'ワンピース Raw raw 第1193話 ( One Piece raw Chapter 1193 )',
+              'number':1193,
+              'slug':'one-piece-raw-1193',
+              'country':'JP',
+              'pages':[]
+            },
+            {
+              'id':'sakamoto-days-275-raw',
+              'mangaId':'sakamoto-days-ja',
+              'title':'SAKAMOTO DAYS – サカモトデイズ raw 第275話',
+              'number':275,
+              'slug':'SAKAMOTO-275',
+              'country':'JP',
+              'pages':[]
+            }
+          ]
+          for w in wanted:
+              old=next((c for c in chapters if c.get('id')==w['id'] or c.get('slug')==w['slug']),None)
+              if old:
+                  old.update(w)
+              else:
+                  chapters.append(w)
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          hp=Path('chapter.html')
+          s=hp.read_text(encoding='utf-8')
+          old="if(s.startsWith('chapter-images/'))return 'https://cdn.jsdelivr.net/gh/MangaAtlas/MangaAtlas.github.io@main/'+s.split('/').map(encodeURIComponent).join('/');"
+          new="if(s.startsWith('chapter-images/'))return 'https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/'+s.split('/').map(encodeURIComponent).join('/');"
+          if old not in s:
+              raise SystemExit('Expected chapter image URL mapper was not found')
+          s=s.replace(old,new,1)
+          hp.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/content.json chapter.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add One Piece 1193 and Sakamoto Days 275; fix chapter image loading'
+          git push
