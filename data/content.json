@@ -1054,6 +1054,24 @@
       "country": "JP",
       "pages": [],
       "createdAt": "2026-09-07T00:00:00Z"
+    },
+    {
+      "id": "one-piece-1193-raw",
+      "mangaId": "one-piece",
+      "title": "ワンピース Raw raw 第1193話 ( One Piece raw Chapter 1193 )",
+      "number": 1193,
+      "slug": "one-piece-raw-1193",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "sakamoto-days-275-raw",
+      "mangaId": "sakamoto-days-ja",
+      "title": "SAKAMOTO DAYS – サカモトデイズ raw 第275話",
+      "number": 275,
+      "slug": "SAKAMOTO-275",
+      "country": "JP",
+      "pages": []
     }
   ]
 }
