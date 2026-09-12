@@ -1020,37 +1020,29 @@
       "updatedAt": "2026-09-09T16:24:47.575Z"
     },
     {
-      "id": "one-piece-1193-raw",
-      "mangaId": "one-piece",
-      "title": "ワンピース Raw raw 第1193話 ( One Piece raw Chapter 1193 )",
-      "number": 1193,
-      "slug": "one-piece-raw-1193",
-      "country": "JP",
-      "pages": [
-        "chapter-images/one-piece/chapter-1193/0001-1789034417848-0.webp",
-        "chapter-images/one-piece/chapter-1193/0002-1789034420531-1.webp",
-        "chapter-images/one-piece/chapter-1193/0003-1789034423138-2.webp",
-        "chapter-images/one-piece/chapter-1193/0004-1789034425120-3.webp",
-        "chapter-images/one-piece/chapter-1193/0005-1789034427554-4.webp",
-        "chapter-images/one-piece/chapter-1193/0006-1789034429491-5.webp",
-        "chapter-images/one-piece/chapter-1193/0007-1789034431781-6.webp",
-        "chapter-images/one-piece/chapter-1193/0008-1789034434199-7.webp",
-        "chapter-images/one-piece/chapter-1193/0009-1789034437091-8.webp",
-        "chapter-images/one-piece/chapter-1193/0011-1789034541723-1.webp",
-        "chapter-images/one-piece/chapter-1193/0012-1789034626011-2.webp",
-        "chapter-images/one-piece/chapter-1193/0013-1789034628588-3.webp",
-        "chapter-images/one-piece/chapter-1193/0014-1789034630885-4.webp",
-        "chapter-images/one-piece/chapter-1193/0015-1789034633365-5.webp",
-        "chapter-images/one-piece/chapter-1193/0016-1789034635538-6.webp",
-        "chapter-images/one-piece/chapter-1193/0017-1789034637866-7.webp"
-      ]
-    },
-    {
-      "id": "sakamoto-days-275-raw",
+      "id": "sakamoto-days-275-fresh",
       "mangaId": "days",
       "title": "SAKAMOTO DAYS – サカモトデイズ raw 第275話",
       "number": 275,
-      "slug": "SAKAMOTO-275",
+      "slug": "sakamoto-days-raw-275-v2",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "one-piece-1193-fresh",
+      "mangaId": "one-piece",
+      "title": "ワンピース Raw raw 第1193話 ( One Piece raw Chapter 1193 )",
+      "number": 1193,
+      "slug": "one-piece-raw-1193-v2",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "sakamoto-days-raw-275-v2",
+      "mangaId": "sakamoto-days-ja",
+      "title": "SAKAMOTO DAYS – サカモトデイズ raw 第275話",
+      "number": 275,
+      "slug": "sakamoto-days-raw-275-v2",
       "country": "JP",
       "pages": [
         "chapter-images/sakamoto-days-ja/chapter-275/0001-1789034740375-0.webp",
@@ -1073,25 +1065,37 @@
         "chapter-images/sakamoto-days-ja/chapter-275/0018-1789034800136-7.webp",
         "chapter-images/sakamoto-days-ja/chapter-275/0019-1789034802498-8.webp",
         "chapter-images/sakamoto-days-ja/chapter-275/0020-1789034804486-9.webp"
-      ]
+      ],
+      "updatedAt": "2026-09-12T09:00:00+05:00",
+      "createdAt": "2026-09-12T09:00:00+05:00"
     },
     {
-      "id": "sakamoto-days-275-fresh",
-      "mangaId": "days",
-      "title": "SAKAMOTO DAYS – サカモトデイズ raw 第275話",
-      "number": 275,
-      "slug": "sakamoto-days-raw-275-v2",
-      "country": "JP",
-      "pages": []
-    },
-    {
-      "id": "one-piece-1193-fresh",
+      "id": "one-piece-raw-1193-v2",
       "mangaId": "one-piece",
       "title": "ワンピース Raw raw 第1193話 ( One Piece raw Chapter 1193 )",
       "number": 1193,
       "slug": "one-piece-raw-1193-v2",
       "country": "JP",
-      "pages": []
+      "pages": [
+        "chapter-images/one-piece/chapter-1193/0001-1789034417848-0.webp",
+        "chapter-images/one-piece/chapter-1193/0002-1789034420531-1.webp",
+        "chapter-images/one-piece/chapter-1193/0003-1789034423138-2.webp",
+        "chapter-images/one-piece/chapter-1193/0004-1789034425120-3.webp",
+        "chapter-images/one-piece/chapter-1193/0005-1789034427554-4.webp",
+        "chapter-images/one-piece/chapter-1193/0006-1789034429491-5.webp",
+        "chapter-images/one-piece/chapter-1193/0007-1789034431781-6.webp",
+        "chapter-images/one-piece/chapter-1193/0008-1789034434199-7.webp",
+        "chapter-images/one-piece/chapter-1193/0009-1789034437091-8.webp",
+        "chapter-images/one-piece/chapter-1193/0011-1789034541723-1.webp",
+        "chapter-images/one-piece/chapter-1193/0012-1789034626011-2.webp",
+        "chapter-images/one-piece/chapter-1193/0013-1789034628588-3.webp",
+        "chapter-images/one-piece/chapter-1193/0014-1789034630885-4.webp",
+        "chapter-images/one-piece/chapter-1193/0015-1789034633365-5.webp",
+        "chapter-images/one-piece/chapter-1193/0016-1789034635538-6.webp",
+        "chapter-images/one-piece/chapter-1193/0017-1789034637866-7.webp"
+      ],
+      "updatedAt": "2026-09-12T09:00:00+05:00",
+      "createdAt": "2026-09-12T09:00:00+05:00"
     }
   ]
 }
