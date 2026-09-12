@@ -24,10 +24,9 @@ jobs:
           p = Path('admin/index.html')
           s = p.read_text(encoding='utf-8')
 
-          # Make individual image PUTs retry transient GitHub conflicts/rate limits.
           old_upload = r"async function uploadFile\(path,file\)\{.*?\}"
           new_upload = r'''async function uploadFile(path,file,attempt=0){try{const content=await fileToBase64(file);if(!content)throw Error('Empty image data for '+file.name);const r=await api('/contents/'+path,{method:'PUT',body:JSON.stringify({message:'Upload manga image '+path,content,branch:BRANCH})});if(!r.content?.path)throw Error('GitHub did not confirm '+path+' was uploaded.');return path}catch(e){if(attempt<3&&/GitHub (409|429|5\d\d)/i.test(e.message)){await sleep(900*(attempt+1));return uploadFile(path,file,attempt+1)}throw e}}'''
-          s, n = re.subn(old_upload, new_upload, s, count=1, flags=re.S)
+          s, n = re.subn(old_upload, lambda m: new_upload, s, count=1, flags=re.S)
           if n != 1:
               raise SystemExit('uploadFile target not found')
 
