@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-10T15:02:40+05:00",
+  "generatedAt": "2026-09-12T11:05:55+05:00",
   "chapters": {
     "restored-1": {
       "createdAt": "2026-09-05T08:04:24+05:00",
@@ -166,10 +166,6 @@
       "createdAt": "2026-09-05T08:04:24+05:00",
       "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
     },
-    "hunter-420": {
-      "createdAt": "2026-09-05T08:04:24+05:00",
-      "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
-    },
     "fragrant-200": {
       "createdAt": "2026-09-05T08:04:24+05:00",
       "commit": "b8560975a0e1c815d33d503ff6c42ad012600f8b"
@@ -230,17 +226,21 @@
       "createdAt": "2026-09-08T14:29:09+05:00",
       "commit": "7da0b089d54313af2b9c4def13d7ef2cd08396c9"
     },
+    "sakamoto-days-275-fresh": {
+      "createdAt": "2026-09-12T05:21:03Z",
+      "commit": "a3c807f77d1c3cae686314bbdf3d6e9a661d848f"
+    },
+    "sakamoto-days-raw-275-v2": {
+      "createdAt": "2026-09-12T05:34:07Z",
+      "commit": "4f88ef62d8cc6a91bc2bf0425bd1e2918837a9d2"
+    },
+    "-one-piece-1193-": {
+      "createdAt": "2026-09-12T10:42:50+05:00",
+      "commit": "19153cc85bf2ec28191f887dcde905c7c4422c86"
+    },
     "hunter-420-raw": {
       "createdAt": "2026-09-05T04:44:13Z",
       "commit": "904679422d8e625fa5576bb7abb0db9cc0badd8c"
-    },
-    "one-piece-1193-raw": {
-      "createdAt": "2026-09-10T09:52:29Z",
-      "commit": "5964c8672fd9b07027f4a45430b1d58f170525d9"
-    },
-    "sakamoto-days-275-raw": {
-      "createdAt": "2026-09-10T09:52:29Z",
-      "commit": "5964c8672fd9b07027f4a45430b1d58f170525d9"
     }
   }
 }
