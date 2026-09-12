@@ -24,24 +24,36 @@ jobs:
           p = Path('admin/index.html')
           s = p.read_text(encoding='utf-8')
 
-          old_upload = r"async function uploadFile\(path,file\)\{.*?\}"
-          new_upload = r'''async function uploadFile(path,file,attempt=0){try{const content=await fileToBase64(file);if(!content)throw Error('Empty image data for '+file.name);const r=await api('/contents/'+path,{method:'PUT',body:JSON.stringify({message:'Upload manga image '+path,content,branch:BRANCH})});if(!r.content?.path)throw Error('GitHub did not confirm '+path+' was uploaded.');return path}catch(e){if(attempt<3&&/GitHub (409|429|5\d\d)/i.test(e.message)){await sleep(900*(attempt+1));return uploadFile(path,file,attempt+1)}throw e}}'''
-          s, n = re.subn(old_upload, lambda m: new_upload, s, count=1, flags=re.S)
+          # Replace the entire uploadFile block so earlier partial regex patches
+          # cannot leave duplicated JavaScript behind.
+          upload = r'''async function uploadFile(path,file,attempt=0){
+          try{
+            const content=await fileToBase64(file);
+            if(!content)throw Error('Empty image data for '+file.name);
+            const r=await api('/contents/'+path,{method:'PUT',body:JSON.stringify({message:'Upload manga image '+path,content,branch:BRANCH})});
+            if(!r.content?.path)throw Error('GitHub did not confirm '+path+' was uploaded.');
+            return path;
+          }catch(e){
+            if(attempt<3&&/GitHub (409|429|5\\d\\d)/i.test(e.message)){await sleep(900*(attempt+1));return uploadFile(path,file,attempt+1)}
+            throw e;
+          }
+          }'''
+          pattern = r"async function uploadFile\(path,file.*?\}async function refresh\(\)"
+          replacement = upload + "async function refresh()"
+          s, n = re.subn(pattern, lambda m: replacement, s, count=1, flags=re.S)
           if n != 1:
-              raise SystemExit('uploadFile target not found')
+              raise SystemExit('Could not locate uploadFile block')
 
           marker = "$('clearChapter').onclick=clearChapter;"
-          if "async function uploadPart(which)" not in s:
-              code = r'''function pageNumberFromName(name){const m=String(name||'').match(/(?:page[-_ ]?)?(\d{1,3})(?=\.[^.]+$)/i);return m?Number(m[1]):null}
+          code = r'''function pageNumberFromName(name){const m=String(name||'').match(/(?:page[-_ ]?)?(\d{1,3})(?=\.[^.]+$)/i);return m?Number(m[1]):null}
           function bindImageInfo(inputId,infoId){$(inputId).addEventListener('change',()=>{$(infoId).textContent=`${$(inputId).files.length} images selected`})}
           bindImageInfo('cPages1','part1Info');bindImageInfo('cPages2','part2Info');
           async function uploadPart(which){const input=$(which==='1'?'cPages1':'cPages2'),info=$(which==='1'?'part1Info':'part2Info'),progress=$(which==='1'?'part1Progress':'part2Progress');try{if(!editChapterId)throw Error('Pehle chapter ko Save chapter details se create karo.');const files=[...input.files];if(!files.length)throw Error('Images select karo.');if(files.length>10)throw Error('Ek part mein maximum 10 images upload karo.');const latest=await readData(),c=latest.data.chapters.find(x=>x.id===editChapterId);if(!c)throw Error('Chapter not found.');const min=which==='1'?1:11,max=which==='1'?10:20,uploaded={};for(let i=0;i<files.length;i++){progress.textContent=`Preparing image ${i+1}/${files.length}: ${files[i].name}`;const f=await prepareImage(files[i]);let n=pageNumberFromName(files[i].name);if(!(n>=min&&n<=max))n=min+i;if(n>max)throw Error('Part mein maximum 10 images allowed hain.');const safe=Date.now()+'-'+Math.random().toString(36).slice(2,8);const path=`chapter-images/${c.mangaId}/chapter-${c.number}/${String(n).padStart(4,'0')}-${safe}.webp`;progress.textContent=`Uploading image ${i+1}/${files.length}: ${files[i].name}`;uploaded[n]=await uploadFile(path,f)}const current=await readData(),fresh=current.data.chapters.find(x=>x.id===c.id);if(!fresh)throw Error('Chapter disappeared from content data.');const byNumber={};(fresh.pages||[]).forEach((path,i)=>byNumber[i+1]=path);Object.entries(uploaded).forEach(([n,path])=>byNumber[Number(n)]=path);fresh.pages=Object.keys(byNumber).sort((a,b)=>Number(a)-Number(b)).map(k=>byNumber[k]).filter(Boolean);fresh.updatedAt=new Date().toISOString();await writeData(current.data,current.sha,`Upload chapter ${c.number} part ${which}`);data=current.data;renderLists();input.value='';info.textContent='0 images selected';progress.textContent=`✓ Part ${which} uploaded. ${Object.keys(uploaded).length} image(s) saved.`;setStatus(`Part ${which} upload complete.`)}catch(e){progress.textContent='Error: '+e.message;setStatus('Image upload error: '+e.message)}}
           $('uploadPart1').onclick=()=>uploadPart('1');$('uploadPart2').onclick=()=>uploadPart('2');
           '''
-              if marker not in s:
-                  raise SystemExit('clearChapter marker not found')
-              s = s.replace(marker, code + marker, 1)
-
+          if marker not in s:
+              raise SystemExit('clearChapter marker not found')
+          s = s.replace(marker, code + marker, 1)
           p.write_text(s, encoding='utf-8')
 
       - name: Commit patched admin
@@ -51,6 +63,6 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add admin/index.html
           git diff --cached --quiet && exit 0
-          git commit -m 'Fix admin chapter image upload buttons'
+          git commit -m 'Fix admin chapter image upload JavaScript'
           git pull --rebase origin main
           git push
