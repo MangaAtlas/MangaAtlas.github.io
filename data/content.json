@@ -1074,6 +1074,24 @@
         "chapter-images/sakamoto-days-ja/chapter-275/0019-1789034802498-8.webp",
         "chapter-images/sakamoto-days-ja/chapter-275/0020-1789034804486-9.webp"
       ]
+    },
+    {
+      "id": "sakamoto-days-275-fresh",
+      "mangaId": "days",
+      "title": "SAKAMOTO DAYS – サカモトデイズ raw 第275話",
+      "number": 275,
+      "slug": "sakamoto-days-raw-275-v2",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "one-piece-1193-fresh",
+      "mangaId": "one-piece",
+      "title": "ワンピース Raw raw 第1193話 ( One Piece raw Chapter 1193 )",
+      "number": 1193,
+      "slug": "one-piece-raw-1193-v2",
+      "country": "JP",
+      "pages": []
     }
   ]
 }
