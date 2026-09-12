@@ -1,0 +1,27 @@
+name: Restore working admin
+
+on:
+  push:
+    paths:
+      - .github/restore-admin.trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore admin from known working commit
+        run: |
+          git checkout 745cf6f654e5783cf5c8c4df12dd07b4e135b434 -- admin/index.html
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add admin/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Restore working MangaAtlas admin'
+          git push origin main
