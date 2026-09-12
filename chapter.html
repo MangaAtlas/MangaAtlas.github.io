@@ -1,67 +1,8 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<title>Chapter | MangaAtlas</title>
-<meta id="desc" name="description" content="Read manga chapters on MangaAtlas.">
-<style>
-*{box-sizing:border-box}body{margin:0;background:#07080b;color:#f5f5f7;font-family:Inter,system-ui,sans-serif}.bar{position:sticky;top:0;z-index:5;background:#0c0e13ee;backdrop-filter:blur(10px);border-bottom:1px solid #222733;padding:14px 5%;display:flex;justify-content:space-between;align-items:center}.bar a{color:#b7bdc9;text-decoration:none}.title{font-weight:800}.reader{max-width:1000px;margin:auto}.page{display:block;width:100%;height:auto;margin:0 auto;background:#111}.empty{text-align:center;padding:100px 20px;color:#8b92a1}.error{color:#ff8c9b;text-align:center;padding:100px 20px}
-</style>
-<script src="/analytics.js"></script>
-</head>
-<body>
-<header class="bar"><a href="/">← MangaAtlas</a><span id="title" class="title">Chapter</span></header>
-<main id="reader" class="reader"><div class="empty">Loading chapter…</div></main>
-
-<!-- The only ads allowed on each chapter page: exactly one instance of each supplied code. -->
-<script async="async" data-cfasync="false" src="https://pl31305611.profitableratecpmnetwork.com/9c318a50ef96d7af9089a1f23c3dcd48/invoke.js"></script>
-<div id="container-9c318a50ef96d7af9089a1f23c3dcd48"></div>
-<script>
-  atOptions = {
-    'key' : '2e991058e24736f278716e790d11b67f',
-    'format' : 'iframe',
-    'height' : 90,
-    'width' : 728,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highrevenueformat.com/2e991058e24736f278716e790d11b67f/invoke.js"></script>
-<script>
-  atOptions = {
-    'key' : 'e4d112d8537fd34ba895ce915fd0cf89',
-    'format' : 'iframe',
-    'height' : 50,
-    'width' : 320,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highrevenueformat.com/e4d112d8537fd34ba895ce915fd0cf89/invoke.js"></script>
-<script src="https://pl31305612.profitableratecpmnetwork.com/33/42/f5/3342f5af23f7a0a9a4797216c21f1442.js"></script>
-
-<script>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="index,follow,max-image-preview:large"><title>Chapter | MangaAtlas</title><meta id="desc" name="description" content="Read manga chapters on MangaAtlas."><style>*{box-sizing:border-box}body{margin:0;background:#07080b;color:#f5f5f7;font-family:Inter,system-ui,sans-serif}.bar{position:sticky;top:0;z-index:5;background:#0c0e13ee;backdrop-filter:blur(10px);border-bottom:1px solid #222733;padding:14px 5%;display:flex;justify-content:space-between;align-items:center}.bar a{color:#b7bdc9;text-decoration:none}.title{font-weight:800}.reader{max-width:1000px;margin:auto}.page{display:block;width:100%;height:auto;margin:0 auto;background:#111}.ads{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 8px}.adbox{display:flex;justify-content:center;align-items:center;width:100%;min-height:0}.empty{text-align:center;padding:100px 20px;color:#8b92a1}.error{color:#ff8c9b;text-align:center;padding:100px 20px}@media(max-width:760px){.desktop-ad{display:none}.mobile-ad{display:flex}.ads{padding:8px 4px}}@media(min-width:761px){.mobile-ad{display:none}.desktop-ad{display:flex}}</style><script src="/analytics.js"></script></head><body><header class="bar"><a href="/">← MangaAtlas</a><span id="title" class="title">Chapter</span></header><main id="reader" class="reader"><div class="empty">Loading chapter…</div></main><script>
 const slug=decodeURIComponent(new URLSearchParams(location.search).get('slug')||'');
 function imageUrl(p){let s=String(p||'').trim();if(!s)return '';s=s.replace(/^https:\/\/mangaatlas\.github\.io\//i,'').replace(/^https:\/\/raw\.githubusercontent\.com\/MangaAtlas\/MangaAtlas\.github\.io\/main\//i,'').replace(/^\//,'');if(s.startsWith('chapter-images/'))return 'https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/'+s.split('/').map(encodeURIComponent).join('/');return s}
-async function init(){
- const r=document.getElementById('reader');
- if(!slug){r.innerHTML='<div class="error">Chapter not found.</div>';return}
- try{
-  const d=await fetch('/data/content.json?v='+Date.now(),{cache:'no-store'}).then(x=>x.json());
-  const c=(d.chapters||[]).find(x=>String(x.slug)===slug);
-  if(!c){r.innerHTML='<div class="error">Chapter not found.</div>';return}
-  const m=(d.mangas||[]).find(x=>x.id===c.mangaId)||{};
-  const pageTitle=c.title||`${m.title||'Manga'} — Chapter ${c.number} | MangaAtlas`;
-  document.title=pageTitle;
-  document.getElementById('desc').content=`Read ${c.title||m.title||'manga'} on MangaAtlas.`;
-  document.getElementById('title').textContent=c.title||`${m.title||''} · Chapter ${c.number}`;
-  if(window.mangaAtlasAnalytics) window.mangaAtlasAnalytics.pageView({chapter_slug:c.slug,chapter_number:c.number,manga_id:c.mangaId,manga_title:m.title});
-  const pages=(c.pages||[]).map(p=>typeof p==='string'?p:p.url).filter(Boolean).map(imageUrl);
-  if(!pages.length){r.innerHTML='<div class="empty">This chapter has no pages yet.</div>';return}
-  r.innerHTML=pages.map((u,i)=>`<img class="page" src="${u}" alt="${(c.title||m.title||'Manga')}, page ${i+1}" loading="${i<2?'eager':'lazy'}" decoding="async">`).join('');
- }catch(e){console.error(e);r.innerHTML='<div class="error">Unable to load this chapter.</div>'}
-}
-init();
-</script>
-</body>
-</html>
+function ads(){return `<section class="ads" aria-label="Advertisement"><div class="adbox desktop-ad"><script async="async" data-cfasync="false" src="https://pl31305611.profitableratecpmnetwork.com/9c318a50ef96d7af9089a1f23c3dcd48/invoke.js"><\/script><div id="container-9c318a50ef96d7af9089a1f23c3dcd48"></div></div><div class="adbox desktop-ad"><div id="ad728"></div></div><div class="adbox mobile-ad"><div id="ad320"></div></div><div class="adbox"><div id="adExtra"></div></div></section>`}
+function loadAds(){const a=document.createElement('script');a.textContent="atOptions={'key':'2e991058e24736f278716e790d11b67f','format':'iframe','height':90,'width':728,'params':{}};";document.getElementById('ad728').appendChild(a);const s=document.createElement('script');s.src='https://www.highrevenueformat.com/2e991058e24736f278716e790d11b67f/invoke.js';document.getElementById('ad728').appendChild(s);const b=document.createElement('script');b.textContent="atOptions={'key':'e4d112d8537fd34ba895ce915fd0cf89','format':'iframe','height':50,'width':320,'params':{}};";document.getElementById('ad320').appendChild(b);const t=document.createElement('script');t.src='https://www.highrevenueformat.com/e4d112d8537fd34ba895ce915fd0cf89/invoke.js';document.getElementById('ad320').appendChild(t);const e=document.createElement('script');e.src='https://pl31305612.profitableratecpmnetwork.com/33/42/f5/3342f5af23f7a0a9a4797216c21f1442.js';document.getElementById('adExtra').appendChild(e)}
+async function init(){const r=document.getElementById('reader');if(!slug){r.innerHTML='<div class="error">Chapter not found.</div>';return}try{const d=await fetch('/data/content.json?v='+Date.now(),{cache:'no-store'}).then(x=>x.json());const c=(d.chapters||[]).find(x=>String(x.slug)===slug);if(!c){r.innerHTML='<div class="error">Chapter not found.</div>';return}const m=(d.mangas||[]).find(x=>x.id===c.mangaId)||{};document.title=c.title||`${m.title||'Manga'} — Chapter ${c.number} | MangaAtlas`;document.getElementById('desc').content=`Read ${c.title||m.title||'manga'} on MangaAtlas.`;document.getElementById('title').textContent=c.title||`${m.title||''} · Chapter ${c.number}`;const pages=(c.pages||[]).map(p=>typeof p==='string'?p:p.url).filter(Boolean).map(imageUrl);if(!pages.length){r.innerHTML='<div class="error">This chapter has no pages yet.</div>';return}r.innerHTML=ads()+pages.map((u,i)=>`<img class="page" src="${u}" alt="${(c.title||m.title||'Manga')}, page ${i+1}" loading="${i<2?'eager':'lazy'}" decoding="async">`).join('');loadAds();if(window.mangaAtlasAnalytics)window.mangaAtlasAnalytics.pageView({chapter_slug:c.slug,chapter_number:c.number,manga_id:c.mangaId,manga_title:m.title})}catch(e){console.error(e);r.innerHTML='<div class="error">Unable to load this chapter.</div>'}}init();
+</script></body></html>
