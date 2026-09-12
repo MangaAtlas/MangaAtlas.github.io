@@ -1,0 +1,62 @@
+name: Rebuild chapters with new slugs
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Rebuild chapter records and sitemap
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/content.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          chapters=d.get('chapters',[])
+          old_slugs={'SAKAMOTO-275','one-piece-raw-1193'}
+          new=[]
+          for c in chapters:
+            if c.get('slug') in old_slugs:
+              continue
+            new.append(c)
+          defs=[
+            ('sakamoto-days-raw-275-v2','sakamoto-days-ja','SAKAMOTO DAYS – サカモトデイズ raw 第275話',275),
+            ('one-piece-raw-1193-v2','one-piece','ワンピース Raw raw 第1193話 ( One Piece raw Chapter 1193 )',1193),
+          ]
+          for slug,mid,title,num in defs:
+            old=next((c for c in chapters if c.get('slug')==('SAKAMOTO-275' if num==275 else 'one-piece-raw-1193')), {})
+            c=dict(old)
+            c.update({'id':slug,'mangaId':mid,'title':title,'number':num,'slug':slug,'country':'JP','updatedAt':'2026-09-12T09:00:00+05:00','createdAt':'2026-09-12T09:00:00+05:00'})
+            # preserve the old page URLs exactly
+            new.append(c)
+          d['chapters']=new
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('sitemap.xml')
+          s=p.read_text(encoding='utf-8')
+          lines=[]
+          for line in s.splitlines():
+            if 'slug=SAKAMOTO-275' in line or 'slug=one-piece-raw-1193' in line:
+              continue
+            lines.append(line)
+          text='\n'.join(lines)
+          if '</urlset>' not in text:
+            raise SystemExit('invalid sitemap')
+          additions='''<url><loc>https://mangaatlas.github.io/chapter.html?slug=sakamoto-days-raw-275-v2</loc><lastmod>2026-09-12T04:00:00Z</lastmod></url>\n<url><loc>https://mangaatlas.github.io/chapter.html?slug=one-piece-raw-1193-v2</loc><lastmod>2026-09-12T04:00:00Z</lastmod></url>\n'''
+          text=text.replace('</urlset>', additions+'</urlset>')
+          p.write_text(text+'\n',encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/content.json sitemap.xml
+          git commit -m 'Rebuild Sakamoto 275 and One Piece 1193 with fresh slugs' || exit 0
+          git push origin main
