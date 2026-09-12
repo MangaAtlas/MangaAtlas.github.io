@@ -1,0 +1,125 @@
+name: Remove all site ads
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Remove ad code and ad assets
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          root = Path('.')
+
+          def remove_js_function(text, name):
+              marker = 'function ' + name + '('
+              while True:
+                  start = text.find(marker)
+                  if start < 0:
+                      return text
+                  brace = text.find('{', start)
+                  if brace < 0:
+                      return text[:start] + text[brace:]
+                  depth = 0
+                  quote = None
+                  escape = False
+                  i = brace
+                  while i < len(text):
+                      ch = text[i]
+                      if quote:
+                          if escape:
+                              escape = False
+                          elif ch == '\\':
+                              escape = True
+                          elif ch == quote:
+                              quote = None
+                      else:
+                          if ch in "'\"`":
+                              quote = ch
+                          elif ch == '{':
+                              depth += 1
+                          elif ch == '}':
+                              depth -= 1
+                              if depth == 0:
+                                  i += 1
+                                  break
+                      i += 1
+                  text = text[:start] + text[i:]
+
+          # Remove explicit ad assets.
+          for p in [Path('ads/.ad-fix-trigger'), Path('ads/300.html'), Path('ads/728.html'), Path('ads/profit.html')]:
+              if p.exists():
+                  p.unlink()
+          if Path('ads').exists() and not any(Path('ads').iterdir()):
+              Path('ads').rmdir()
+
+          # Remove the old ad-specific build helper.
+          helper = Path('scripts/ensure-ad-loading.mjs')
+          if helper.exists(): helper.unlink()
+
+          # Remove ad provider scripts/markup from every text asset.
+          extensions = {'.html', '.js', '.css', '.xml', '.txt', '.md', '.mjs'}
+          for p in root.rglob('*'):
+              if not p.is_file() or p.suffix.lower() not in extensions:
+                  continue
+              if '.git' in p.parts:
+                  continue
+              text = p.read_text(encoding='utf-8')
+
+              # External ad scripts and ad iframe/slot markup.
+              text = re.sub(r'<script[^>]+(?:profitableratecpmnetwork|highperformanceformat|highrevenueformat)[^>]*></script>', '', text, flags=re.I)
+              text = re.sub(r'<div[^>]*class=[\"\'][^\"\']*ad-slot[^\"\']*[\"\'][^>]*></div>', '', text, flags=re.I)
+              text = re.sub(r'<div[^>]*data-ad=[\"\'][^\"\']+[\"\'][^>]*></div>', '', text, flags=re.I)
+              text = text.replace('https://pl29176332.profitableratecpmnetwork.com/ce/2b/ec/ce2bec91c99bbf03669eb325da7e6c8f.js', '')
+              text = text.replace('https://pl29176333.profitableratecpmnetwork.com/', '')
+              text = text.replace('https://www.highperformanceformat.com/', '')
+              text = text.replace('https://www.highrevenueformat.com/', '')
+
+              if p.name == 'chapter.html':
+                  # Remove ad CSS blocks/classes.
+                  for _ in range(5):
+                      text = re.sub(r'\.ad-(?:slot|90|50|60|250|container|start|empty)(?:\.[^{\s]+)?\{[^{}]*\}', '', text)
+                  # Remove all ad loader functions.
+                  for name in ['watchAd','adFrame','addHighRevenue','addContainerAd','add300Ad','loadOneAd']:
+                      text = remove_js_function(text, name)
+                  text = re.sub(r'function addAds\(\)\{[^{}]*\}', 'function addAds(){}', text)
+                  # Remove generated ad slot insertions and ad counters.
+                  text = re.sub(r"let html='<div[^;]*ad-(?:slot|container|90|50|250)[^;]*;", "let html='';", text)
+                  text = re.sub(r"html\+='<div[^;]*ad-(?:slot|container|90|50|250)[^;]*;", '', text)
+                  text = re.sub(r"if\([^{};]*\)html\+='<div[^;]*ad-(?:slot|container|90|50|250)[^;]*;", '', text)
+                  text = re.sub(r'let ad728Count=0;', '', text)
+                  text = re.sub(r'ad728Count\+\+', '', text)
+                  text = re.sub(r'addAds\(\);', '', text)
+                  # Remove direct references to the local ad pages.
+                  text = re.sub(r"/ads/(?:300|728)\.html\?slot=[^'\"]+", '', text)
+
+              p.write_text(text, encoding='utf-8')
+
+          print('All ad code, provider references, ad assets, and ad-specific helper removed.')
+
+      - name: Remove ad rendering workflow
+        run: rm -f .github/workflows/fix-ad-rendering.yml
+
+      - name: Commit cleanup
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No ad cleanup changes needed.'
+            exit 0
+          fi
+          git commit -m 'Remove all site ads'
+          git push
