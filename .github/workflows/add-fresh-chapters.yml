@@ -1,0 +1,66 @@
+name: Add fresh Sakamoto 275 and One Piece 1193 chapters
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  add-chapters:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add fresh chapter records
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('data/content.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          chapters = data['chapters']
+
+          existing = {c.get('slug') for c in chapters}
+          fresh = [
+              {
+                  'id': 'sakamoto-days-275-fresh',
+                  'mangaId': 'days',
+                  'title': 'SAKAMOTO DAYS – サカモトデイズ raw 第275話',
+                  'number': 275,
+                  'slug': 'sakamoto-days-raw-275-v2',
+                  'country': 'JP',
+                  'pages': []
+              },
+              {
+                  'id': 'one-piece-1193-fresh',
+                  'mangaId': 'one-piece',
+                  'title': 'ワンピース Raw raw 第1193話 ( One Piece raw Chapter 1193 )',
+                  'number': 1193,
+                  'slug': 'one-piece-raw-1193-v2',
+                  'country': 'JP',
+                  'pages': []
+              }
+          ]
+
+          added = [c for c in fresh if c['slug'] not in existing]
+          if not added:
+              print('Fresh chapter records already exist; nothing to add.')
+          else:
+              chapters.extend(added)
+              path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+              print('Added:', ', '.join(c['slug'] for c in added))
+          PY
+
+      - name: Commit fresh chapter records
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/content.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add fresh Sakamoto 275 and One Piece 1193 chapter records'
+          git push
