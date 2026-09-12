@@ -2,8 +2,7 @@ name: Fix fresh chapter records and admin image upload
 
 on:
   push:
-    paths:
-      - '.github/workflows/fix-fresh-chapter-upload.yml'
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -11,45 +10,36 @@ permissions:
 
 jobs:
   fix:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Add fresh chapters and harden admin uploads
         shell: python
         run: |
           from pathlib import Path
           import json, re
-
-          p = Path('data/content.json')
-          d = json.loads(p.read_text(encoding='utf-8'))
-          chapters = d.setdefault('chapters', [])
-          wanted = [
-              {'id':'sakamoto-days-275-fresh','mangaId':'sakamoto-days-ja','title':'SAKAMOTO DAYS – サカモトデイズ raw 第275話','number':275,'slug':'sakamoto-days-raw-275-v2','country':'JP','pages':[]},
-              {'id':'one-piece-1193-fresh','mangaId':'one-piece-ja','title':'ワンピース Raw raw 第1193話 ( One Piece raw Chapter 1193 )','number':1193,'slug':'one-piece-raw-1193-v2','country':'JP','pages':[]}
+          p=Path('data/content.json'); d=json.loads(p.read_text(encoding='utf-8')); chapters=d.setdefault('chapters',[])
+          wanted=[
+            {'id':'sakamoto-days-275-fresh','mangaId':'sakamoto-days-ja','title':'SAKAMOTO DAYS – サカモトデイズ raw 第275話','number':275,'slug':'sakamoto-days-raw-275-v2','country':'JP','pages':[]},
+            {'id':'one-piece-1193-fresh','mangaId':'one-piece-ja','title':'ワンピース Raw raw 第1193話 ( One Piece raw Chapter 1193 )','number':1193,'slug':'one-piece-raw-1193-v2','country':'JP','pages':[]}
           ]
           for w in wanted:
-              old = next((c for c in chapters if c.get('id') == w['id'] or c.get('slug') == w['slug']), None)
-              if old: old.update(w)
-              else: chapters.append(w)
-          p.write_text(json.dumps(d, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-
-          ap = Path('admin/index.html')
-          s = ap.read_text(encoding='utf-8')
-
-          old_upload = r"async function uploadFile\(path,file\)\{.*?\}async function refresh\(\)"
-          new_upload = r'''async function uploadFile(path,file,attempt=0){try{const content=await fileToBase64(file);if(!content)throw Error('Empty image data for '+file.name);const r=await api('/contents/'+path,{method:'PUT',body:JSON.stringify({message:'Upload manga image '+path,content,branch:BRANCH})});if(!r.content?.path)throw Error('GitHub did not confirm '+path+' was uploaded.');return path}catch(e){if(attempt<3&&/GitHub 409|GitHub 429|GitHub 5\d\d/i.test(e.message)){await sleep(900*(attempt+1));return uploadFile(path,file,attempt+1)}throw e}}async function refresh()'''
-          s2, n = re.subn(old_upload, lambda m: new_upload, s, count=1, flags=re.S)
-          if n != 1: raise SystemExit('uploadFile target not found')
-
-          old_part = r"async function uploadPart\(which\)\{.*?\}\$\('uploadPart1'\)\.onclick"
-          new_part = r'''async function uploadPart(which){const input=$(which==='1'?'cPages1':'cPages2'),progress=$(which==='1'?'part1Progress':'part2Progress');try{if(!editChapterId)throw Error('Pehle chapter ko Save chapter details se create karo.');const files=[...input.files];if(!files.length)throw Error('Images select karo.');if(files.length>10)throw Error('Ek part mein maximum 10 images upload karo.');const latest=await readData(),c=latest.data.chapters.find(x=>x.id===editChapterId);if(!c)throw Error('Chapter not found.');const min=which==='1'?1:11,max=which==='1'?10:20;const uploaded={};for(let i=0;i<files.length;i++){progress.textContent=`Preparing ${i+1}/${files.length}: ${files[i].name}`;const f=await prepareImage(files[i]);let n=pageNumberFromName(files[i].name);if(!(n>=min&&n<=max))n=min+i;if(n>max)throw Error('Part mein maximum 10 images allowed hain.');const safe=String(Date.now())+'-'+Math.random().toString(36).slice(2,8);const path=`chapter-images/${c.mangaId}/chapter-${c.number}/${String(n).padStart(4,'0')}-${safe}.webp`;progress.textContent=`Uploading ${i+1}/${files.length}: ${files[i].name}`;uploaded[n]=await uploadFile(path,f)}const current=await readData(),fresh=current.data.chapters.find(x=>x.id===c.id);if(!fresh)throw Error('Chapter disappeared from content data.');const byNumber={};(fresh.pages||[]).forEach((p,i)=>byNumber[i+1]=p);Object.entries(uploaded).forEach(([n,path])=>byNumber[Number(n)]=path);fresh.pages=Object.keys(byNumber).sort((a,b)=>Number(a)-Number(b)).map(k=>byNumber[k]).filter(Boolean);fresh.updatedAt=new Date().toISOString();await writeData(current.data,current.sha,`Upload chapter ${c.number} part ${which}`);data=current.data;renderLists();input.value='';$(which==='1'?'part1Info':'part2Info').textContent='0 images selected';progress.textContent=`✓ Part ${which} uploaded. ${Object.keys(uploaded).length} image(s) saved.`;setStatus(`Part ${which} upload complete.`)}catch(e){progress.textContent='Error: '+e.message;setStatus('Image upload error: '+e.message)}}$('uploadPart1').onclick'''
-          s3, n2 = re.subn(old_part, lambda m: new_part, s2, count=1, flags=re.S)
-          if n2 != 1: raise SystemExit('uploadPart target not found')
-          ap.write_text(s3, encoding='utf-8')
-
+              old=next((c for c in chapters if c.get('id')==w['id'] or c.get('slug')==w['slug']),None)
+              old.update(w) if old else chapters.append(w)
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          ap=Path('admin/index.html'); s=ap.read_text(encoding='utf-8')
+          old=r"async function uploadFile\(path,file\)\{.*?\}async function refresh\(\)"
+          new=r'''async function uploadFile(path,file,attempt=0){try{const content=await fileToBase64(file);if(!content)throw Error('Empty image data for '+file.name);const r=await api('/contents/'+path,{method:'PUT',body:JSON.stringify({message:'Upload manga image '+path,content,branch:BRANCH})});if(!r.content?.path)throw Error('GitHub did not confirm '+path+' was uploaded.');return path}catch(e){if(attempt<3&&/GitHub 409|GitHub 429|GitHub 5\d\d/i.test(e.message)){await sleep(900*(attempt+1));return uploadFile(path,file,attempt+1)}throw e}}async function refresh()'''
+          s,n=re.subn(old,lambda m:new,s,count=1,flags=re.S)
+          if n!=1: raise SystemExit('uploadFile target not found')
+          old=r"async function uploadPart\(which\)\{.*?\}\$\('uploadPart1'\)\.onclick"
+          new=r'''async function uploadPart(which){const input=$(which==='1'?'cPages1':'cPages2'),progress=$(which==='1'?'part1Progress':'part2Progress');try{if(!editChapterId)throw Error('Pehle chapter ko Save chapter details se create karo.');const files=[...input.files];if(!files.length)throw Error('Images select karo.');if(files.length>10)throw Error('Ek part mein maximum 10 images upload karo.');const latest=await readData(),c=latest.data.chapters.find(x=>x.id===editChapterId);if(!c)throw Error('Chapter not found.');const min=which==='1'?1:11,max=which==='1'?10:20,uploaded={};for(let i=0;i<files.length;i++){progress.textContent=`Preparing ${i+1}/${files.length}: ${files[i].name}`;const f=await prepareImage(files[i]);let n=pageNumberFromName(files[i].name);if(!(n>=min&&n<=max))n=min+i;if(n>max)throw Error('Part mein maximum 10 images allowed hain.');const safe=Date.now()+'-'+Math.random().toString(36).slice(2,8);const path=`chapter-images/${c.mangaId}/chapter-${c.number}/${String(n).padStart(4,'0')}-${safe}.webp`;progress.textContent=`Uploading ${i+1}/${files.length}: ${files[i].name}`;uploaded[n]=await uploadFile(path,f)}const current=await readData(),fresh=current.data.chapters.find(x=>x.id===c.id);if(!fresh)throw Error('Chapter disappeared from content data.');const byNumber={};(fresh.pages||[]).forEach((p,i)=>byNumber[i+1]=p);Object.entries(uploaded).forEach(([n,path])=>byNumber[Number(n)]=path);fresh.pages=Object.keys(byNumber).sort((a,b)=>Number(a)-Number(b)).map(k=>byNumber[k]).filter(Boolean);fresh.updatedAt=new Date().toISOString();await writeData(current.data,current.sha,`Upload chapter ${c.number} part ${which}`);data=current.data;renderLists();input.value='';$(which==='1'?'part1Info':'part2Info').textContent='0 images selected';progress.textContent=`✓ Part ${which} uploaded. ${Object.keys(uploaded).length} image(s) saved.`;setStatus(`Part ${which} upload complete.`)}catch(e){progress.textContent='Error: '+e.message;setStatus('Image upload error: '+e.message)}}$('uploadPart1').onclick'''
+          s,n=re.subn(old,lambda m:new,s,count=1,flags=re.S)
+          if n!=1: raise SystemExit('uploadPart target not found')
+          ap.write_text(s,encoding='utf-8')
       - name: Commit fixes
         shell: bash
         run: |
