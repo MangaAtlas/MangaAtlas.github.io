@@ -7,7 +7,7 @@
 <title>Chapter | MangaAtlas</title>
 <meta id="desc" name="description" content="Read manga chapters on MangaAtlas.">
 <style>
-*{box-sizing:border-box}body{margin:0;background:#07080b;color:#f5f5f7;font-family:Inter,system-ui,sans-serif}.bar{position:sticky;top:0;z-index:5;background:#0c0e13ee;backdrop-filter:blur(10px);border-bottom:1px solid #222733;padding:14px 5%;display:flex;justify-content:space-between;align-items:center}.bar a{color:#b7bdc9;text-decoration:none}.title{font-weight:800}.reader{max-width:1000px;margin:auto}.page{display:block;width:100%;height:auto;margin:0 auto;background:#111}.empty{text-align:center;padding:100px 20px;color:#8b92a1}.error{color:#ff8c9b;text-align:center;padding:100px 20px}.chapter-ads{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 8px}.chapter-ad{display:flex;justify-content:center;align-items:center;width:100%;min-height:0;overflow:hidden;min-height:1px}.chapter-ad[data-disabled="1"]{display:none}
+*{box-sizing:border-box}body{margin:0;background:#07080b;color:#f5f5f7;font-family:Inter,system-ui,sans-serif}.bar{position:sticky;top:0;z-index:5;background:#0c0e13ee;backdrop-filter:blur(10px);border-bottom:1px solid #222733;padding:14px 5%;display:flex;justify-content:space-between;align-items:center}.bar a{color:#b7bdc9;text-decoration:none}.title{font-weight:800}.reader{max-width:1000px;margin:auto}.page{display:block;width:100%;height:auto;margin:0 auto;background:#111}.empty{text-align:center;padding:100px 20px;color:#8b92a1}.error{color:#ff8c9b;text-align:center;padding:100px 20px}.chapter-ads{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 8px}.chapter-ad{display:flex;justify-content:center;align-items:center;width:100%;min-height:1px;overflow:hidden}.chapter-ad[data-disabled="1"]{display:none}
 </style>
 <script src="/analytics.js"></script>
 </head>
@@ -23,42 +23,74 @@
 <script>
 const slug=decodeURIComponent(new URLSearchParams(location.search).get('slug')||'');
 
-/* Ads: one eligible ad session per 50 chapter pageviews in this browser.
-   The approved ad snippets themselves are unchanged; only their execution is deferred. */
+/* Ads are eligible once every 50 successfully opened chapter pages in this browser.
+   The approved ad snippets are kept unchanged. Loading is queued so the two
+   atOptions-based ads cannot overwrite each other's global configuration. */
 function adEligible(){
   try{
     const key='mangaatlas_ad_pageviews_v1';
-    const n=Math.max(0,parseInt(localStorage.getItem(key)||'0',10))+1;
+    let n=parseInt(localStorage.getItem(key)||'0',10);
+    if(!Number.isFinite(n)||n<0)n=0;
+    n+=1;
     localStorage.setItem(key,String(n));
     return n%50===0;
-  }catch(e){return false}
+  }catch(e){
+    /* If storage is blocked, do not silently break ad loading. */
+    return true;
+  }
 }
-function addScript(slot,src,attrs={}){const s=document.createElement('script');s.src=src;Object.entries(attrs).forEach(([k,v])=>s.setAttribute(k,v));slot.appendChild(s)}
-function loadAds(){
-  const section=document.getElementById('chapterAds');
-  if(!adEligible()){section.hidden=true;return}
-  section.hidden=false;
-  const slots=[...section.querySelectorAll('[data-ad]')];
-  const load=slot=>{
-    if(slot.dataset.loaded==='1')return;slot.dataset.loaded='1';
-    const n=slot.dataset.ad;
+function addScript(slot,src,attrs={}){
+  return new Promise(resolve=>{
+    const s=document.createElement('script');
+    Object.entries(attrs).forEach(([k,v])=>s.setAttribute(k,v));
+    s.onload=()=>resolve();
+    s.onerror=()=>resolve();
+    s.src=src;
+    slot.appendChild(s);
+  });
+}
+let adQueue=Promise.resolve();
+function queueAd(slot){
+  adQueue=adQueue.then(()=>loadAdSlot(slot));
+  return adQueue;
+}
+async function loadAdSlot(slot){
+  if(!slot||slot.dataset.loaded==='1')return;
+  slot.dataset.loaded='1';
+  const n=slot.dataset.ad;
+  try{
     if(n==='1'){
-      addScript(slot,'https://pl31305611.profitableratecpmnetwork.com/9c318a50ef96d7af9089a1f23c3dcd48/invoke.js',{async:'async','data-cfasync':'false'});
-      const d=document.createElement('div');d.id='container-9c318a50ef96d7af9089a1f23c3dcd48';slot.appendChild(d);
+      await addScript(slot,'https://pl31305611.profitableratecpmnetwork.com/9c318a50ef96d7af9089a1f23c3dcd48/invoke.js',{async:'async','data-cfasync':'false'});
+      const d=document.createElement('div');
+      d.id='container-9c318a50ef96d7af9089a1f23c3dcd48';
+      slot.appendChild(d);
     }else if(n==='2'){
       window.atOptions={'key':'2e991058e24736f278716e790d11b67f','format':'iframe','height':90,'width':728,'params':{}};
-      addScript(slot,'https://www.highrevenueformat.com/2e991058e24736f278716e790d11b67f/invoke.js',{'type':'text/javascript'});
+      await addScript(slot,'https://www.highrevenueformat.com/2e991058e24736f278716e790d11b67f/invoke.js',{'type':'text/javascript'});
     }else if(n==='3'){
       window.atOptions={'key':'e4d112d8537fd34ba895ce915fd0cf89','format':'iframe','height':50,'width':320,'params':{}};
-      addScript(slot,'https://www.highrevenueformat.com/e4d112d8537fd34ba895ce915fd0cf89/invoke.js',{'type':'text/javascript'});
+      await addScript(slot,'https://www.highrevenueformat.com/e4d112d8537fd34ba895ce915fd0cf89/invoke.js',{'type':'text/javascript'});
     }else if(n==='4'){
-      addScript(slot,'https://pl31305612.profitableratecpmnetwork.com/33/42/f5/3342f5af23f7a0a9a4797216c21f1442.js');
+      await addScript(slot,'https://pl31305612.profitableratecpmnetwork.com/33/42/f5/3342f5af23f7a0a9a4797216c21f1442.js');
     }
-  };
+  }catch(e){
+    console.warn('Ad slot failed:',n,e);
+  }
+}
+function loadAds(){
+  const section=document.getElementById('chapterAds');
+  if(!section||!adEligible()){
+    if(section)section.hidden=true;
+    return;
+  }
+  section.hidden=false;
+  const slots=[...section.querySelectorAll('[data-ad]')];
   if('IntersectionObserver' in window){
-    const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){load(e.target);io.unobserve(e.target)}}),{rootMargin:'600px 0px'});
+    const io=new IntersectionObserver(entries=>entries.forEach(e=>{
+      if(e.isIntersecting){queueAd(e.target);io.unobserve(e.target)}
+    }),{rootMargin:'800px 0px'});
     slots.forEach(s=>io.observe(s));
-  }else slots.forEach(load);
+  }else slots.forEach(queueAd);
 }
 function imageUrl(p){
  let s=String(p||'').trim(); if(!s)return '';
