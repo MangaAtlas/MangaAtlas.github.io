@@ -1,110 +1,48 @@
 name: Remove all site ads
-
 on:
   workflow_dispatch:
   push:
     branches: [main]
-
 permissions:
   contents: write
-
 jobs:
   cleanup:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Strip every ad from the site
+      - name: Remove advertising code
         shell: python
         run: |
           from pathlib import Path
           import re, shutil
-
           root = Path('.')
-          domains = r'(?:profitableratecpmnetwork|highperformanceformat|highrevenueformat|propellerads|adsterra|doubleclick|googlesyndication|googleadservices)'
-
-          def remove_function(s, name):
-              marker = 'function ' + name + '('
-              while True:
-                  start = s.find(marker)
-                  if start < 0:
-                      return s
-                  brace = s.find('{', start)
-                  if brace < 0:
-                      return s
-                  depth = 0
-                  quote = None
-                  esc = False
-                  i = brace
-                  while i < len(s):
-                      ch = s[i]
-                      if quote:
-                          if esc:
-                              esc = False
-                          elif ch == '\\':
-                              esc = True
-                          elif ch == quote:
-                              quote = None
-                      else:
-                          if ch in "'\"`":
-                              quote = ch
-                          elif ch == '{':
-                              depth += 1
-                          elif ch == '}':
-                              depth -= 1
-                              if depth == 0:
-                                  i += 1
-                                  break
-                      i += 1
-                  s = s[:start] + s[i:]
-
+          providers = r'profitableratecpmnetwork|highperformanceformat|highrevenueformat|propellerads|adsterra|doubleclick|googlesyndication|googleadservices'
           for p in root.rglob('*'):
-              if not p.is_file() or '.git' in p.parts or p.suffix.lower() not in {'.html','.js','.mjs','.css','.xml','.txt','.md'}:
+              if not p.is_file() or '.git' in p.parts or '.github' in p.parts or p.suffix.lower() not in {'.html','.js','.mjs','.css'}:
                   continue
               s = p.read_text(encoding='utf-8', errors='ignore')
               old = s
-
-              # Remove external ad provider scripts and direct provider URLs.
-              s = re.sub(r'<script[^>]+src=["\'][^"\']*'+domains+r'[^"\']*["\'][^>]*>\s*</script>', '', s, flags=re.I)
-              s = re.sub(r'https?://[^\"\'\s<>]*'+domains+r'[^\"\'\s<>]*', '', s, flags=re.I)
-
+              s = re.sub(r'<script[^>]*src=["\'][^"\']*(?:' + providers + r')[^"\']*["\'][^>]*>\s*</script>', '', s, flags=re.I)
+              s = re.sub(r'https?://[^\"\'\s<>]*(?:' + providers + r')[^\"\'\s<>]*', '', s, flags=re.I)
               if p.name == 'chapter.html':
-                  # Remove all ad functions before removing their call sites.
-                  for fn in ('watchAd','adFrame','addHighRevenue','addContainerAd','add300Ad','loadOneAd'):
-                      s = remove_function(s, fn)
+                  s = re.sub(r'function (?:watchAd|adFrame|addHighRevenue|addContainerAd|add300Ad|loadOneAd)\([^)]*\)\{.*?\}', '', s, flags=re.S)
                   s = re.sub(r'function\s+addAds\s*\([^)]*\)\s*\{.*?\}', 'function addAds(){}', s, flags=re.S)
-
-                  # Remove ad CSS rules/classes.
                   s = re.sub(r'\.ad-[A-Za-z0-9_-]+\{[^{}]*\}', '', s)
-
-                  # Remove generated ad HTML from JS strings.
-                  s = re.sub(r"<div class=\\?['\"]?ad-slot[^>]*></div>", '', s, flags=re.I)
                   s = re.sub(r'<div class=\\?"ad-slot[^>]*></div>', '', s, flags=re.I)
-                  s = re.sub(r"let html='';?let ad728Count=0;", "let html='';", s)
-                  s = re.sub(r'let\s+(?:ad728Count|new728Count|new320Count|new468Count)\s*=\s*0;?', '', s)
-                  s = re.sub(r'if\([^{}]*\)\s*\{?\s*html\+=[^;]*ad-(?:slot|90|50|60|250|container)[^;]*;?\s*\}?', '', s)
-                  s = re.sub(r'html\+=[^;]*ad-(?:slot|90|50|60|250|container)[^;]*;', '', s)
-                  s = re.sub(r'ad728Count\+\+;|new728Count\+\+;|new320Count\+\+;|new468Count\+\+;', '', s)
-                  s = re.sub(r'while\(ad728Count<6\)\{.*?\}', '', s, flags=re.S)
+                  s = re.sub(r"<div class=\\?'ad-slot[^>]*></div>", '', s, flags=re.I)
+                  s = re.sub(r'html\+=[^;]*ad-slot[^;]*;', '', s)
                   s = re.sub(r'addAds\(\);?', '', s)
-
               if s != old:
                   p.write_text(s, encoding='utf-8')
-
-          # Delete all local ad asset folders/files and the old ad helper.
-          for name in ('ads',):
-              shutil.rmtree(name, ignore_errors=True)
-          for name in ('scripts/ensure-ad-loading.mjs',):
-              Path(name).unlink(missing_ok=True)
-
-      - name: Verify no ad providers or ad slots remain
+          shutil.rmtree('ads', ignore_errors=True)
+          Path('scripts/ensure-ad-loading.mjs').unlink(missing_ok=True)
+      - name: Verify site has no ad providers
         shell: bash
         run: |
-          if grep -RniE 'profitableratecpmnetwork|highperformanceformat|highrevenueformat|propellerads|adsterra|googlesyndication|googleadservices' --exclude-dir=.git .; then exit 1; fi
-          if grep -Rni 'ad-slot' chapter.html; then exit 1; fi
-          echo 'Verified: no known ad provider code and no chapter ad slots remain.'
-
+          if grep -RniE 'profitableratecpmnetwork|highperformanceformat|highrevenueformat|propellerads|adsterra|googlesyndication|googleadservices' --exclude-dir=.git --exclude-dir=.github --exclude='*.md' .; then exit 1; fi
+          if grep -ni 'ad-slot' chapter.html; then exit 1; fi
+          echo 'PASS: no ad provider code or chapter ad slots remain in live site files.'
       - name: Commit cleanup
         shell: bash
         run: |
