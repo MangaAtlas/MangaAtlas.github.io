@@ -23,21 +23,17 @@
 <script>
 const slug=decodeURIComponent(new URLSearchParams(location.search).get('slug')||'');
 function imageUrl(p){
- let s=String(p||'').trim();
- if(!s)return '';
- s=s.replace(/^https:\/\/mangaatlas\.github\.io\//i,'').replace(/^https:\/\/raw\.githubusercontent\.com\/MangaAtlas\/MangaAtlas\.github\.io\/(?:main|master)\//i,'').replace(/^\.\//,'').replace(/^\//,'');
- if(!s)return '';
- if(/^https?:\/\//i.test(s)){
-   const m=s.match(/^https:\/\/raw\.githubusercontent\.com\/MangaAtlas\/MangaAtlas\.github\.io\/(?:main|master)\/(.+)$/i);
-   if(m)return 'https://cdn.jsdelivr.net/gh/MangaAtlas/MangaAtlas.github.io@main/'+m[1].split('/').map(encodeURIComponent).join('/');
-   return s;
- }
- return 'https://cdn.jsdelivr.net/gh/MangaAtlas/MangaAtlas.github.io@main/'+s.split('/').map(encodeURIComponent).join('/');
+ let s=String(p||'').trim(); if(!s)return '';
+ const raw=s.match(/^https:\/\/raw\.githubusercontent\.com\/MangaAtlas\/MangaAtlas\.github\.io\/(?:main|master)\/(.+)$/i);
+ if(raw)s=raw[1];
+ else s=s.replace(/^https:\/\/mangaatlas\.github\.io\//i,'').replace(/^\.\//,'').replace(/^\//,'');
+ if(/^https?:\/\//i.test(s))return s;
+ return '/'+s.split('/').map(encodeURIComponent).join('/');
 }
 function fallbackImage(img){
  const src=img.getAttribute('src')||'';
- if(src.includes('cdn.jsdelivr.net/gh/MangaAtlas/MangaAtlas.github.io@main/')){
-   const path=src.split('@main/')[1];
+ if(src.startsWith('/chapter-images/')){
+   const path=src.slice(1);
    img.onerror=null;
    img.src='https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/'+path;
  }
