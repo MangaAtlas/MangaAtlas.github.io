@@ -1,0 +1,95 @@
+name: Rebuild two chapters with fresh slugs
+on:
+  push:
+    paths:
+      - '.github/workflows/rebuild-two-chapters-indexing.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Rebuild chapters, preserve images, update sitemap and SEO
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, re, html
+          from pathlib import Path
+          from datetime import datetime, timezone
+          
+          content=Path('data/content.json')
+          data=json.loads(content.read_text(encoding='utf-8'))
+          chapters=data.setdefault('chapters', [])
+          now=datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+          specs=[
+            {
+              'old_slugs': {'SAKAMOTO-275'},
+              'new_slug':'sakamoto-days-raw-275-v2',
+              'new_id':'sakamoto-days-275-raw-v2',
+              'mangaId':'sakamoto-days-ja',
+              'title':'SAKAMOTO DAYS – サカモトデイズ raw 第275話',
+              'number':275,
+              'country':'JP',
+              'dir':Path('chapter-images/sakamoto-days-ja/chapter-275')
+            },
+            {
+              'old_slugs': {'one-piece-raw-1193'},
+              'new_slug':'one-piece-raw-1193-v2',
+              'new_id':'one-piece-1193-raw-v2',
+              'mangaId':'one-piece',
+              'title':'ワンピース Raw raw 第1193話 ( One Piece raw Chapter 1193 )',
+              'number':1193,
+              'country':'JP',
+              'dir':Path('chapter-images/one-piece/chapter-1193')
+            }
+          ]
+          for spec in specs:
+              files=sorted([p for p in spec['dir'].glob('*') if p.is_file()], key=lambda p:p.name)
+              pages=['https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/'+str(p).replace('\\','/') for p in files]
+              # Remove the old chapter record(s) only; do not touch its image files.
+              chapters[:]=[c for c in chapters if c.get('slug') not in spec['old_slugs'] and c.get('id') != spec['new_id']]
+              chapters.append({
+                'id':spec['new_id'],
+                'mangaId':spec['mangaId'],
+                'title':spec['title'],
+                'number':spec['number'],
+                'slug':spec['new_slug'],
+                'country':spec['country'],
+                'pages':pages,
+                'createdAt':now,
+                'updatedAt':now
+              })
+          content.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          
+          # Sitemap: remove old URLs and add fresh URLs with current lastmod.
+          sm=Path('sitemap.xml')
+          s=sm.read_text(encoding='utf-8')
+          for old in ('SAKAMOTO-275','one-piece-raw-1193'):
+              s=re.sub(r'<url>\s*<loc>[^<]*chapter\.html\?slug='+re.escape(old)+r'</loc>.*?</url>\s*','',s,flags=re.S)
+          additions=[]
+          for spec in specs:
+              additions.append(f"<url><loc>https://mangaatlas.github.io/chapter.html?slug={spec['new_slug']}</loc><lastmod>{now}</lastmod></url>")
+          s=s.replace('</urlset>','\n'.join(additions)+'\n</urlset>')
+          sm.write_text(s,encoding='utf-8')
+          
+          # Make the client-rendered chapter page expose a real canonical/OG URL after it resolves the slug.
+          cp=Path('chapter.html')
+          t=cp.read_text(encoding='utf-8')
+          if 'id="canonical"' not in t:
+              t=t.replace('<meta id="desc" name="description" content="Read manga chapters on MangaAtlas.">','<meta id="desc" name="description" content="Read manga chapters on MangaAtlas."><link id="canonical" rel="canonical" href="https://mangaatlas.github.io/chapter.html"><meta id="og-title" property="og:title" content="Chapter | MangaAtlas"><meta id="og-url" property="og:url" content="https://mangaatlas.github.io/chapter.html">')
+          marker="document.getElementById('desc').content=`Read ${c.title||m.title||'manga'} on MangaAtlas.`;"
+          inject=marker+"document.getElementById('canonical').href=location.origin+location.pathname+'?slug='+encodeURIComponent(c.slug);document.getElementById('og-title').content=pageTitle;document.getElementById('og-url').content=location.origin+location.pathname+'?slug='+encodeURIComponent(c.slug);"
+          if marker in t and 'document.getElementById(\'canonical\').href' not in t:
+              t=t.replace(marker,inject,1)
+          cp.write_text(t,encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/content.json sitemap.xml chapter.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Rebuild One Piece 1193 and Sakamoto 275 with fresh slugs'
+          git push
