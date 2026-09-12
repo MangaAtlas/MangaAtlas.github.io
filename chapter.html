@@ -43,19 +43,19 @@ async function loadAdSlot(slot){
   const n=slot.dataset.ad;
   try{
     if(n==='1'){
-      await addScript(slot,'https://pl31305611.profitableratecpmnetwork.com/9c318a50ef96d7af9089a1f23c3dcd48/invoke.js',{async:'async','data-cfasync':'false'});
+      await addScript(slot,'',{async:'async','data-cfasync':'false'});
       const d=document.createElement('div');d.id='container-9c318a50ef96d7af9089a1f23c3dcd48';slot.appendChild(d);
     }else if(n==='2'){
       window.atOptions={'key':'2e991058e24736f278716e790d11b67f','format':'iframe','height':90,'width':728,'params':{}};
-      await addScript(slot,'https://www.highrevenueformat.com/2e991058e24736f278716e790d11b67f/invoke.js',{'type':'text/javascript'});
+      await addScript(slot,'',{'type':'text/javascript'});
     }else if(n==='3'){
       window.atOptions={'key':'e4d112d8537fd34ba895ce915fd0cf89','format':'iframe','height':50,'width':320,'params':{}};
-      await addScript(slot,'https://www.highrevenueformat.com/e4d112d8537fd34ba895ce915fd0cf89/invoke.js',{'type':'text/javascript'});
+      await addScript(slot,'',{'type':'text/javascript'});
     }else if(n==='4'){
-      await addScript(slot,'https://pl31305612.profitableratecpmnetwork.com/33/42/f5/3342f5af23f7a0a9a4797216c21f1442.js');
+      await addScript(slot,'');
     }else if(n==='5'){
       window.atOptions={'key':'8b11294931fe6646d489e066d12c4a7b','format':'iframe','height':250,'width':300,'params':{}};
-      await addScript(slot,'https://www.highrevenueformat.com/8b11294931fe6646d489e066d12c4a7b/invoke.js',{'type':'text/javascript'});
+      await addScript(slot,'',{'type':'text/javascript'});
     }
   }catch(e){console.warn('Ad slot failed:',n,e);}
 }
