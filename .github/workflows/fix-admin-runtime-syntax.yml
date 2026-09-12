@@ -1,0 +1,46 @@
+name: Fix admin runtime syntax
+
+on:
+  push:
+    paths:
+      - .github/rebuild.trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repair broken JavaScript newline literals
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('admin/index.html')
+          s = p.read_text(encoding='utf-8')
+          nl = chr(10)
+          old1 = "replace(/" + nl + "/g,'')"
+          new1 = "replace(/\\n/g,'')"
+          old2 = "+'" + nl + "'"
+          new2 = "+'\\n'"
+          changed = 0
+          if old1 in s:
+              s = s.replace(old1, new1)
+              changed += 1
+          if old2 in s:
+              s = s.replace(old2, new2)
+              changed += 1
+          if changed == 0:
+              raise SystemExit('No broken newline literals found')
+          p.write_text(s, encoding='utf-8')
+      - name: Commit fix
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add admin/index.html
+          git commit -m 'Fix admin JavaScript runtime syntax' || exit 0
+          git pull --rebase origin main
+          git push
