@@ -52,4 +52,5 @@ jobs:
           git add admin/index.html
           git diff --cached --quiet && exit 0
           git commit -m 'Fix admin chapter image upload buttons'
+          git pull --rebase origin main
           git push
