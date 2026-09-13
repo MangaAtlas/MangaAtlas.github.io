@@ -11,7 +11,7 @@
   s.onerror=function(){window.__mangaAtlasAnalyticsError='gtag_load_failed'};
   document.head.appendChild(s);
 
-  var adScript='https://pl31305611.profitableratecpmnetwork.com/9c318a50ef96d7af9089a1f23c3dcd48/invoke.js';
+  var adScript='';
   function mountTopAd(){
     if(!document.body||document.getElementById('manga-atlas-ad-top')) return;
     var wrap=document.createElement('div');

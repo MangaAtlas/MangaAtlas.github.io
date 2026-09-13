@@ -13,7 +13,7 @@
     var s=document.createElement('script');
     s.async=true;
     s.setAttribute('data-cfasync','false');
-    s.src='https://pl31305611.profitableratecpmnetwork.com/9c318a50ef96d7af9089a1f23c3dcd48/invoke.js';
+    s.src='';
     document.head.appendChild(s);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount); else mount();
