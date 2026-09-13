@@ -20,11 +20,11 @@
   function addHighRevenue(parent,key,width,height){
     var box=document.createElement('div');
     box.style.cssText='display:flex;justify-content:center;align-items:center;width:100%;min-height:'+height+'px;margin:14px 0;overflow:visible;';
+    parent.appendChild(box);
     var cfg=document.createElement('script');
-    cfg.text='atOptions={key:'+JSON.stringify(key)+',format:"iframe",height:'+height+',width:'+width+',params:{}};';
+    cfg.text='window.atOptions={key:'+JSON.stringify(key)+',format:"iframe",height:'+height+',width:'+width+',params:{}};';
     box.appendChild(cfg);
     addExternalScript(box,'https://www.highrevenueformat.com/'+key+'/invoke.js');
-    parent.appendChild(box);
   }
 
   function addAds(){
@@ -34,30 +34,30 @@
     var top=document.createElement('div');
     top.id='mangaatlas-ads-top';
     top.style.cssText='width:100%;display:flex;flex-direction:column;align-items:center;overflow:visible;';
+    document.body.insertBefore(top,document.body.firstChild);
 
     var nativeBox=document.createElement('div');
     nativeBox.style.cssText='width:100%;display:flex;justify-content:center;align-items:center;margin:8px 0;overflow:visible;';
-    addExternalScript(nativeBox,'https://pl31326962.profitableratecpmnetwork.com/d4d07386504123ce6e8dd856dd6557f7/invoke.js',{'async':'async','data-cfasync':'false'});
+    top.appendChild(nativeBox);
     var nativeContainer=document.createElement('div');
     nativeContainer.id='container-d4d07386504123ce6e8dd856dd6557f7';
     nativeBox.appendChild(nativeContainer);
-    top.appendChild(nativeBox);
+    addExternalScript(nativeBox,'https://pl31326962.profitableratecpmnetwork.com/d4d07386504123ce6e8dd856dd6557f7/invoke.js',{'async':'async','data-cfasync':'false'});
 
     var social=document.createElement('div');
     social.style.cssText='width:100%;display:block;overflow:visible;';
-    addExternalScript(social,'https://pl31326963.profitableratecpmnetwork.com/01/89/4e/01894ea722635fb2ec48d7847937a012.js');
     top.appendChild(social);
+    addExternalScript(social,'https://pl31326963.profitableratecpmnetwork.com/01/89/4e/01894ea722635fb2ec48d7847937a012.js');
 
     addHighRevenue(top,'d403d3e95eb68c8dc43b433780436e3e',300,250);
     addHighRevenue(top,'6513670c5172f87515d7daa363316e9e',728,90);
-    document.body.insertBefore(top,document.body.firstChild);
 
     var bottom=document.createElement('div');
     bottom.id='mangaatlas-ads-bottom';
     bottom.style.cssText='width:100%;display:flex;flex-direction:column;align-items:center;overflow:visible;margin-top:18px;';
+    document.body.appendChild(bottom);
     addHighRevenue(bottom,'d403d3e95eb68c8dc43b433780436e3e',300,250);
     addHighRevenue(bottom,'6513670c5172f87515d7daa363316e9e',728,90);
-    document.body.appendChild(bottom);
   }
 
   function pageView(){
