@@ -15,15 +15,9 @@
     gtag('event','page_view',{page_title:document.title,page_location:location.href,page_path:location.pathname+location.search});
   }
 
-  function providerScript(src,atOptions){
-    if(atOptions) window.atOptions=atOptions;
-    var s=document.createElement('script');
-    s.async=true;
-    s.src=src;
-    s.setAttribute('data-manga-atlas-ad','1');
-    document.body.appendChild(s);
-  }
-
+  /* These two ad providers both read the global window.atOptions object.
+     Do NOT load them async: async loading lets the second key overwrite the
+     first key before its script executes, which makes both placements fail. */
   function ad300(parent){
     var box=document.createElement('div');
     box.style.cssText='width:300px;min-height:250px;max-width:100%;margin:12px auto;display:flex;justify-content:center;align-items:flex-start;overflow:visible;';
@@ -31,7 +25,7 @@
     window.atOptions={key:'d403d3e95eb68c8dc43b433780436e3e',format:'iframe',height:250,width:300,params:{}};
     var s=document.createElement('script');
     s.src='https://www.highrevenueformat.com/d403d3e95eb68c8dc43b433780436e3e/invoke.js';
-    s.async=true;
+    s.async=false;
     s.setAttribute('data-manga-atlas-ad','300x250');
     box.appendChild(s);
   }
@@ -43,7 +37,7 @@
     window.atOptions={key:'6513670c5172f87515d7daa363316e9e',format:'iframe',height:90,width:728,params:{}};
     var s=document.createElement('script');
     s.src='https://www.highrevenueformat.com/6513670c5172f87515d7daa363316e9e/invoke.js';
-    s.async=true;
+    s.async=false;
     s.setAttribute('data-manga-atlas-ad','728x90');
     box.appendChild(s);
   }
@@ -73,6 +67,7 @@
   function ads(){
     if(window.__mangaAtlasAdsLoaded||!document.body) return;
     window.__mangaAtlasAdsLoaded=true;
+
     var top=document.createElement('div');
     top.id='mangaatlas-ads-top';
     top.style.cssText='width:100%;display:flex;flex-direction:column;align-items:center;overflow:visible;';
@@ -80,6 +75,7 @@
     nativeAd(top);
     ad300(top);
     ad728(top);
+
     var bottom=document.createElement('div');
     bottom.id='mangaatlas-ads-bottom';
     bottom.style.cssText='width:100%;display:flex;flex-direction:column;align-items:center;overflow:visible;margin-top:18px;';
