@@ -1053,6 +1053,17 @@
         "chapter-images/kagurabachi/chapter-kagurabachi-raw-132/0001-_877_2026_6_1_2_.jpg"
       ],
       "updated_at": "2026-09-13T12:02:34.712Z"
+    },
+    {
+      "id": "kingdom-raw-888",
+      "mangaId": "kingdom",
+      "title": "キングダム raw ( Kingdom Raw ) 第888話",
+      "number": 888,
+      "slug": "kingdom-raw-888",
+      "country": "JP",
+      "pages": [
+        "chapter-images/kingdom/chapter-kingdom-raw-888/0001-_877_2026_6_1_3_.jpg"
+      ]
     }
   ]
 }
