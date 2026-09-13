@@ -1,0 +1,106 @@
+name: Install static ads
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  ads:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inject provider snippets into public HTML
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          marker_start='<!-- MangaAtlas STATIC ADS START -->'
+          marker_end='<!-- MangaAtlas STATIC ADS END -->'
+          block='''<!-- MangaAtlas STATIC ADS START -->
+          <div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;margin:10px 0;overflow:visible;">
+            <div>
+              <script async="async" data-cfasync="false" src="https://pl31326962.profitableratecpmnetwork.com/d4d07386504123ce6e8dd856dd6557f7/invoke.js"></script>
+              <div id="container-d4d07386504123ce6e8dd856dd6557f7"></div>
+            </div>
+            <div>
+              <script>
+                atOptions = {
+                  'key' : 'd403d3e95eb68c8dc43b433780436e3e',
+                  'format' : 'iframe',
+                  'height' : 250,
+                  'width' : 300,
+                  'params' : {}
+                };
+              </script>
+              <script src="https://www.highrevenueformat.com/d403d3e95eb68c8dc43b433780436e3e/invoke.js"></script>
+            </div>
+            <div>
+              <script>
+                atOptions = {
+                  'key' : '6513670c5172f87515d7daa363316e9e',
+                  'format' : 'iframe',
+                  'height' : 90,
+                  'width' : 728,
+                  'params' : {}
+                };
+              </script>
+              <script src="https://www.highrevenueformat.com/6513670c5172f87515d7daa363316e9e/invoke.js"></script>
+            </div>
+          </div>
+          <!-- MangaAtlas STATIC ADS END -->'''
+          bottom='''<!-- MangaAtlas STATIC ADS BOTTOM START -->
+          <div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;margin:18px 0;overflow:visible;">
+            <div>
+              <script>
+                atOptions = {
+                  'key' : 'd403d3e95eb68c8dc43b433780436e3e',
+                  'format' : 'iframe',
+                  'height' : 250,
+                  'width' : 300,
+                  'params' : {}
+                };
+              </script>
+              <script src="https://www.highrevenueformat.com/d403d3e95eb68c8dc43b433780436e3e/invoke.js"></script>
+            </div>
+            <div>
+              <script>
+                atOptions = {
+                  'key' : '6513670c5172f87515d7daa363316e9e',
+                  'format' : 'iframe',
+                  'height' : 90,
+                  'width' : 728,
+                  'params' : {}
+                };
+              </script>
+              <script src="https://www.highrevenueformat.com/6513670c5172f87515d7daa363316e9e/invoke.js"></script>
+            </div>
+          </div>
+          <script src="https://pl31326963.profitableratecpmnetwork.com/01/89/4e/01894ea722635fb2ec48d7847937a012.js"></script>
+          <!-- MangaAtlas STATIC ADS BOTTOM END -->'''
+          changed=[]
+          for p in sorted(Path('.').glob('*.html')):
+              text=p.read_text(encoding='utf-8')
+              # Remove old static blocks if a previous run left them, then install exactly one top and one bottom block.
+              import re
+              text=re.sub(r'\s*<!-- MangaAtlas STATIC ADS START -->.*?<!-- MangaAtlas STATIC ADS END -->\s*', '\n', text, flags=re.S)
+              text=re.sub(r'\s*<!-- MangaAtlas STATIC ADS BOTTOM START -->.*?<!-- MangaAtlas STATIC ADS BOTTOM END -->\s*', '\n', text, flags=re.S)
+              if '<body' not in text.lower() or '</body>' not in text.lower():
+                  continue
+              new=text.replace('<body>', '<body>\n'+block, 1) if '<body>' in text else re.sub(r'(<body\b[^>]*>)', r'\1\n'+block, text, count=1, flags=re.I)
+              new=new.replace('</body>', bottom+'\n</body>', 1)
+              if new!=text:
+                  p.write_text(new,encoding='utf-8')
+                  changed.append(p.name)
+          print('Installed static ads:', ', '.join(changed) if changed else 'none')
+          PY
+      - name: Commit static ads
+        run: |
+          git config user.name 'MangaAtlas Bot'
+          git config user.email 'bot@mangaatlas.local'
+          git add '*.html'
+          if git diff --cached --quiet; then
+            echo 'No static ad changes needed.'
+          else
+            git commit -m 'Install static ad snippets on public pages'
+            git push
+          fi
