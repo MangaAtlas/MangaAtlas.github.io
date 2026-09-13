@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "chapters": [
+    {
+      "id": "hunter-x-hunter-420",
+      "mangaId": "hunter-x-hunter",
+      "title": "ハンター×ハンター raw ( Hunter x Hunter raw ) 第420話",
+      "number": 420,
+      "slug": "Hun x Hun 420",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "hunter-x-hunter-421",
+      "mangaId": "hunter-x-hunter",
+      "title": "ハンター×ハンター raw ( Hunter x Hunter raw ) 第421話",
+      "number": 421,
+      "slug": "Hun x Hun 421",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "kingdom-raw-888",
+      "mangaId": "kingdom",
+      "title": "キングダム raw ( Kingdom Raw ) 第888話",
+      "number": 888,
+      "slug": "kingdom-raw-888",
+      "country": "JP",
+      "pages": []
+    }
+  ]
+}
