@@ -33,6 +33,7 @@
     else document.body.appendChild(wrap);
     window.atOptions={key:key,format:'iframe',height:height,width:width,params:{}};
     var x=document.createElement('script');
+    x.async=false;
     x.src='https://www.highrevenueformat.com/'+key+'/invoke.js';
     wrap.appendChild(x);
   }
