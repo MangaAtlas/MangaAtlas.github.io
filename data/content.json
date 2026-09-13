@@ -1085,6 +1085,38 @@
       "slug": "Hun-x-Hun-420-Raw",
       "country": "JP",
       "pages": []
+    },
+    {
+      "id": "sakamoto-days-raw-275",
+      "mangaId": "sakamoto-days",
+      "title": "SAKAMOTO DAYS – サカモトデイズ raw 第275話",
+      "number": 275,
+      "slug": "sakamoto-days-raw-275",
+      "country": "JP",
+      "pages": [
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0001-006_6aa6bb7335b2c.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0002-007_6aa6bb7359fe6.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0003-025_6aa6bb742002b.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0004-026_6aa6bb7419271.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0005-027_6aa6bb7457b33.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0006-028_6aa6bb74ceab4.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0007-029_6aa6bb74dc163.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0008-030_6aa6bb74b9e32.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0009-031_6aa6bb758e8fa.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0010-032_6aa6bb759371b.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0011-033_6aa6bb759fb09.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0012-034_6aa6bb767dcd7.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0013-035_6aa6bb7677e25.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0014-036_6aa6bb768d7aa.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0015-037_6aa6bb772ecee.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0016-038_6aa6bb773163b.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0017-039_6aa6bb7707612.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0018-040_6aa6bb776f6a0.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0019-041_6aa6bb77c9348.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0020-042_6aa6bb780557b.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/manga/chapter-sakamoto-days-raw-275/0021-043_6aa6bb780cb62.jpg"
+      ],
+      "_manual": true
     }
   ]
 }
