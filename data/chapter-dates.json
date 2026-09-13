@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-13T21:16:47+05:00",
+  "generatedAt": "2026-09-13T22:10:09+05:00",
   "chapters": {
     "restored-1": {
       "createdAt": "2026-09-05T08:04:24+05:00",
@@ -237,6 +237,14 @@
     "hunter-x-hunter-421": {
       "createdAt": "2026-09-13T17:43:53+05:00",
       "commit": "ed6abe8e303c6c3c8aeb18367f7b29952798ce36"
+    },
+    "hunter-420-raw": {
+      "createdAt": "2026-09-05T04:44:13Z",
+      "commit": "904679422d8e625fa5576bb7abb0db9cc0badd8c"
+    },
+    "sakamoto-days-raw-275": {
+      "createdAt": "2026-09-13T22:10:09+05:00",
+      "commit": "9e36b79c94c552e003ea63dc7fa41b6e0d0a239d"
     }
   }
 }
