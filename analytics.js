@@ -10,21 +10,19 @@
   ga.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(MEASUREMENT_ID);
   document.head.appendChild(ga);
 
-  function addExternalScript(parent,src,attrs){
-    var s=document.createElement('script');
-    if(attrs) Object.keys(attrs).forEach(function(k){s.setAttribute(k,attrs[k])});
-    s.src=src;
-    parent.appendChild(s);
-  }
-
-  function addHighRevenue(parent,key,width,height){
-    var box=document.createElement('div');
-    box.style.cssText='display:flex;justify-content:center;align-items:center;width:100%;min-height:'+height+'px;margin:14px 0;overflow:visible;';
-    parent.appendChild(box);
-    var cfg=document.createElement('script');
-    cfg.text='window.atOptions={key:'+JSON.stringify(key)+',format:"iframe",height:'+height+',width:'+width+',params:{}};';
-    box.appendChild(cfg);
-    addExternalScript(box,'https://www.highrevenueformat.com/'+key+'/invoke.js');
+  function adFrame(parent,width,height,html){
+    var wrap=document.createElement('div');
+    wrap.style.cssText='width:100%;display:flex;justify-content:center;align-items:center;min-height:'+height+'px;margin:14px 0;overflow:visible;';
+    var frame=document.createElement('iframe');
+    frame.width=String(width);
+    frame.height=String(height);
+    frame.setAttribute('frameborder','0');
+    frame.setAttribute('scrolling','no');
+    frame.setAttribute('title','Advertisement');
+    frame.style.cssText='display:block;max-width:100%;border:0;overflow:hidden;background:transparent;';
+    wrap.appendChild(frame);
+    parent.appendChild(wrap);
+    frame.srcdoc='<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;padding:0;background:transparent;overflow:hidden;}body{display:flex;justify-content:center;align-items:flex-start;}</style></head><body>'+html+'</body></html>';
   }
 
   function addAds(){
@@ -36,28 +34,15 @@
     top.style.cssText='width:100%;display:flex;flex-direction:column;align-items:center;overflow:visible;';
     document.body.insertBefore(top,document.body.firstChild);
 
-    var nativeBox=document.createElement('div');
-    nativeBox.style.cssText='width:100%;display:flex;justify-content:center;align-items:center;margin:8px 0;overflow:visible;';
-    top.appendChild(nativeBox);
-    var nativeContainer=document.createElement('div');
-    nativeContainer.id='container-d4d07386504123ce6e8dd856dd6557f7';
-    nativeBox.appendChild(nativeContainer);
-    addExternalScript(nativeBox,'https://pl31326962.profitableratecpmnetwork.com/d4d07386504123ce6e8dd856dd6557f7/invoke.js',{'async':'async','data-cfasync':'false'});
-
-    var social=document.createElement('div');
-    social.style.cssText='width:100%;display:block;overflow:visible;';
-    top.appendChild(social);
-    addExternalScript(social,'https://pl31326963.profitableratecpmnetwork.com/01/89/4e/01894ea722635fb2ec48d7847937a012.js');
-
-    addHighRevenue(top,'d403d3e95eb68c8dc43b433780436e3e',300,250);
-    addHighRevenue(top,'6513670c5172f87515d7daa363316e9e',728,90);
+    adFrame(top,300,250,'<script>var atOptions={key:\'d403d3e95eb68c8dc43b433780436e3e\',format:\'iframe\',height:250,width:300,params:{}};<\\/script><script src="https://www.highrevenueformat.com/d403d3e95eb68c8dc43b433780436e3e/invoke.js"><\\/script>');
+    adFrame(top,728,90,'<script>var atOptions={key:\'6513670c5172f87515d7daa363316e9e\',format:\'iframe\',height:90,width:728,params:{}};<\\/script><script src="https://www.highrevenueformat.com/6513670c5172f87515d7daa363316e9e/invoke.js"><\\/script>');
 
     var bottom=document.createElement('div');
     bottom.id='mangaatlas-ads-bottom';
     bottom.style.cssText='width:100%;display:flex;flex-direction:column;align-items:center;overflow:visible;margin-top:18px;';
     document.body.appendChild(bottom);
-    addHighRevenue(bottom,'d403d3e95eb68c8dc43b433780436e3e',300,250);
-    addHighRevenue(bottom,'6513670c5172f87515d7daa363316e9e',728,90);
+    adFrame(bottom,300,250,'<script>var atOptions={key:\'d403d3e95eb68c8dc43b433780436e3e\',format:\'iframe\',height:250,width:300,params:{}};<\\/script><script src="https://www.highrevenueformat.com/d403d3e95eb68c8dc43b433780436e3e/invoke.js"><\\/script>');
+    adFrame(bottom,728,90,'<script>var atOptions={key:\'6513670c5172f87515d7daa363316e9e\',format:\'iframe\',height:90,width:728,params:{}};<\\/script><script src="https://www.highrevenueformat.com/6513670c5172f87515d7daa363316e9e/invoke.js"><\\/script>');
   }
 
   function pageView(){
