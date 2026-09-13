@@ -11,14 +11,14 @@
   s.onerror=function(){window.__mangaAtlasAnalyticsError='gtag_load_failed'};
   document.head.appendChild(s);
 
-  var adScript='';
+  var adScript='https://pl31326962.profitableratecpmnetwork.com/d4d07386504123ce6e8dd856dd6557f7/invoke.js';
   function mountTopAd(){
     if(!document.body||document.getElementById('manga-atlas-ad-top')) return;
     var wrap=document.createElement('div');
     wrap.id='manga-atlas-ad-top';
     wrap.style.cssText='width:100%;display:block;text-align:center;margin:0 auto;padding:0;min-height:0;overflow:hidden;';
     var container=document.createElement('div');
-    container.id='container-9c318a50ef96d7af9089a1f23c3dcd48';
+    container.id='container-d4d07386504123ce6e8dd856dd6557f7';
     wrap.appendChild(container);
     document.body.insertBefore(wrap,document.body.firstChild);
     var ad=document.createElement('script');
