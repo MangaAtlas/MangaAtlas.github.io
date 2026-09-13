@@ -1,54 +1,10 @@
 name: Remove all site ads
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
 permissions:
   contents: write
 jobs:
   cleanup:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Remove advertising code
-        shell: python
-        run: |
-          from pathlib import Path
-          import re, shutil
-          root = Path('.')
-          providers = r'profitableratecpmnetwork|highperformanceformat|highrevenueformat|propellerads|adsterra|doubleclick|googlesyndication|googleadservices'
-          for p in root.rglob('*'):
-              if not p.is_file() or '.git' in p.parts or '.github' in p.parts or p.suffix.lower() not in {'.html','.js','.mjs','.css'}:
-                  continue
-              s = p.read_text(encoding='utf-8', errors='ignore')
-              old = s
-              s = re.sub(r'<script[^>]*src=["\'][^"\']*(?:' + providers + r')[^"\']*["\'][^>]*>\s*</script>', '', s, flags=re.I)
-              s = re.sub(r'https?://[^\"\'\s<>]*(?:' + providers + r')[^\"\'\s<>]*', '', s, flags=re.I)
-              if p.name == 'chapter.html':
-                  s = re.sub(r'function (?:watchAd|adFrame|addHighRevenue|addContainerAd|add300Ad|loadOneAd)\([^)]*\)\{.*?\}', '', s, flags=re.S)
-                  s = re.sub(r'function\s+addAds\s*\([^)]*\)\s*\{.*?\}', 'function addAds(){}', s, flags=re.S)
-                  s = re.sub(r'\.ad-[A-Za-z0-9_-]+\{[^{}]*\}', '', s)
-                  s = re.sub(r'<div class=\\?"ad-slot[^>]*></div>', '', s, flags=re.I)
-                  s = re.sub(r"<div class=\\?'ad-slot[^>]*></div>", '', s, flags=re.I)
-                  s = re.sub(r'html\+=[^;]*ad-slot[^;]*;', '', s)
-                  s = re.sub(r'addAds\(\);?', '', s)
-              if s != old:
-                  p.write_text(s, encoding='utf-8')
-          shutil.rmtree('ads', ignore_errors=True)
-          Path('scripts/ensure-ad-loading.mjs').unlink(missing_ok=True)
-      - name: Verify site has no ad providers
-        shell: bash
-        run: |
-          if grep -RniE 'profitableratecpmnetwork|highperformanceformat|highrevenueformat|propellerads|adsterra|googlesyndication|googleadservices' --exclude-dir=.git --exclude-dir=.github --exclude='*.md' .; then exit 1; fi
-          if grep -ni 'ad-slot' chapter.html; then exit 1; fi
-          echo 'PASS: no ad provider code or chapter ad slots remain in live site files.'
-      - name: Commit cleanup
-        shell: bash
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'Remove all site advertising [skip ci]'
-          git push
+      - run: echo "Disabled — MangaAtlas ads are managed by analytics.js"
