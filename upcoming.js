@@ -3,7 +3,6 @@
   if(!app)return;
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   const GH='https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/';
-  const placeholder='https://placehold.co/220x300';
   try{
     const d=await fetch('/data/upcoming-chapters.json?v='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()});
     const rows=d.chapters||[];
@@ -13,13 +12,14 @@
     section.id='coming-soon';
     section.innerHTML=`<div class="upcoming-head"><div><div class="upcoming-kicker">🇯🇵 今夜公開予定</div><h2>Coming Soon — Japanese Chapters</h2><p>今夜公開予定の最新話を先にチェック。公開後は同じリンクから本編を読めます。</p></div><a href="#japan" class="upcoming-jump">Japan releases ↓</a></div><div class="upcoming-grid"></div>`;
     const grid=section.querySelector('.upcoming-grid');
-    rows.forEach(c=>{
+    rows.forEach((c,index)=>{
       const hasCover=!!c.cover;
       const cover=hasCover?(c.cover.startsWith('http')?c.cover:GH+c.cover):'';
       const card=document.createElement('a');
       card.className='upcoming-card'+(hasCover?' has-cover':' no-cover');
       card.href='/chapter.html?slug='+encodeURIComponent(c.slug);
-      card.innerHTML=`${hasCover?`<img src="${esc(cover)}" alt="${esc(c.mangaTitle)}" loading="lazy" onerror="this.style.display='none'">`:''}<div class="upcoming-copy"><span class="soon-badge">近日公開</span><h3>${esc(c.title)}</h3><p>${esc(c.releaseNote)}</p><span class="read-link">Preview chapter →</span></div>`;
+      const releaseText = `${c.title}は近日公開予定です。${c.releaseNote && String(c.releaseNote).trim() && !String(c.releaseNote).trim().startsWith(String(c.title)) ? ' '+String(c.releaseNote).trim() : '公開まで少々お待ちください。'}`;
+      card.innerHTML=`${hasCover?`<img src="${esc(cover)}" alt="${esc(c.mangaTitle)}" loading="lazy" onerror="this.style.display='none'">`:''}<div class="upcoming-copy"><span class="soon-badge">近日公開</span><h3>${esc(c.title)}</h3><p>${esc(releaseText)}</p><span class="read-link">Preview chapter →</span></div>`;
       grid.appendChild(card);
     });
     const style=document.createElement('style');
