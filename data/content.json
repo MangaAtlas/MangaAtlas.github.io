@@ -1036,6 +1036,23 @@
         "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/one-piece/chapter-1193/0017-1789193133849-7.webp"
       ],
       "updatedAt": "2026-09-12T06:05:35.986Z"
+    },
+    {
+      "id": "upcoming-031",
+      "mangaId": "kagurabachi",
+      "title": "カグラバチ raw ( Kagurabachi raw ) 第132話",
+      "number": 132,
+      "slug": "kagurabachi-raw-132",
+      "country": "JP",
+      "mangaTitle": "Kagurabachi",
+      "native_title": "カグラバチ",
+      "cover": "manga-covers/kagurabachi/cover-1788578413437.webp",
+      "status": "coming_soon",
+      "releaseNote": "カグラバチ 第132話は近日公開予定です。新たな展開をお楽しみに。",
+      "pages": [
+        "chapter-images/kagurabachi/chapter-kagurabachi-raw-132/0001-_877_2026_6_1_2_.jpg"
+      ],
+      "updated_at": "2026-09-13T12:02:34.712Z"
     }
   ]
 }
