@@ -8,13 +8,22 @@
       fetch('/data/upcoming-chapters.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():{chapters:[]}).catch(()=>({chapters:[]})),
       fetch('/data/manual-chapters.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():{chapters:[]}).catch(()=>({chapters:[]}))
     ]);
-
     const latestWanted=[
       {slug:'blue-lock-raw-361',name:'ブルーロック raw ( Blue Lock raw ) 第361話',series:'Blue Lock',number:361,cover:'manga-covers/blue-lock/cover-1788579266374.webp'},
       {slug:'mokushiroku-no-yon-kishi-253',name:'黙示録の四騎士 Raw ( THE FOUR KNIGHTS OF THE APOCALYPSE raw ) 第253話',series:'THE FOUR KNIGHTS OF THE APOCALYPSE',number:253,cover:''}
     ];
     const manualRows=manual.chapters||[];
     const latestRows=latestWanted.map(w=>manualRows.find(c=>String(c.slug||'')===w.slug)||w);
+    const latestUrls=latestRows.map(c=>'https://mangaatlas.github.io/chapter.html?slug='+encodeURIComponent(c.slug));
+    document.title='Blue Lock 361 & Four Knights 253 Raw — MangaAtlas';
+    const meta=document.querySelector('meta[name="description"]');
+    if(meta) meta.setAttribute('content','Read Blue Lock raw Chapter 361 and THE FOUR KNIGHTS OF THE APOCALYPSE raw Chapter 253 on MangaAtlas. Latest Japanese manga raw chapters and chapter links.');
+    const ld=document.createElement('script');
+    ld.type='application/ld+json';
+    ld.textContent=JSON.stringify({
+      '@context':'https://schema.org','@type':'ItemList','name':'MangaAtlas Latest Chapters','itemListElement':latestRows.map((c,i)=>({'@type':'ListItem','position':i+1,'name':c.title||c.name,'url':latestUrls[i]}))
+    });
+    document.head.appendChild(ld);
     const latest=document.createElement('section');
     latest.className='latest-new-section';
     latest.id='latest-new-releases';
@@ -35,7 +44,6 @@
     document.head.appendChild(style);
     const insertLatest=()=>{const first=app.firstElementChild;if(first){app.insertBefore(latest,first)}else setTimeout(insertLatest,80)};
     insertLatest();
-
     const rows=upcoming.chapters||[];
     if(!rows.length)return;
     const section=document.createElement('section');
