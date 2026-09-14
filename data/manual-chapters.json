@@ -60,6 +60,24 @@
       "slug": "sakamoto-days-raw-275",
       "country": "JP",
       "pages": []
+    },
+    {
+      "id": "blue-lock-raw-361",
+      "mangaId": "blue-lock",
+      "title": "ブルーロック raw ( Blue Lock raw ) 第361話",
+      "number": 361,
+      "slug": "blue-lock-raw-361",
+      "country": "JP",
+      "pages": []
+    },
+    {
+      "id": "mokushiroku-no-yon-kishi-253",
+      "mangaId": "mokushiroku-no-yon-kishi",
+      "title": "黙示録の四騎士 Raw ( THE FOUR KNIGHTS OF THE APOCALYPSE raw ) 第253話",
+      "number": 253,
+      "slug": "mokushiroku-no-yon-kishi-253",
+      "country": "JP",
+      "pages": []
     }
   ]
 }
