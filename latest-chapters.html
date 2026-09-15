@@ -14,38 +14,6 @@
 <script src="/analytics.js"></script>
 </head>
 <body>
-<!-- MangaAtlas STATIC ADS START -->
-<div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;margin:10px 0;overflow:visible;">
-  <div>
-    <script async="async" data-cfasync="false" src="https://pl31326962.profitableratecpmnetwork.com/d4d07386504123ce6e8dd856dd6557f7/invoke.js"></script>
-    <div id="container-d4d07386504123ce6e8dd856dd6557f7"></div>
-  </div>
-  <div>
-    <script>
-      atOptions = {
-        'key' : 'd403d3e95eb68c8dc43b433780436e3e',
-        'format' : 'iframe',
-        'height' : 250,
-        'width' : 300,
-        'params' : {}
-      };
-    </script>
-    <script src="https://www.highrevenueformat.com/d403d3e95eb68c8dc43b433780436e3e/invoke.js"></script>
-  </div>
-  <div>
-    <script>
-      atOptions = {
-        'key' : '6513670c5172f87515d7daa363316e9e',
-        'format' : 'iframe',
-        'height' : 90,
-        'width' : 728,
-        'params' : {}
-      };
-    </script>
-    <script src="https://www.highrevenueformat.com/6513670c5172f87515d7daa363316e9e/invoke.js"></script>
-  </div>
-</div>
-<!-- MangaAtlas STATIC ADS END -->
 <nav class="nav"><a class="brand" href="/"><span>Manga</span>Atlas</a><div class="navlinks"><a href="/">Home</a><a href="/admin/">Admin</a></div></nav>
 <header class="hero"><h1>Latest Manga Chapters</h1><p>Browse the latest Japanese manga chapters, raw releases, and upcoming chapter updates on MangaAtlas. This page is the main release directory for new Japanese chapter pages.</p></header>
 <main class="wrap">
@@ -80,33 +48,4 @@
 <div class="footer-note">MangaAtlas latest chapter pages are linked from this release directory and from the XML sitemap. Individual chapter URLs use a stable chapter slug so search engines can discover and revisit the corresponding page.</div>
 </main>
 <script>const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));async function init(){const list=document.getElementById('list');try{const r=await fetch('/data/upcoming-chapters.json',{cache:'default'});if(!r.ok)throw Error('upcoming '+r.status);const d=await r.json();const chapters=Array.isArray(d.chapters)?d.chapters:[];document.getElementById('count').textContent=chapters.length+' Japanese chapters listed';list.innerHTML=chapters.map(c=>{const slug=String(c.slug||'');const title=c.title||('Chapter '+(c.number??''));const manga=c.mangaTitle||c.manga||c.mangaName||'Manga';const note=c.releaseNote||'This Japanese chapter is scheduled for release soon.';return '<a class="card" href="/chapter.html?slug='+encodeURIComponent(slug)+'"><div class="badge">🇯🇵 JAPAN RELEASE · COMING SOON</div><div class="manga">'+esc(manga)+'</div><div class="title">'+esc(title)+'</div><div class="note">'+esc(note)+'</div><div class="meta">Open chapter page →</div></a>'}).join('')||'<div class="empty">No Japanese releases available.</div>'}catch(e){console.error(e);document.getElementById('count').textContent='';list.innerHTML='<div class="empty">Unable to load Japanese chapters. The crawlable chapter links above remain available.</div>'}}init();</script>
-<!-- MangaAtlas STATIC ADS BOTTOM START -->
-<div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;margin:18px 0;overflow:visible;">
-  <div>
-    <script>
-      atOptions = {
-        'key' : 'd403d3e95eb68c8dc43b433780436e3e',
-        'format' : 'iframe',
-        'height' : 250,
-        'width' : 300,
-        'params' : {}
-      };
-    </script>
-    <script src="https://www.highrevenueformat.com/d403d3e95eb68c8dc43b433780436e3e/invoke.js"></script>
-  </div>
-  <div>
-    <script>
-      atOptions = {
-        'key' : '6513670c5172f87515d7daa363316e9e',
-        'format' : 'iframe',
-        'height' : 90,
-        'width' : 728,
-        'params' : {}
-      };
-    </script>
-    <script src="https://www.highrevenueformat.com/6513670c5172f87515d7daa363316e9e/invoke.js"></script>
-  </div>
-</div>
-<script src="https://pl31326963.profitableratecpmnetwork.com/01/89/4e/01894ea722635fb2ec48d7847937a012.js"></script>
-<!-- MangaAtlas STATIC ADS BOTTOM END -->
 </body></html>
