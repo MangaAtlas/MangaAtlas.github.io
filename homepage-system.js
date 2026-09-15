@@ -17,14 +17,17 @@
       fetch('/data/manual-chapters.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ]);
     const mangas=Array.isArray(content.mangas)?content.mangas:[];
-    const rows=[];for(const c of [...(content.chapters||[]),...(manual.chapters||[])]){if(!c?.slug||rows.some(x=>String(x.slug)===String(c.slug)))continue;rows.push(c)}
+    const rows=[];const add=(c,source,index)=>{if(!c?.slug||rows.some(x=>String(x.c.slug)===String(c.slug)))return;rows.push({c,source,index})};
+    (content.chapters||[]).forEach((c,i)=>add(c,0,i));
+    (manual.chapters||[]).forEach((c,i)=>add(c,1,i));
+    // Homepage = latest activity only. Manga pages remain the complete archive.
+    rows.sort((a,b)=>{const at=timeOf(a.c),bt=timeOf(b.c);if(at||bt)return bt-at||b.source-a.source||b.index-a.index;return b.source-a.source||b.index-a.index});
+    const latest=rows.slice(0,18).map(x=>x.c);
+    const hot=rows.slice(0,10).map(x=>x.c);
     const byManga={};rows.forEach(c=>{const id=mangaId(c);(byManga[id]??=[]).push(c)});
     Object.values(byManga).forEach(a=>a.sort((x,y)=>timeOf(y)-timeOf(x)||Number(y.number||0)-Number(x.number||0)));
     const mangaById=Object.fromEntries(mangas.map(m=>[String(m.id),m]));
     const infoFor=c=>mangaById[mangaId(c)]||mangas.find(m=>String(m.title).toLowerCase()===String(mangaName(c)).toLowerCase())||null;
-    rows.sort((a,b)=>timeOf(b)-timeOf(a)||Number(b.number||0)-Number(a.number||0));
-    const latest=rows.slice(0,18);
-    const hot=rows.slice(0,10);
     const trend=Object.entries(byManga).map(([id,cs])=>({id,count:cs.length,latest:cs[0],m:mangaById[id]})).sort((a,b)=>b.count-a.count||timeOf(b.latest)-timeOf(a.latest)).slice(0,10);
     const newManga=mangas.slice().sort((a,b)=>{const ac=byManga[String(a.id)]?.[0],bc=byManga[String(b.id)]?.[0];return timeOf(bc)-timeOf(ac)}).slice(0,10);
     const ranked=trend.slice(0,5);
@@ -32,7 +35,7 @@
     const listItem=c=>'<a class="ma-home-list-item" href="'+chapterHref(c)+'"><div class="ma-home-list-time">'+esc(ago(c))+'</div><div class="ma-home-list-main"><strong>'+esc(mangaName(c))+'</strong><span>'+esc(c.number!==undefined?'Chapter '+c.number:'Latest update')+'</span></div><div class="ma-home-list-arrow">→</div></a>';
     const rankItem=x=>{const m=x.m||{title:x.latest?mangaName(x.latest):x.id},img=cover(m);return '<a class="ma-home-rank" href="'+(m.slug?'/manga.html?slug='+encodeURIComponent(m.slug):chapterHref(x.latest))+'"><div class="ma-home-rank-no">'+(ranked.indexOf(x)+1)+'</div>'+(img?'<img src="'+esc(img)+'" alt="'+esc(m.title)+'">':'')+'<div><strong>'+esc(m.title||x.id)+'</strong><small>'+x.count+' chapter updates</small></div></a>'};
     app.innerHTML='<div class="ma-home-wrap">'
-      +'<section class="ma-home-section ma-home-hot"><div class="ma-home-heading"><div><span>HOT RELEASES</span><h2>Latest & Popular</h2><p>Fresh chapters, raw releases and the manga readers are following now.</p></div><a href="/latest-chapters.html">View all →</a></div><div class="ma-home-hot-grid">'+hot.slice(0,10).map((c,i)=>'<a class="ma-home-hot-card '+(i===0?'featured':'')+'" href="'+chapterHref(c)+'">'+(cover(infoFor(c)||c)?'<img src="'+esc(cover(infoFor(c)||c))+'" alt="'+esc(mangaName(c))+'" loading="'+(i<2?'eager':'lazy')+'">':'<div class="ma-home-cover-fallback">M</div>')+'<div class="ma-home-hot-overlay"><small>'+esc(ago(c))+'</small><h3>'+esc(mangaName(c))+'</h3><b>'+(c.number!==undefined?'Chapter '+esc(c.number):'Latest')+'</b></div></a>').join('')+'</div></section>'
+      +'<section class="ma-home-section ma-home-hot"><div class="ma-home-heading"><div><span>HOT RELEASES</span><h2>Latest & Popular</h2><p>Fresh chapters and the newest published updates.</p></div><a href="/latest-chapters.html">View all →</a></div><div class="ma-home-hot-grid">'+hot.map((c,i)=>'<a class="ma-home-hot-card '+(i===0?'featured':'')+'" href="'+chapterHref(c)+'">'+(cover(infoFor(c)||c)?'<img src="'+esc(cover(infoFor(c)||c))+'" alt="'+esc(mangaName(c))+'" loading="'+(i<2?'eager':'lazy')+'">':'<div class="ma-home-cover-fallback">M</div>')+'<div class="ma-home-hot-overlay"><small>'+esc(ago(c))+'</small><h3>'+esc(mangaName(c))+'</h3><b>'+(c.number!==undefined?'Chapter '+esc(c.number):'Latest')+'</b></div></a>').join('')+'</div></section>'
       +'<div class="ma-home-columns"><main>'
       +'<section class="ma-home-section"><div class="ma-home-heading"><div><span>LATEST UPDATES</span><h2>Latest Chapters</h2></div><a href="/latest-chapters.html">See all →</a></div><div class="ma-home-list">'+latest.map(listItem).join('')+'</div></section>'
       +'<section class="ma-home-section"><div class="ma-home-heading"><div><span>NEW ARRIVALS</span><h2>New Manga</h2></div><a href="/latest-chapters.html">Browse →</a></div><div class="ma-home-manga-grid">'+newManga.map(m=>{const c=byManga[String(m.id)]?.[0];if(!c)return '';const img=cover(m);return '<a class="ma-home-manga" href="'+chapterHref(c)+'">'+(img?'<img src="'+esc(img)+'" alt="'+esc(m.title)+' cover" loading="lazy">':'<div class="ma-home-cover-fallback">M</div>')+'<strong>'+esc(m.title)+'</strong><span>'+esc(m.native_title||m.country||'Manga')+'</span></a>'}).join('')+'</div></section>'
