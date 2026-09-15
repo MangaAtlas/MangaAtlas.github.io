@@ -6,19 +6,37 @@
   const SOURCES = ['/data/content.json', '/data/upcoming-chapters.json', '/data/manual-chapters.json'];
   const get = (url) => fetch(url + '?nav=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : { chapters: [] }).catch(() => ({ chapters: [] }));
   const num = c => Number(c && c.number);
-  const key = c => String(c && (c.mangaId || c.manga || c.mangaTitle || '')).trim().toLowerCase();
+  function clean(v) {
+    return String(v || '').toLowerCase().replace(/[_–—:：]+/g,'-').replace(/\s+/g,'-').replace(/-+/g,'-').replace(/-ja$/,'').replace(/-raw$/,'').trim();
+  }
   function seriesKey(c) {
-    const k = key(c);
-    if (k) return k;
+    const ids = [c && c.mangaId, c && c.manga, c && c.mangaTitle].map(clean).filter(Boolean);
+    if (ids.length) return ids[0];
     const title = String(c && c.title || '').toLowerCase();
-    return title.replace(/\b(?:chapter|chap|raw|第)\s*\d+.*$/i, '').replace(/\d+/g, '').replace(/[()（）\-–—:：]+/g, ' ').replace(/\s+/g, ' ').trim();
+    const stripped = title.replace(/\b(?:chapter|chap|raw|第)\s*\d+.*$/i, '').replace(/\d+/g, '').replace(/[()（）]+/g,' ').replace(/\s+/g,' ').trim();
+    return clean(stripped);
+  }
+  function sameSeries(a,b) {
+    const ka=seriesKey(a), kb=seriesKey(b);
+    if (ka && kb && ka===kb) return true;
+    const ta=String(a&&a.title||'').toLowerCase(), tb=String(b&&b.title||'').toLowerCase();
+    const aliases=[
+      ['blue-lock','ブルーロック','blue lock'],
+      ['hunter-x-hunter','hunter x hunter','ハンター×ハンター'],
+      ['one-piece','one piece','ワンピース'],
+      ['sakamoto-days','sakamoto days','サカモトデイズ'],
+      ['kagurabachi','カグラバチ'],
+      ['kingdom','キングダム'],
+      ['mokushiroku-no-yon-kishi','the four knights of the apocalypse','黙示録の四騎士']
+    ];
+    return aliases.some(group=>group.some(x=>ta.includes(x))&&group.some(x=>tb.includes(x)));
   }
   function unique(list) {
     const seen = new Set();
     return list.filter(c => c && c.slug && !seen.has(String(c.slug)) && (seen.add(String(c.slug)), true));
   }
   function addNav(chapters, current) {
-    const same = unique(chapters).filter(c => seriesKey(c) === seriesKey(current) && Number.isFinite(num(c))).sort((a,b) => num(a)-num(b));
+    const same = unique(chapters).filter(c => sameSeries(c,current) && Number.isFinite(num(c))).sort((a,b) => num(a)-num(b));
     const idx = same.findIndex(c => String(c.slug) === slug);
     if (idx < 0) return;
     const prev = same[idx - 1] || null;
