@@ -1,0 +1,74 @@
+name: Purge static ads permanently
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Purge legacy ad code from every public source file
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          roots = [Path('.')]
+          files = []
+          for root in roots:
+              for p in root.rglob('*'):
+                  if not p.is_file():
+                      continue
+                  if '.git' in p.parts or 'admin' in p.parts:
+                      continue
+                  if p.suffix.lower() not in {'.html', '.js'}:
+                      continue
+                  files.append(p)
+
+          providers = re.compile(r'https?://(?:pl31326962|pl31326963)\.profitableratecpmnetwork\.com/[^\"\'<>\s]+|https?://www\.highrevenueformat\.com/[^\"\'<>\s]+', re.I)
+          markers = re.compile(r'\s*<!-- MangaAtlas STATIC ADS(?: BOTTOM)? START -->.*?<!-- MangaAtlas STATIC ADS(?: BOTTOM)? END -->\s*', re.I | re.S)
+          scripts = re.compile(r'<script\b[^>]*>.*?</script\s*>', re.I | re.S)
+
+          changed = []
+          for p in files:
+              text = p.read_text(encoding='utf-8', errors='ignore')
+              original = text
+              text = markers.sub('\n', text)
+              if providers.search(text):
+                  def clean_script(m):
+                      block = m.group(0)
+                      return '' if providers.search(block) else block
+                  text = scripts.sub(clean_script, text)
+              if providers.search(text):
+                  text = providers.sub('', text)
+              if text != original:
+                  p.write_text(text, encoding='utf-8')
+                  changed.append(str(p))
+
+          print('Purged:', *changed, sep='\n- ')
+
+      - name: Verify zero legacy provider references
+        run: |
+          if grep -RInE --exclude-dir=.git --exclude-dir=admin 'profitableratecpmnetwork\.com|highrevenueformat\.com|MangaAtlas STATIC ADS' .; then
+            echo 'Legacy ad references still exist.'
+            exit 1
+          fi
+          echo 'No legacy static ad references remain in source.'
+
+      - name: Commit purge
+        run: |
+          git config user.name 'MangaAtlas Bot'
+          git config user.email 'bot@mangaatlas.local'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No changes required.'
+            exit 0
+          fi
+          git commit -m 'Permanently remove static ads from source'
+          git push
