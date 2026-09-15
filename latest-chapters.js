@@ -1,4 +1,4 @@
-/* MangaAtlas Latest Chapters System — homepage only: latest activity, isolated from Admin/Chapter/Manga systems. */
+/* MangaAtlas Latest Chapters System — homepage only. */
 (async()=>{
  const app=document.getElementById('app'); if(!app||document.getElementById('manga-atlas-latest-system')) return;
  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -10,10 +10,15 @@
    fetch('/data/content.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():{chapters:[]}).catch(()=>({chapters:[]})),
    fetch('/data/manual-chapters.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():{chapters:[]}).catch(()=>({chapters:[]}))
   ]);
-  const rows=[]; for(const c of [...(content.chapters||[]),...(manual.chapters||[])]){if(!c?.slug||rows.some(x=>String(x.slug)===String(c.slug)))continue; rows.push(c)}
+  const rows=[]; const add=(c,source,index)=>{if(!c?.slug||rows.some(x=>String(x.c.slug)===String(c.slug)))return;rows.push({c,source,index})};
+  (content.chapters||[]).forEach((c,i)=>add(c,0,i));
+  (manual.chapters||[]).forEach((c,i)=>add(c,1,i));
   const timeOf=c=>{for(const k of ['updated_at','updatedAt','last_updated','lastUpdated','published_at','publishedAt','created_at','createdAt','posted_at','postedAt','date','timestamp']){const n=Date.parse(c?.[k]);if(Number.isFinite(n))return n} return 0};
-  const latest=rows.map((c,i)=>({c,i,t:timeOf(c)})).sort((a,b)=>b.t-a.t||b.i-a.i).slice(0,6).map(x=>x.c);
-  root.innerHTML='<div class="ma-latest-shell"><div class="ma-latest-head"><div><div class="ma-latest-kicker">LATEST ACTIVITY</div><h2>Latest Chapters</h2><p>Only the newest posted or updated chapters appear here.</p></div><a href="/latest-chapters.html">View all chapters →</a></div><div class="ma-latest-grid"></div></div>';
+  // Explicit dates always win. If dates are absent (as in legacy static data), manual/published
+  // entries are treated as newer than the old content list, and later entries win within a source.
+  rows.sort((a,b)=>{const at=timeOf(a.c),bt=timeOf(b.c);if(at||bt)return bt-at||b.source-a.source||b.index-a.index;return b.source-a.source||b.index-a.index});
+  const latest=rows.slice(0,6).map(x=>x.c);
+  root.innerHTML='<div class="ma-latest-shell"><div class="ma-latest-head"><div><div class="ma-latest-kicker">LATEST ACTIVITY</div><h2>Latest Chapters</h2><p>Only the newest published or updated chapters appear here.</p></div><a href="/latest-chapters.html">View all chapters →</a></div><div class="ma-latest-grid"></div></div>';
   const grid=root.querySelector('.ma-latest-grid'); latest.forEach((c,i)=>{const cover=c.cover||c.cover_url||(c.mangaId==='blue-lock'?GH+'manga-covers/blue-lock/cover-1788579266374.webp':'');const title=c.title||c.name||'Latest Chapter';const series=c.mangaTitle||c.manga||c.series||c.mangaId||'Manga';const number=c.number??'';const a=document.createElement('a');a.className='ma-latest-card';a.href='/chapter.html?slug='+encodeURIComponent(c.slug);a.innerHTML=(cover?'<img src="'+esc(cover.startsWith('http')?cover:GH+cover)+'" alt="'+esc(series)+' manga cover" loading="'+(i<2?'eager':'lazy')+'">':'<div></div>')+'<div class="ma-latest-copy"><span class="ma-latest-badge">NEW / UPDATED</span><h3>'+esc(title)+'</h3><p>'+esc(series)+(number!==''?' · Chapter '+esc(number):'')+'</p><span class="ma-latest-link">Read Chapter →</span></div>';grid.appendChild(a)});
   app.parentNode.insertBefore(root,app); window.__mangaAtlasLatestReady=true; window.dispatchEvent(new CustomEvent('mangaatlas:latest-ready'));
  }catch(e){console.warn('Latest Chapters System unavailable',e)}
