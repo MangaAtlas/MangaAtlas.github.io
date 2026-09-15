@@ -15,9 +15,6 @@
     gtag('event','page_view',{page_title:document.title,page_location:location.href,page_path:location.pathname+location.search});
   }
 
-  /* These two ad providers both read the global window.atOptions object.
-     Do NOT load them async: async loading lets the second key overwrite the
-     first key before its script executes, which makes both placements fail. */
   function ad300(parent){
     var box=document.createElement('div');
     box.style.cssText='width:300px;min-height:250px;max-width:100%;margin:12px auto;display:flex;justify-content:center;align-items:flex-start;overflow:visible;';
@@ -67,7 +64,6 @@
   function ads(){
     if(window.__mangaAtlasAdsLoaded||!document.body) return;
     window.__mangaAtlasAdsLoaded=true;
-
     var top=document.createElement('div');
     top.id='mangaatlas-ads-top';
     top.style.cssText='width:100%;display:flex;flex-direction:column;align-items:center;overflow:visible;';
@@ -75,7 +71,6 @@
     nativeAd(top);
     ad300(top);
     ad728(top);
-
     var bottom=document.createElement('div');
     bottom.id='mangaatlas-ads-bottom';
     bottom.style.cssText='width:100%;display:flex;flex-direction:column;align-items:center;overflow:visible;margin-top:18px;';
@@ -85,9 +80,20 @@
     socialBar();
   }
 
+  function loadChapterNavigation(){
+    if(location.pathname!=='/chapter.html'&&location.pathname!=='/chapter') return;
+    if(document.querySelector('script[data-manga-atlas-navigation]')) return;
+    var s=document.createElement('script');
+    s.src='/chapter-navigation.js?v=1';
+    s.async=false;
+    s.setAttribute('data-manga-atlas-navigation','true');
+    document.head.appendChild(s);
+  }
+
   function boot(){
     ads();
     pageView();
+    loadChapterNavigation();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true});
   else boot();
