@@ -1,4 +1,4 @@
-/* MangaAtlas Upcoming Chapters System — isolated from Latest Chapters and Admin. */
+/* MangaAtlas Upcoming Chapters System — isolated from Homepage, Latest Chapters and Admin. */
 (async()=>{
 const app=document.getElementById('app');if(!app)return;
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -13,12 +13,3 @@ const putUpcoming=()=>{if(document.getElementById('coming-soon'))return true;if(
 let tries=0;const timer=setInterval(()=>{tries++;if(putUpcoming()||tries>50)clearInterval(timer)},100);
 }catch(e){console.warn('Upcoming Chapters System unavailable',e)}
 })();
-
-/* Load the isolated Latest Chapters System without sharing its DOM or state. */
-if(!document.querySelector('script[data-manga-atlas-latest-system]')){
-  const s=document.createElement('script');
-  s.src='/latest-chapters.js?v=1';
-  s.async=true;
-  s.dataset.mangaAtlasLatestSystem='1';
-  document.body.appendChild(s);
-}
