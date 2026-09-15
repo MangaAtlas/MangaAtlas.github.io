@@ -8,14 +8,13 @@ const href=c=>'/chapter.html?slug='+encodeURIComponent(c.slug||'');
 const time=c=>{for(const k of ['updated_at','updatedAt','last_updated','lastUpdated','published_at','publishedAt','created_at','createdAt','posted_at','postedAt','date','timestamp']){const n=Date.parse(c?.[k]);if(Number.isFinite(n))return n}return 0};
 const name=c=>c?.mangaTitle||c?.manga||c?.series||c?.mangaId||'Manga';
 const id=c=>String(c?.mangaId||c?.manga_id||c?.seriesId||c?.series_id||name(c)).toLowerCase().replace(/[-_](ja|raw)$/,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
-const unwrap=d=>{if(d&&typeof d.content==='string'){try{return JSON.parse(d.content)}catch(e){return {}}}return d&&typeof d==='object'?d:{}};
+const unwrap=d=>{let v=d;for(let i=0;i<5;i++){if(v&&typeof v.content==='string'){try{v=JSON.parse(v.content);continue}catch(e){break}}break}return v&&typeof v==='object'?v:{}};
 const getJson=async path=>{try{const r=await fetch(path+'?v='+Date.now(),{cache:'no-store'});return r.ok?unwrap(await r.json()):{}}catch(e){return {}}};
 try{
 const [content,manual]=await Promise.all([getJson('/data/content.json'),getJson('/data/manual-chapters.json')]);
 const mangas=Array.isArray(content.mangas)?content.mangas:[];
 const published=[];const seen=new Set();
 for(const source of [content.chapters||[],manual.chapters||[]]) for(const c of source){if(!c?.slug)continue;const key=String(c.slug).toLowerCase();if(seen.has(key))continue;seen.add(key);published.push(c)}
-// Explicitly prioritize manual/admin-published chapters when timestamps are absent.
 const sourceRank=c=>(manual.chapters||[]).some(x=>String(x?.slug||'').toLowerCase()===String(c?.slug||'').toLowerCase())?1:0;
 published.sort((a,b)=>time(b)-time(a)||sourceRank(b)-sourceRank(a)||Number(b.number||0)-Number(a.number||0));
 const latestByManga=new Map();for(const c of published){const k=id(c);if(k&&!latestByManga.has(k))latestByManga.set(k,c)}
