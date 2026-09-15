@@ -16,9 +16,11 @@
   }
 
   function loadAdsSystem(){
+    /* Ads are disabled on the homepage. */
+    if(location.pathname==='/'||location.pathname==='/index.html') return;
     if(document.querySelector('script[data-manga-atlas-ads-system]')) return;
     var s=document.createElement('script');
-    s.src='/ads-system.js?v=1';
+    s.src='/ads-system.js?v=2';
     s.async=false;
     s.setAttribute('data-manga-atlas-ads-system','true');
     document.head.appendChild(s);
