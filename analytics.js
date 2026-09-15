@@ -90,8 +90,18 @@
     document.head.appendChild(s);
   }
 
+  function loadSeoSystem(){
+    if(document.querySelector('script[data-manga-atlas-seo]')) return;
+    var s=document.createElement('script');
+    s.src='/seo-system.js?v=1';
+    s.async=true;
+    s.setAttribute('data-manga-atlas-seo','true');
+    document.head.appendChild(s);
+  }
+
   function boot(){
     ads();
+    loadSeoSystem();
     pageView();
     loadChapterNavigation();
   }
