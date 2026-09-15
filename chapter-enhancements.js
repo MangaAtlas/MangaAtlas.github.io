@@ -1,20 +1,37 @@
-/* MangaAtlas — isolated chapter enhancements: views + same-series navigation. */
+/* MangaAtlas — isolated chapter enhancements: universal series matching + navigation. */
 (function(){
-  'use strict';
-  var slug='';
-  try{slug=decodeURIComponent(new URLSearchParams(location.search).get('slug')||'')}catch(e){}
-  if(!slug)return;
-  var SOURCES=['/data/content.json','/data/upcoming-chapters.json','/data/manual-chapters.json'];
-  function get(url){return fetch(url+'?enh='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():{chapters:[]}}).catch(function(){return{chapters:[]}})}
-  function clean(v){return String(v||'').toLowerCase().replace(/[_–—:：]+/g,'-').replace(/\s+/g,'-').replace(/-+/g,'-').replace(/-ja$/,'').replace(/-raw$/,'').trim()}
-  function key(c){var ids=[c.mangaId,c.manga,c.mangaTitle].map(clean).filter(Boolean);if(ids.length)return ids[0];return clean(String(c.title||'').toLowerCase().replace(/\b(?:chapter|chap|raw|第)\s*\d+.*$/i,'').replace(/\d+/g,'').replace(/[()（）]+/g,' ').replace(/\s+/g,' ').trim())}
-  function same(a,b){var x=key(a),y=key(b);if(x&&y&&x===y)return true;var aliases=[['blue-lock','blue lock','ブルーロック'],['hunter-x-hunter','hunter x hunter','hunter×hunter','ハンター×ハンター'],['one-piece','one piece','ワンピース'],['sakamoto-days','sakamoto days','サカモトデイズ'],['kagurabachi','カグラバチ'],['kingdom','キングダム'],['mokushiroku-no-yon-kishi','the four knights of the apocalypse','黙示録の四騎士']];var ta=String(a.title||'').toLowerCase(),tb=String(b.title||'').toLowerCase();return aliases.some(function(g){return g.some(function(v){return ta.indexOf(v)>=0})&&g.some(function(v){return tb.indexOf(v)>=0})})}
-  function unique(a){var s={};return a.filter(function(c){if(!c||!c.slug||s[c.slug])return false;s[c.slug]=1;return true})}
-  function styleNav(n){n.style.cssText='max-width:1000px;margin:22px auto 36px;padding:0 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;';}
-  function navButton(c,label){if(!c)return '<span style="flex:1"></span>';return '<a href="/chapter.html?slug='+encodeURIComponent(c.slug)+'" style="flex:1;text-align:center;padding:12px 10px;border:1px solid #2a3040;border-radius:10px;background:#111822;color:#f5f5f7;text-decoration:none;font-weight:700">'+label+' '+String(c.number||'')+'</a>'}
-  function enhanceNav(all,current){var sameList=unique(all).filter(function(c){return same(c,current)&&Number.isFinite(Number(c.number))}).sort(function(a,b){return Number(a.number)-Number(b.number)});var i=sameList.findIndex(function(c){return String(c.slug)===slug});if(i<0)return;var old=document.getElementById('mangaatlas-chapter-nav');if(old)old.remove();var n=document.createElement('nav');n.id='mangaatlas-chapter-nav';n.setAttribute('aria-label','Chapter navigation');styleNav(n);var prev=sameList[i-1],next=sameList[i+1];n.innerHTML=navButton(prev,'← Previous')+'<a href="/" style="flex:1;text-align:center;padding:12px 10px;color:#bfc6d2;text-decoration:none;font-weight:700">⌂ Home</a>'+navButton(next,'Next →');var r=document.getElementById('reader');if(r)r.insertAdjacentElement('afterend',n)}
-  function ensureViewHost(){var r=document.getElementById('reader');if(!r)return null;var h=document.getElementById('manga-atlas-view-count');if(h)return h;h=document.createElement('div');h.className='view-count';h.id='manga-atlas-view-count';h.setAttribute('aria-label','Chapter views');h.innerHTML='👁 <strong>0</strong> views';r.insertAdjacentElement('beforebegin',h);return h.querySelector('strong')}
-  function countView(){var host=ensureViewHost();if(!host)return;var safe=slug.toLowerCase().replace(/[^a-z0-9_-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,180);fetch('https://api.counterapi.dev/v1/mangaatlas-chapters/chapter-'+encodeURIComponent(safe)+'/up',{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('counter '+r.status);return r.json()}).then(function(d){var v=Number(d&&((d.count!==undefined)?d.count:d.value));host.textContent=Number.isFinite(v)?v.toLocaleString():'0'}).catch(function(){host.textContent='0'})}
-  function boot(){Promise.all(SOURCES.map(get)).then(function(ds){var all=ds.flatMap(function(d){return Array.isArray(d.chapters)?d.chapters:[]});var current=all.find(function(c){return String(c.slug)===slug});if(!current)return;enhanceNav(all,current);countView()})}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
+'use strict';
+var slug='';try{slug=decodeURIComponent(new URLSearchParams(location.search).get('slug')||'')}catch(e){}
+if(!slug)return;
+var SOURCES=['/data/content.json','/data/upcoming-chapters.json','/data/manual-chapters.json'];
+function get(u){return fetch(u+'?enh='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():{chapters:[]}}).catch(function(){return{chapters:[]}})}
+function norm(v){return String(v||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/&amp;/g,'&').replace(/[_–—:：]+/g,'-').replace(/[^a-z0-9]+/g,'-').replace(/-+/g,'-').replace(/^-+|-+$/g,'').replace(/-raw$/,'').replace(/-ja$/,'')}
+function num(c){var n=Number(c&&c.number);if(Number.isFinite(n))return n;var m=String(c&&c.title||c&&c.slug||'').match(/(?:chapter|chap|第)[^0-9]*([0-9]+)/i);return m?Number(m[1]):-1}
+function rawTitle(c){return c&& (c.mangaTitle||c.manga||c.series||c.title_manga||c.manga_name||'')}
+function slugBase(s){return norm(String(s||'').replace(/(?:-raw)?-(?:chapter-)?\d+(?:-.*)?$/i,''))}
+function identity(c,mangas){
+var ids=[c&&c.mangaId,c&&c.manga_id,c&&c.seriesId,c&&c.series_id].filter(Boolean);
+var title=rawTitle(c);
+var direct=ids.map(norm).filter(Boolean);
+if(title)direct.push(norm(title));
+var all=direct.concat([slugBase(c&&c.slug)]).filter(Boolean);
+if(mangas.length){
+for(var i=0;i<mangas.length;i++){
+var m=mangas[i], vals=[m.id,m.mangaId,m.slug,m.title,m.name,m.native_title,m.nativeTitle].filter(Boolean).map(norm);
+if(vals.some(function(v){return all.indexOf(v)>=0}))return vals.find(function(v){return v===norm(m.slug)||v===norm(m.id)})||vals[0];
+}
+for(var j=0;j<mangas.length;j++){
+var mm=m, mv=[mm.id,mm.slug,mm.title,mm.name,mm.native_title,mm.nativeTitle].filter(Boolean).map(norm);
+if(all.some(function(a){return mv.some(function(v){return a===v||a.indexOf(v)>=0||v.indexOf(a)>=0})}))return norm(mm.slug||mm.id||mm.title);
+}
+}
+return all[0]||'';
+}
+function unique(a){var seen={};return a.filter(function(c){var k=String(c&&c.slug||'');if(!k||seen[k])return false;seen[k]=1;return true})}
+function same(a,b,mangas){var x=identity(a,mangas),y=identity(b,mangas);return !!x&&!!y&&x===y}
+function styles(){if(document.getElementById('ma-nav-style'))return;var s=document.createElement('style');s.id='ma-nav-style';s.textContent='.ma-nav{max-width:1000px;margin:22px auto 30px;padding:0 16px;display:flex;justify-content:center;flex-wrap:wrap;gap:10px}.ma-nav a{display:inline-flex;align-items:center;justify-content:center;padding:11px 18px;border:1px solid #2a3040;border-radius:10px;background:#111822;color:#f5f5f7;text-decoration:none;font-weight:700}.ma-nav a:hover{border-color:#5b8bd9}.ma-series{max-width:1000px;margin:0 auto 12px;padding:0 16px;text-align:center;color:#8f97a8;font-size:13px}.ma-view{text-align:center;margin:12px auto 18px;color:#aeb3c0;font-size:14px}';document.head.appendChild(s)}
+function nav(all,current,mangas){var list=unique(all).filter(function(c){return same(c,current,mangas)});list.sort(function(a,b){return num(a)-num(b)});var i=list.findIndex(function(c){return String(c.slug)===String(current.slug)});if(i<0)return;var old=document.querySelector('.ma-nav');if(old)old.remove();styles();var n=document.createElement('nav');n.className='ma-nav';n.setAttribute('aria-label','Chapter navigation');var p=list[i-1],nx=list[i+1];if(p)n.innerHTML+='<a href="/chapter.html?slug='+encodeURIComponent(p.slug)+'">← Previous '+(num(p)>-1?num(p):'')+'</a>';n.innerHTML+='<a href="/">⌂ Home</a>';var ms=current.mangaSlug||current.manga_slug;var mm=mangas.find(function(m){return [m.id,m.mangaId,m.slug,m.title,m.name].filter(Boolean).map(norm).indexOf(norm(current.mangaId))>=0});if(!ms&&mm)ms=mm.slug||mm.id;if(ms)n.innerHTML+='<a href="/manga.html?slug='+encodeURIComponent(ms)+'">Manga</a>';if(nx)n.innerHTML+='<a href="/chapter.html?slug='+encodeURIComponent(nx.slug)+'">Next '+(num(nx)>-1?num(nx):'')+' →</a>';var r=document.getElementById('reader');if(r)r.insertAdjacentElement('afterend',n);else document.body.appendChild(n);var info=document.createElement('div');info.className='ma-series';info.textContent=(num(current)>-1?'Chapter '+num(current)+' · ':'')+list.length+' chapters in this series';if(r)r.insertAdjacentElement('afterend',info);}
+function count(){var r=document.getElementById('reader');if(!r)return;var h=document.getElementById('ma-view-count');if(!h){h=document.createElement('div');h.id='ma-view-count';h.className='ma-view';h.innerHTML='👁 <strong>0</strong> views';r.insertAdjacentElement('beforebegin',h)}var safe=slug.toLowerCase().replace(/[^a-z0-9_-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,180);fetch('https://api.counterapi.dev/v1/mangaatlas-chapters/chapter-'+encodeURIComponent(safe)+'/up',{cache:'no-store'}).then(function(r){if(!r.ok)throw Error();return r.json()}).then(function(d){var v=Number(d&&(d.count!==undefined?d.count:d.value));h.innerHTML='👁 <strong>'+ (Number.isFinite(v)?v.toLocaleString():'0') +'</strong> views'}).catch(function(){});}
+function boot(){Promise.all(SOURCES.map(get)).then(function(ds){var all=[],mangas=[];ds.forEach(function(d){if(Array.isArray(d))all=all.concat(d);if(d&&Array.isArray(d.chapters))all=all.concat(d.chapters);if(d&&d.content&&Array.isArray(d.content.chapters))all=all.concat(d.content.chapters);if(d&&Array.isArray(d.mangas))mangas=mangas.concat(d.mangas);if(d&&d.content&&Array.isArray(d.content.mangas))mangas=mangas.concat(d.content.mangas)});all=unique(all);var current=all.find(function(c){return String(c.slug)===slug});if(current)nav(all,current,mangas);count();}).catch(function(){count()})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
 })();
