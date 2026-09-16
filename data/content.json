@@ -187,8 +187,9 @@
       "native_title": "アンダードクター",
       "country": "JP",
       "language": "ja",
-      "cover": "manga-covers/under-doctor/cover-1788716121964.webp",
-      "slug": "under-doctor"
+      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/under-doctor/1789578954552-61jzznKAG-L._UF1000_1000_QL80_.jpg",
+      "slug": "under-doctor",
+      "updated_at": "2026-09-16T17:15:54.550Z"
     },
     {
       "id": "witch-watch",
