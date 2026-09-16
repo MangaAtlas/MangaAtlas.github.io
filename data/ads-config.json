@@ -1,4 +1,14 @@
 {
-  "enabled": true,
-  "version": "8"
+  "version": 1,
+  "sections": [
+    {"id":"ad-1","name":"Ad Section 1","enabled":false,"code":"","placement":"start","between":"50"},
+    {"id":"ad-2","name":"Ad Section 2","enabled":false,"code":"","placement":"start","between":"50"},
+    {"id":"ad-3","name":"Ad Section 3","enabled":false,"code":"","placement":"start","between":"50"},
+    {"id":"ad-4","name":"Ad Section 4","enabled":false,"code":"","placement":"between","between":"25"},
+    {"id":"ad-5","name":"Ad Section 5","enabled":false,"code":"","placement":"between","between":"50"},
+    {"id":"ad-6","name":"Ad Section 6","enabled":false,"code":"","placement":"between","between":"75"},
+    {"id":"ad-7","name":"Ad Section 7","enabled":false,"code":"","placement":"end","between":"50"},
+    {"id":"ad-8","name":"Ad Section 8","enabled":false,"code":"","placement":"end","between":"50"},
+    {"id":"ad-9","name":"Ad Section 9","enabled":false,"code":"","placement":"end","between":"50"}
+  ]
 }
