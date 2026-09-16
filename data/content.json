@@ -82,8 +82,10 @@
       "title": "Yowamushi Pedal",
       "country": "JP",
       "language": "ja",
-      "cover": "https://placehold.co/300x400",
-      "slug": "yowamushi-pedal"
+      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/yowamushi-pedal/1789578422968-81aeRVdqTOL._AC_UF894_1000_QL80_.jpg",
+      "slug": "yowamushi-pedal",
+      "native_title": "弱虫ペダル",
+      "updated_at": "2026-09-16T17:07:02.966Z"
     },
     {
       "id": "taika-no-li-xing",
