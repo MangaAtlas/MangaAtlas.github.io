@@ -232,8 +232,9 @@
       "native_title": "しのびごと",
       "country": "JP",
       "language": "ja",
-      "cover": "manga-covers/shinobi-undercover/cover-1788716414190.webp",
-      "slug": "shinobi-undercover"
+      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/shinobi-undercover/1789578770473-9784088844015.jpg",
+      "slug": "shinobi-undercover",
+      "updated_at": "2026-09-16T17:12:50.470Z"
     },
     {
       "id": "ruridragon",
