@@ -177,8 +177,9 @@
       "native_title": "あかね噺",
       "country": "JP",
       "language": "ja",
-      "cover": "manga-covers/akane-banashi/cover-1788716514672.webp",
-      "slug": "akane-banashi"
+      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/akane-banashi/1789578509620-71nC5K_CjoL._AC_UF1000_1000_QL80_.jpg",
+      "slug": "akane-banashi",
+      "updated_at": "2026-09-16T17:08:29.618Z"
     },
     {
       "id": "under-doctor",
