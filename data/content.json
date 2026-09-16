@@ -155,8 +155,10 @@
       "title": "Mokushiroku no Yonkishi",
       "country": "JP",
       "language": "ja",
-      "cover": "https://placehold.co/300x400",
-      "slug": "mokushiroku-no-yon-kishi"
+      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/mokushiroku-no-yon-kishi/1789578121420-ef0af39b3dd4a49d1c09cab30e4342ba.jpg",
+      "slug": "mokushiroku-no-yon-kishi",
+      "native_title": "黙示録の四騎士",
+      "updated_at": "2026-09-16T17:02:01.412Z"
     },
     {
       "id": "shuumatsu-no-valkyrie",
