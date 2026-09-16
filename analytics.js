@@ -34,8 +34,19 @@
     document.head.appendChild(s);
   }
 
+  function loadAdsSystem(){
+    if(location.pathname.indexOf('/admin')===0) return;
+    if(document.querySelector('script[data-manga-atlas-ads]')) return;
+    var s=document.createElement('script');
+    s.src='/ads-system.js?v=2';
+    s.async=false;
+    s.setAttribute('data-manga-atlas-ads','true');
+    document.head.appendChild(s);
+  }
+
   function boot(){
     loadSeoSystem();
+    loadAdsSystem();
     pageView();
     loadChapterNavigation();
   }
