@@ -234,8 +234,9 @@
       "native_title": "ルリドラゴン",
       "country": "JP",
       "language": "ja",
-      "cover": "manga-covers/ruridragon/cover-1788716384933.webp",
-      "slug": "ruridragon"
+      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/ruridragon/1789576473450-71udtL_BidL._AC_UF1000_1000_QL80_.jpg",
+      "slug": "ruridragon",
+      "updated_at": "2026-09-16T16:34:33.446Z"
     },
     {
       "id": "the-exiled-heavy-knight-knows-how-to-game-the-system",
