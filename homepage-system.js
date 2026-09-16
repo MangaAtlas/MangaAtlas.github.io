@@ -4,7 +4,7 @@
   if(!app||window.__mangaAtlasHomepageLoaded)return;
   window.__mangaAtlasHomepageLoaded=true;
   const GH='https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/';
-  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const esc=v=>String(v??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[m]));
   const norm=v=>String(v??'').toLowerCase().replace(/[-_](ja|raw)$/,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
   const unwrap=d=>{let v=d;for(let i=0;i<6;i++){if(v&&typeof v.content==='string'){try{v=JSON.parse(v.content);continue}catch(e){break}}break}return v&&typeof v==='object'?v:{}};
   const read=async(path)=>{
@@ -36,7 +36,9 @@
     };
     const blockedSlug='hun x hun - us - 419';
     const rows=[];const seen=new Set();
-    for(const source of [content.chapters||[],manual.chapters||[]]) for(const c of source){
+    // Manual chapters intentionally come first so a newly posted chapter overrides
+    // a stale/duplicated record in content.json with the same slug.
+    for(const source of [manual.chapters||[],content.chapters||[]]) for(const c of source){
       if(!c?.slug)continue;
       if(String(c.slug).trim().toLowerCase()===blockedSlug)continue;
       const manga=resolveManga(c);
