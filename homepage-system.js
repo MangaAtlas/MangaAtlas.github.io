@@ -5,6 +5,7 @@
   window.__mangaAtlasHomepageLoaded=true;
   const GH='https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/';
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const norm=v=>String(v??'').toLowerCase().replace(/[-_](ja|raw)$/,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
   const unwrap=d=>{let v=d;for(let i=0;i<6;i++){if(v&&typeof v.content==='string'){try{v=JSON.parse(v.content);continue}catch(e){break}}break}return v&&typeof v==='object'?v:{}};
   const read=async(path)=>{
     try{const r=await fetch('/'+path+'?v='+Date.now(),{cache:'no-store'});if(r.ok)return unwrap(await r.json())}catch(e){}
@@ -12,13 +13,15 @@
     return {};
   };
   const time=c=>{for(const k of ['updated_at','updatedAt','last_updated','lastUpdated','published_at','publishedAt','created_at','createdAt','posted_at','postedAt','date','timestamp']){const n=Date.parse(c?.[k]);if(Number.isFinite(n))return n}return 0};
-  const title=c=>c?.mangaTitle||c?.manga||c?.series||c?.mangaId||'Manga';
-  const id=c=>String(c?.mangaId||c?.manga_id||c?.seriesId||c?.series_id||title(c)||c?.slug||'').toLowerCase().replace(/[-_](ja|raw)$/,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+  const title=c=>c?.mangaTitle||c?.manga||c?.series||c?.mangaId||c?.title||'Manga';
+  const chapterId=c=>norm(c?.mangaId||c?.manga_id||c?.seriesId||c?.series_id||title(c)||c?.slug||'');
+  const mangaId=m=>norm(m?.id||m?.slug||m?.mangaId||m?.manga_id||m?.title||'');
   const href=c=>'/chapter.html?slug='+encodeURIComponent(c?.slug||'');
   try{
     const [content,manual]=await Promise.all([read('data/content.json'),read('data/manual-chapters.json')]);
     const mangas=Array.isArray(content.mangas)?content.mangas:[];
-    const mangaMap=new Map(mangas.map(m=>[id(m),m]));
+    const mangaMap=new Map();
+    mangas.forEach(m=>{const key=mangaId(m);if(key)mangaMap.set(key,m)});
     const rows=[];const seen=new Set();
     for(const source of [content.chapters||[],manual.chapters||[]]) for(const c of source){
       if(!c?.slug)continue;
@@ -28,10 +31,20 @@
     }
     rows.sort((a,b)=>time(b)-time(a)||Number(b.number||0)-Number(a.number||0));
     const latestByManga=new Map();
-    for(const c of rows){const k=id(c);if(k&&!latestByManga.has(k))latestByManga.set(k,c)}
+    for(const c of rows){const k=chapterId(c);if(k&&!latestByManga.has(k))latestByManga.set(k,c)}
     const latest=[...latestByManga.values()].sort((a,b)=>time(b)-time(a)||Number(b.number||0)-Number(a.number||0));
-    const info=c=>mangaMap.get(id(c))||mangas.find(m=>String(m.title||'').toLowerCase()===String(title(c)).toLowerCase())||null;
-    const cover=c=>{const m=info(c);const v=m?.cover||c?.cover||c?.cover_url||'';return v?(v.startsWith('http')?v:GH+v):''};
+    const info=c=>{
+      const direct=mangaMap.get(chapterId(c));
+      if(direct)return direct;
+      const t=norm(title(c));
+      return mangas.find(m=>mangaId(m)===t||norm(m.title)===t||norm(m.slug)===t)||null;
+    };
+    const cover=c=>{
+      const m=info(c),v=m?.cover||c?.cover||c?.cover_url||'';
+      if(!v)return '';
+      if(/^https:\/\/mangaatlas\.github\.io\//i.test(v))return v.replace(/^https:\/\/mangaatlas\.github\.io\//i,GH);
+      return /^https?:\/\//i.test(v)?v:(GH+String(v).replace(/^\/+/,''));
+    };
     if(!latest.length){app.innerHTML='<div class="empty">No latest chapters found.</div>';return}
     const card=(c,i)=>{const m=info(c),name=m?.title||title(c),img=cover(c);return '<a class="ma-home-card '+(i===0?'featured':'')+'" href="'+href(c)+'">'+(img?'<img src="'+esc(img)+'" alt="'+esc(name)+'" loading="'+(i<2?'eager':'lazy')+'">':'<div class="ma-home-cover-fallback">M</div>')+'<div class="ma-home-overlay"><small>Latest release</small><strong>'+esc(name)+'</strong><span>Chapter '+esc(c.number??'')+'</span></div></a>'};
     const list=c=>'<a class="ma-home-list-item" href="'+href(c)+'"><div><strong>'+esc(info(c)?.title||title(c))+'</strong><span>Chapter '+esc(c.number??'')+'</span></div><b>Read →</b></a>';
