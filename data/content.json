@@ -223,8 +223,9 @@
       "native_title": "ねずみの初恋",
       "country": "JP",
       "language": "ja",
-      "cover": "manga-covers/nezumis-first-love/cover-1788716448778.webp",
-      "slug": "nezumis-first-love"
+      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/nezumis-first-love/1789578896723-81LNwPjJtRL._UF1000_1000_QL80_.jpg",
+      "slug": "nezumis-first-love",
+      "updated_at": "2026-09-16T17:14:56.715Z"
     },
     {
       "id": "shinobi-undercover",
