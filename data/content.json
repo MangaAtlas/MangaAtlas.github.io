@@ -118,8 +118,10 @@
       "title": "Magic Emperor",
       "country": "JP",
       "language": "ja",
-      "cover": "https://placehold.co/300x400",
-      "slug": "magic-emperor"
+      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/magic-emperor/1789579976454-1vrbxn2wawg91.jpg",
+      "slug": "magic-emperor",
+      "native_title": "",
+      "updated_at": "2026-09-16T17:32:56.451Z"
     },
     {
       "id": "chronicles-of-the-demon-faction",
