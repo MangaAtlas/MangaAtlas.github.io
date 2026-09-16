@@ -1,15 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://mangaatlas.github.io/</loc></url>
-  <url><loc>https://mangaatlas.github.io/latest-chapters.html</loc><lastmod>2026-09-16</lastmod></url>
+  <url><loc>https://mangaatlas.github.io/latest-chapters.html</loc><lastmod>2026-09-17</lastmod></url>
+
+  <!-- Manga pages -->
   <url><loc>https://mangaatlas.github.io/manga/one-piece-ja</loc></url>
   <url><loc>https://mangaatlas.github.io/manga/sakamoto-days-ja</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/the-fragrant-flowers-bloom-dignifiedly</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/blue-lock</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/hunter-x-hunter</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/one-piece</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/kingdom</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/kagurabachi</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/days</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/mairimashita-iruma-kun</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/yowamushi-pedal</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/taika-no-li-xing</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/lupin-iii-neverworld-princess</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/tougen-anki</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/magic-emperor</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/chronicles-of-the-demon-faction</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/star-embracing-swordmaster</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/the-regressed-mercenarys-machinations</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/red-blue</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/mokushiroku-no-yon-kishi</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/shuumatsu-no-valkyrie</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/akane-banashi</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/under-doctor</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/witch-watch</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/boku-to-roboko</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/ultimate-exorcist-kiyoshi</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/nezumis-first-love</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/shinobi-undercover</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/ruridragon</loc></url>
+  <url><loc>https://mangaatlas.github.io/manga/the-exiled-heavy-knight-knows-how-to-game-the-system</loc></url>
 
-  <url><loc>https://mangaatlas.github.io/chapter.html?slug=kingdom-raw-888</slug><lastmod>2026-09-15T16:30:00Z</lastmod></url>
-  <url><loc>https://mangaatlas.github.io/chapter.html?slug=blue-lock-raw-361</slug><lastmod>2026-09-16</lastmod></url>
-  <url><loc>https://mangaatlas.github.io/chapter.html?slug=kagurabachi-raw-132</slug><lastmod>2026-09-16</lastmod></url>
-  <url><loc>https://mangaatlas.github.io/chapter.html?slug=sakamoto-days-raw-275</slug><lastmod>2026-09-15T15:00:00Z</lastmod></url>
-  <url><loc>https://mangaatlas.github.io/chapter.html?slug=mokushiroku-no-yon-kishi-253</slug><lastmod>2026-09-15T14:20:00Z</lastmod></url>
-  <url><loc>https://mangaatlas.github.io/chapter.html?slug=Hun%20x%20Hun%20421</slug><lastmod>2026-09-15T14:10:00Z</lastmod></url>
-  <url><loc>https://mangaatlas.github.io/chapter.html?slug=Hun%20x%20Hun%20420</slug><lastmod>2026-09-15T14:00:00Z</lastmod></url>
+  <!-- Current and crawlable chapter links -->
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=%E3%83%AF%E3%83%B3%E3%83%94%E3%83%BC%E3%82%B9-One%20Piece-1193</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=one-piec-raw-1192</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=kingdom-raw-888</slug><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=sakamoto-days-raw-275</slug><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=blue-lock-raw-361</slug><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=blue-lock-raw-360</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=Hun%20x%20Hun%20421</slug><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=Hun%20x%20Hun%20420</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=mokushiroku-no-yon-kishi-253</slug><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=kagurabachi-raw-132</slug><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=Kagurab-131</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=witch-watch-raw-262</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=boku-to-roboko-raw-297</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=ruridragon-raw-52</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=nue-exorcist-raw-161</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=akane-banashi-raw-222</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=ultimate-exorcist-kiyoshi-raw-108</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=psycho-eyes-raw-98</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=shinobi-undercover-raw-97</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=witch-ichi-raw-98</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=roku-strange-house-raw-22</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=animal-signal-raw-14</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=kanon-master-raw-12</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=radiation-house-raw-178</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=reiwa-no-dara-san-raw-72</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=red-mudan-raw-104</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=habou-no-wadachi-raw-53</slug></url>
+
+  <!-- Previously indexed chapter URLs retained -->
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=kingdo-raw-886</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=mokushiroku-no-yon-kishi-raw-251</slug></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=Under-Ninja-169</slug></url>
 </urlset>
