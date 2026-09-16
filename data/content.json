@@ -197,8 +197,9 @@
       "native_title": "ウィッチウォッチ",
       "country": "JP",
       "language": "ja",
-      "cover": "manga-covers/witch-watch/cover-1788716333118.webp",
-      "slug": "witch-watch"
+      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/witch-watch/1789579622270-_________raw___Witch_Watch_Raw__.jpg",
+      "slug": "witch-watch",
+      "updated_at": "2026-09-16T17:27:02.214Z"
     },
     {
       "id": "boku-to-roboko",
