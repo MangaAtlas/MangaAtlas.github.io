@@ -1,12 +1,12 @@
 /* MangaAtlas centralized Ads System. Admin excluded. */
-(function(){
+(async function(){
 'use strict';
 if(window.__mangaAtlasAdsSystemLoaded)return;
 window.__mangaAtlasAdsSystemLoaded=true;
 if(location.pathname.indexOf('/admin')===0)return;
 var cfg={enabled:true};
-try{var saved=JSON.parse(localStorage.getItem('mangaatlas_ads_admin_settings')||'{}');if(saved&&saved.enabled===false)cfg.enabled=false}catch(e){}
-if(!cfg.enabled)return;
+try{var r=await fetch('/data/ads-config.json?v='+Date.now(),{cache:'no-store'});if(r.ok)cfg=Object.assign(cfg,await r.json())}catch(e){}
+if(cfg.enabled===false)return;
 var rounds=[
  [{src:'/ads/r1-728.html',w:728,h:90},{src:'/ads/r1-468.html',w:468,h:60},{src:'/ads/r1-320.html',w:320,h:50},{src:'/ads/r1-300.html',w:300,h:250}],
  [{src:'/ads/r2-728.html',w:728,h:90},{src:'/ads/r2-468.html',w:468,h:60},{src:'/ads/r2-320.html',w:320,h:50},{src:'/ads/r2-300.html',w:300,h:250}],
