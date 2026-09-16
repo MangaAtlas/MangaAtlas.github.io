@@ -1,57 +1,46 @@
-/* MangaAtlas centralized Ads System. Public pages only; admin pages are excluded. */
+/* MangaAtlas chapter ads — exactly 3 rounds between chapter images. */
 (function(){
 'use strict';
-if(window.__mangaAtlasAdsSystemLoaded)return;
-window.__mangaAtlasAdsSystemLoaded=true;
+if(window.__MangaAtlasChapterAds)return;
+window.__MangaAtlasChapterAds=true;
+if(location.pathname.indexOf('/admin')===0)return;
 var rounds=[
- [
-  {src:'/ads/r1-728.html',w:728,h:90},{src:'/ads/r1-468.html',w:468,h:60},{src:'/ads/r1-320.html',w:320,h:50},{src:'/ads/r1-300.html',w:300,h:250}
- ],
- [
-  {src:'/ads/r2-728.html',w:728,h:90},{src:'/ads/r2-468.html',w:468,h:60},{src:'/ads/r2-320.html',w:320,h:50},{src:'/ads/r2-300.html',w:300,h:250}
- ],
- [
-  {src:'/ads/r3-728.html',w:728,h:90},{src:'/ads/r3-468.html',w:468,h:60},{src:'/ads/r3-320.html',w:320,h:50},{src:'/ads/r3-300.html',w:300,h:250}
- ]
+ ['/ads/r1-728.html','/ads/r1-468.html','/ads/r1-320.html','/ads/r1-300.html'],
+ ['/ads/r2-728.html','/ads/r2-468.html','/ads/r2-320.html','/ads/r2-300.html'],
+ ['/ads/r3-728.html','/ads/r3-468.html','/ads/r3-320.html','/ads/r3-300.html']
 ];
-var nativeSrc='/ads/native.html';
-var socialSrc='https://pl31326963.profitableratecpmnetwork.com/01/89/4e/01894ea722635fb2ec48d7847937a012.js';
-function frame(src,w,h,tag){
- var box=document.createElement('div');
- box.className='manga-atlas-ad-slot';
- box.dataset.adTag=tag||'';
- box.style.cssText='width:100%;min-height:'+h+'px;margin:20px auto;display:flex;justify-content:center;align-items:center;clear:both;overflow:visible;';
- var iframe=document.createElement('iframe');
- iframe.title='Advertisement';iframe.loading='eager';iframe.scrolling='no';iframe.frameBorder='0';iframe.allow='autoplay';
- iframe.style.cssText='display:block;border:0;width:'+w+'px;height:'+h+'px;max-width:100%;overflow:hidden;background:transparent;';
- iframe.src=src+'?atlas='+encodeURIComponent(tag||'slot')+'-'+Date.now()+'-'+Math.random().toString(36).slice(2);
- box.appendChild(iframe);return box;
+var sizes=[
+ [728,90],[468,60],[320,50],[300,250]
+];
+function ad(src,size,round,index){
+ var wrap=document.createElement('div');
+ wrap.className='manga-atlas-ad-round manga-atlas-ad-round-'+round;
+ wrap.setAttribute('data-ad-round',String(round));
+ wrap.style.cssText='display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px;width:100%;margin:24px auto;padding:8px 0;clear:both;min-height:'+size[1]+'px;';
+ var f=document.createElement('iframe');
+ f.title='Advertisement';f.frameBorder='0';f.scrolling='no';f.loading='eager';
+ f.style.cssText='display:block;width:'+size[0]+'px;height:'+size[1]+'px;max-width:100%;border:0;background:transparent;';
+ f.src=src+'?round='+round+'&slot='+index+'&cb='+Date.now()+'-'+Math.random().toString(36).slice(2);
+ wrap.appendChild(f);return wrap;
 }
-function makeRound(n){
+function addRound(img,round){
  var frag=document.createDocumentFragment();
- rounds[n].forEach(function(u,i){frag.appendChild(frame(u.src,u.w,u.h,'chapter-round-'+(n+1)+'-'+(i+1)));});
- return frag;
+ rounds[round-1].forEach(function(src,i){frag.appendChild(ad(src,sizes[i],round,i+1));});
+ img.parentNode.insertBefore(frag,img.nextSibling);
 }
-function addRoundAfter(node,n){if(!node||!node.parentNode)return;node.parentNode.insertBefore(makeRound(n),node.nextSibling);}
-function chapterAds(){
- if(location.pathname.indexOf('/admin')===0)return;
- var pages=document.querySelector('.pages');if(!pages)return;
+function install(){
+ var pages=document.querySelector('.pages');
+ if(!pages||pages.dataset.chapterAdsDone==='1')return;
  var imgs=Array.prototype.slice.call(pages.querySelectorAll('img.page'));
- if(imgs.length<2||pages.dataset.adsInstalled==='1')return;
- pages.dataset.adsInstalled='1';
- [0.25,0.5,0.75].forEach(function(ratio,i){
-  var index=Math.max(0,Math.min(imgs.length-1,Math.floor(imgs.length*ratio)-1));
-  addRoundAfter(imgs[index],i);
+ if(imgs.length<4)return;
+ pages.dataset.chapterAdsDone='1';
+ /* Put the three rounds after 25%, 50% and 75% of the chapter images. */
+ [0.25,0.50,0.75].forEach(function(r,i){
+   var idx=Math.min(imgs.length-1,Math.max(0,Math.ceil(imgs.length*r)-1));
+   addRound(imgs[idx],i+1);
  });
 }
-function pageAds(){
- if(location.pathname.indexOf('/admin')===0)return;
- if(document.querySelector('[data-manga-atlas-page-ads]'))return;
- var marker=document.createElement('span');marker.setAttribute('data-manga-atlas-page-ads','1');marker.style.display='none';document.body.insertBefore(marker,document.body.firstChild);
- var end=document.createElement('div');end.className='manga-atlas-page-ads-end';end.style.cssText='width:100%;padding:12px 4%;text-align:center;clear:both;';end.appendChild(frame(nativeSrc,320,100,'native-end'));document.body.appendChild(end);
- if(!document.querySelector('[data-manga-atlas-social]')){var s=document.createElement('script');s.src=socialSrc;s.async=true;s.setAttribute('data-manga-atlas-social','1');document.body.appendChild(s);}
-}
-function install(){if(!document.body||location.pathname.indexOf('/admin')===0)return;pageAds();chapterAds();setTimeout(chapterAds,500);setTimeout(chapterAds,1500);setTimeout(chapterAds,3000);}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
-new MutationObserver(function(){chapterAds();}).observe(document.documentElement,{childList:true,subtree:true});
+function boot(){install();setTimeout(install,250);setTimeout(install,750);setTimeout(install,1500);setTimeout(install,3000);}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+new MutationObserver(function(){install();}).observe(document.documentElement,{childList:true,subtree:true});
 })();
