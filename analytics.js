@@ -15,43 +15,18 @@
   function loadChapterNavigation(){
     if(location.pathname!=='/chapter.html'&&location.pathname!=='/chapter') return;
     if(document.querySelector('script[data-manga-atlas-navigation]')) return;
-    var s=document.createElement('script');
-    s.src='/chapter-navigation.js?v=1';
-    s.async=false;
-    s.setAttribute('data-manga-atlas-navigation','true');
-    document.head.appendChild(s);
+    var s=document.createElement('script');s.src='/chapter-navigation.js?v=1';s.async=false;s.setAttribute('data-manga-atlas-navigation','true');document.head.appendChild(s);
   }
   function loadSeoSystem(){
     if(document.querySelector('script[data-manga-atlas-seo]')) return;
-    var s=document.createElement('script');
-    s.src='/seo-system.js?v=1';
-    s.async=true;
-    s.setAttribute('data-manga-atlas-seo','true');
-    document.head.appendChild(s);
+    var s=document.createElement('script');s.src='/seo-system.js?v=1';s.async=true;s.setAttribute('data-manga-atlas-seo','true');document.head.appendChild(s);
   }
   function loadAdsSystem(){
     if(location.pathname.indexOf('/admin')===0) return;
     if(document.querySelector('script[data-manga-atlas-ads]')) return;
-    var s=document.createElement('script');
-    s.src='/ads-system.js?v=4';
-    s.async=false;
-    s.setAttribute('data-manga-atlas-ads','true');
-    document.head.appendChild(s);
+    var s=document.createElement('script');s.src='/ads-system.js?v=5';s.async=false;s.setAttribute('data-manga-atlas-ads','true');document.head.appendChild(s);
   }
-  function boot(){
-    loadSeoSystem();
-    loadAdsSystem();
-    pageView();
-    loadChapterNavigation();
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true});
-  else boot();
-  window.mangaAtlasAnalytics={
-    pageView:function(extra){
-      var p={page_title:document.title,page_location:location.href,page_path:location.pathname+location.search};
-      if(extra) for(var k in extra) p[k]=String(extra[k]);
-      gtag('event','page_view',p);
-    },
-    event:function(name,params){gtag('event',name,params||{})}
-  };
+  function boot(){loadSeoSystem();loadAdsSystem();pageView();loadChapterNavigation();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+  window.mangaAtlasAnalytics={pageView:function(extra){var p={page_title:document.title,page_location:location.href,page_path:location.pathname+location.search};if(extra)for(var k in extra)p[k]=String(extra[k]);gtag('event','page_view',p)},event:function(name,params){gtag('event',name,params||{})}};
 })();
