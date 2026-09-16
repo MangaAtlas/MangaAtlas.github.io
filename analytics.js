@@ -33,7 +33,7 @@
     if(location.pathname.indexOf('/admin')===0) return;
     if(document.querySelector('script[data-manga-atlas-ads]')) return;
     var s=document.createElement('script');
-    s.src='/ads-system.js?v=3';
+    s.src='/ads-system.js?v=4';
     s.async=false;
     s.setAttribute('data-manga-atlas-ads','true');
     document.head.appendChild(s);
