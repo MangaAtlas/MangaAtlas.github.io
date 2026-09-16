@@ -12,7 +12,7 @@ function executeCode(code){var box=document.createElement('div');box.className='
 function root(){return document.querySelector('.pages')||document.querySelector('main')||document.querySelector('article')||document.body}
 function start(s){var r=root();if(r&&r.parentNode)r.parentNode.insertBefore(executeCode(s.code),r)}
 function end(s){var r=root();if(r&&r.parentNode)r.parentNode.insertBefore(executeCode(s.code),r.nextSibling)}
-function between(s){var r=document.querySelector('.pages');if(!r)return end(s);var imgs=Array.prototype.slice.call(r.querySelectorAll('img.page'));if(!imgs.length)return end(s);var n=parseInt(s.afterImage,10);if(!Number.isFinite(n)||n<1)n=5;if(n>imgs.length)n=imgs.length;r.insertBefore(executeCode(s.code),imgs[n-1].nextSibling)}
+function between(s){var r=document.querySelector('.pages');if(!r)return end(s);var imgs=Array.prototype.slice.call(r.querySelectorAll('img.page'));if(!imgs.length)return end(s);var n=parseInt(s.afterImage||s.between,10);if(!Number.isFinite(n)||n<5)n=5;if(n>imgs.length)return;r.insertBefore(executeCode(s.code),imgs[n-1].nextSibling)}
 function install(){if(document.body.dataset.mangaAtlasAdsInstalled==='1')return;document.body.dataset.mangaAtlasAdsInstalled='1';sections.forEach(function(s){if(s.placement==='between')between(s);else if(s.placement==='end')end(s);else start(s)})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
 setTimeout(install,700);setTimeout(install,1800);setTimeout(install,3500);
