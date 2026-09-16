@@ -150,8 +150,10 @@
       "title": "Red Blue",
       "country": "JP",
       "language": "ja",
-      "cover": "https://placehold.co/300x400",
-      "slug": "red-blue"
+      "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/red-blue/1789579855074-81cu4zdzvTL._AC_UF1000_1000_QL80_.jpg",
+      "slug": "red-blue",
+      "native_title": "レッドブルー",
+      "updated_at": "2026-09-16T17:30:55.070Z"
     },
     {
       "id": "mokushiroku-no-yon-kishi",
