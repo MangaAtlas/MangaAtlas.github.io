@@ -185,6 +185,17 @@
       ],
       "createdAt": "2026-09-17T14:32:50.690Z",
       "updatedAt": "2026-09-17T14:55:18.277Z"
+    },
+    {
+      "id": "manual-1789658144840",
+      "mangaId": "boku-to-roboko",
+      "number": 297,
+      "title": "僕とロボコ raw ( BOKU TO ROBOKO raw ) 第297話",
+      "slug": "boku-to-roboko-raw-297",
+      "country": "JP",
+      "pages": [],
+      "createdAt": "2026-09-17T15:15:43.948Z",
+      "updatedAt": "2026-09-17T15:15:43.948Z"
     }
   ]
 }
