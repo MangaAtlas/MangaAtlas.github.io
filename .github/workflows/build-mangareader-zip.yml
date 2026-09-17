@@ -7,103 +7,59 @@ on:
 permissions:
   contents: read
 
-actions:
-  - uses: actions/checkout@v4
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Build clone
         shell: bash
         run: |
           set -e
           rm -rf /tmp/Mangareader
           mkdir -p /tmp/Mangareader
-
-          # Copy the full site shell, admin, ads, assets and configuration.
           rsync -a --exclude='.git' --exclude='chapter-images' --exclude='manga-covers' ./ /tmp/Mangareader/
-
           python3 - <<'PY'
-          import json, os, shutil
+          import json, shutil
           from pathlib import Path
-
-          root = Path.cwd()
-          out = Path('/tmp/Mangareader')
-
-          keep = {
-            'one -pie-raw -1194': ('one-piece', 'one -pie-raw -1194'),
-            'sakamoto-raw-276': ('days', 'sakamoto-raw-276'),
-            'sakamoto-raw-275': ('days', 'sakamoto-raw-275'),
-            'the-fragrant-raw-202': ('the-fragrant-flowers-bloom-dignifiedly', 'the-fragrant-raw-202'),
-            'boku-to-roboko-raw-297': ('boku-to-roboko', 'boku-to-roboko-raw-297'),
-          }
-          keep_mangas = {
-            'one-piece', 'days', 'the-fragrant-flowers-bloom-dignifiedly',
-            'boku-to-roboko', 'sakamoto-days'
-          }
-
-          def load(path):
-            return json.loads(Path(path).read_text(encoding='utf-8'))
-          def save(path, data):
-            Path(path).write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-
-          # Keep only the five recent published chapters and their five manga entries.
-          cp = root/'data/content.json'
+          root=Path.cwd(); out=Path('/tmp/Mangareader')
+          keep={'one -pie-raw -1194':('one-piece','one -pie-raw -1194'),'sakamoto-raw-276':('days','sakamoto-raw-276'),'sakamoto-raw-275':('days','sakamoto-raw-275'),'the-fragrant-raw-202':('the-fragrant-flowers-bloom-dignifiedly','the-fragrant-raw-202'),'boku-to-roboko-raw-297':('boku-to-roboko','boku-to-roboko-raw-297')}
+          keep_mangas={'one-piece','days','the-fragrant-flowers-bloom-dignifiedly','boku-to-roboko','sakamoto-days'}
+          def load(p): return json.loads(Path(p).read_text(encoding='utf-8'))
+          def save(p,d): Path(p).write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          cp=root/'data/content.json'
           if cp.exists():
-            d = load(cp)
-            d['mangas'] = [m for m in d.get('mangas', []) if m.get('id') in keep_mangas or m.get('slug') in keep_mangas]
-            d['chapters'] = [c for c in d.get('chapters', []) if c.get('slug') in keep]
-            save(out/'data/content.json', d)
-
-          mp = root/'data/manual-chapters.json'
+            d=load(cp); d['mangas']=[m for m in d.get('mangas',[]) if m.get('id') in keep_mangas or m.get('slug') in keep_mangas]; d['chapters']=[c for c in d.get('chapters',[]) if c.get('slug') in keep]; save(out/'data/content.json',d)
+          mp=root/'data/manual-chapters.json'
           if mp.exists():
-            d = load(mp)
-            d['chapters'] = [c for c in d.get('chapters', []) if c.get('slug') in keep]
-            # Keep only one page per chapter in the lightweight clone to guarantee a small ZIP.
+            d=load(mp); d['chapters']=[c for c in d.get('chapters',[]) if c.get('slug') in keep]
             for c in d['chapters']:
-              if c.get('pages'):
-                c['pages'] = c['pages'][:1]
-            save(out/'data/manual-chapters.json', d)
-
-          up = out/'data/upcoming-chapters.json'
+              if c.get('pages'): c['pages']=c['pages'][:1]
+            save(out/'data/manual-chapters.json',d)
+          up=out/'data/upcoming-chapters.json'
           if up.exists():
-            try:
-              d = load(up); d['chapters'] = []; save(up, d)
+            try: d=load(up); d['chapters']=[]; save(up,d)
             except Exception: pass
-
-          # Copy only the five manga cover folders.
           for manga in keep_mangas:
-            src = root/'manga-covers'/manga
-            dst = out/'manga-covers'/manga
-            if src.exists(): shutil.copytree(src, dst, dirs_exist_ok=True)
-
-          # Copy only one chapter image per selected published chapter.
-          for slug, (manga, folder) in keep.items():
-            src = root/'chapter-images'/manga/'chapter-'+folder
-            dst = out/'chapter-images'/manga/'chapter-'+folder
+            src=root/'manga-covers'/manga; dst=out/'manga-covers'/manga
+            if src.exists(): shutil.copytree(src,dst,dirs_exist_ok=True)
+          for slug,(manga,folder) in keep.items():
+            src=root/'chapter-images'/manga/('chapter-'+folder); dst=out/'chapter-images'/manga/('chapter-'+folder)
             if src.exists():
-              files = sorted([p for p in src.iterdir() if p.is_file() and not p.name.startswith('.')])
-              if files:
-                dst.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(files[0], dst/files[0].name)
-
-          # Remove upload placeholders and any empty chapter/manga directories.
+              files=sorted([p for p in src.iterdir() if p.is_file() and not p.name.startswith('.')])
+              if files: dst.mkdir(parents=True,exist_ok=True); shutil.copy2(files[0],dst/files[0].name)
           for p in (out/'chapter-images').rglob('*') if (out/'chapter-images').exists() else []:
             if p.is_file() and p.name.startswith('.upload-'): p.unlink()
-          for base in [out/'chapter-images', out/'manga-covers']:
+          for base in [out/'chapter-images',out/'manga-covers']:
             if base.exists():
-              for p in sorted(base.rglob('*'), reverse=True):
+              for p in sorted(base.rglob('*'),reverse=True):
                 if p.is_dir() and not any(p.iterdir()): p.rmdir()
           PY
-
           cd /tmp
           zip -qr Mangareader.zip Mangareader
-          test $(stat -c%s Mangareader.zip) -lt 20000000
-          echo "ZIP_SIZE=$(du -h Mangareader.zip | cut -f1)"
-
+          size=$(stat -c%s Mangareader.zip)
+          echo "ZIP_BYTES=$size"
+          test "$size" -lt 20000000
       - name: Upload ZIP artifact
         uses: actions/upload-artifact@v4
         with:
