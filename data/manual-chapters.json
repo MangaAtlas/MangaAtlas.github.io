@@ -211,6 +211,17 @@
       ],
       "createdAt": "2026-09-17T15:27:37.419Z",
       "updatedAt": "2026-09-17T15:30:48.541Z"
+    },
+    {
+      "id": "manual-1789667168680",
+      "mangaId": "blue-lock",
+      "number": 362,
+      "title": "ブルーロック raw ( Blue Lock raw ) 第362話",
+      "slug": "blue-lo-raw-362",
+      "country": "JP",
+      "pages": [],
+      "createdAt": "2026-09-17T17:46:07.593Z",
+      "updatedAt": "2026-09-17T17:46:07.593Z"
     }
   ]
 }
