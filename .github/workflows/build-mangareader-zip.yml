@@ -18,7 +18,7 @@ jobs:
           set -e
           rm -rf /tmp/Mangareader
           mkdir -p /tmp/Mangareader
-          rsync -a --exclude='.git' --exclude='chapter-images' --exclude='manga-covers' ./ /tmp/Mangareader/
+          rsync -a --exclude='.git' --exclude='chapter-images' --exclude='manga-covers' --exclude='*.rar' --exclude='*.zip' --exclude='*.7z' --exclude='*.tar' --exclude='*.tar.gz' ./ /tmp/Mangareader/
           python3 - <<'PY'
           import json, shutil
           from pathlib import Path
@@ -56,9 +56,10 @@ jobs:
                 if p.is_dir() and not any(p.iterdir()): p.rmdir()
           PY
           cd /tmp
-          zip -qr Mangareader.zip Mangareader
+          zip -qr -9 Mangareader.zip Mangareader
           size=$(stat -c%s Mangareader.zip)
           echo "ZIP_BYTES=$size"
+          du -ah Mangareader | sort -hr | head -25
           test "$size" -lt 20000000
       - name: Upload ZIP artifact
         uses: actions/upload-artifact@v4
