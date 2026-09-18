@@ -229,20 +229,6 @@
       ],
       "createdAt": "2026-09-17T15:27:37.419Z",
       "updatedAt": "2026-09-18T08:01:54.888Z"
-    },
-    {
-      "id": "manual-1789667168680",
-      "mangaId": "blue-lock",
-      "number": 362,
-      "title": "ブルーロック raw ( Blue Lock raw ) 第362話",
-      "slug": "blue-lo-raw-362",
-      "country": "JP",
-      "pages": [
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-blue-lo-raw-362/.upload-1789667587406/0001-1.jpg",
-        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/blue-lock/chapter-blue-lo-raw-362/.upload-1789667587406/0002-2.jpg"
-      ],
-      "createdAt": "2026-09-17T17:46:07.593Z",
-      "updatedAt": "2026-09-17T17:53:13.594Z"
     }
   ]
 }
