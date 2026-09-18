@@ -243,6 +243,28 @@
       ],
       "createdAt": "2026-09-18T08:04:59.360Z",
       "updatedAt": "2026-09-18T08:05:42.115Z"
+    },
+    {
+      "id": "manual-boruto-two-blue-vortex-117",
+      "mangaId": "boruto-two-blue-vortex",
+      "number": 117,
+      "title": "# ボルト raw ( Boruto raw ) -TWO BLUE VORTEX 第117話",
+      "slug": "boruto-two-blue-vortex-raw-117",
+      "country": "JP",
+      "pages": [],
+      "createdAt": "2026-09-18T15:05:00Z",
+      "updatedAt": "2026-09-18T15:05:00Z"
+    },
+    {
+      "id": "manual-otona-taisen-65",
+      "mangaId": "otona-taisen",
+      "number": 65,
+      "title": "大人大戦 Raw 第65話",
+      "slug": "otona-taisen-raw-65",
+      "country": "JP",
+      "pages": [],
+      "createdAt": "2026-09-18T15:06:00Z",
+      "updatedAt": "2026-09-18T15:06:00Z"
     }
   ]
 }
