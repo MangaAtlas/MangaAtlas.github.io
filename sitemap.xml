@@ -35,6 +35,13 @@
   <url><loc>https://mangaatlas.github.io/manga.html?slug=ruridragon</loc></url>
   <url><loc>https://mangaatlas.github.io/manga.html?slug=the-exiled-heavy-knight-knows-how-to-game-the-system</loc></url>
 
+  <url><loc>https://mangaatlas.github.io/manga.html?slug=boruto-two-blue-vortex</loc><lastmod>2026-09-18</lastmod></url>
+  <url><loc>https://mangaatlas.github.io/manga.html?slug=otona-taisen</loc><lastmod>2026-09-18</lastmod></url>
+
+  <!-- New chapters -->
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=boruto-two-blue-vortex-raw-117</loc><lastmod>2026-09-18</lastmod></url>
+  <url><loc>https://mangaatlas.github.io/chapter.html?slug=otona-taisen-raw-65</loc><lastmod>2026-09-18</lastmod></url>
+
   <!-- Current and crawlable chapter links -->
   <url><loc>https://mangaatlas.github.io/chapter.html?slug=%E3%83%AF%E3%83%B3%E3%83%94%E3%83%BC%E3%82%B9-One%20Piece-1193</loc><lastmod>2026-09-17</lastmod></url>
   <url><loc>https://mangaatlas.github.io/chapter.html?slug=one-piec-raw-1192</loc></url>
