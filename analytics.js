@@ -9,13 +9,8 @@
   ga.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(MEASUREMENT_ID);
   document.head.appendChild(ga);
   function pageView(){
+    if(location.pathname==='/chapter.html'||location.pathname==='/chapter') return;
     var p={page_title:document.title,page_location:location.href,page_path:location.pathname+location.search};
-    if(location.pathname==='/chapter.html'||location.pathname==='/chapter'){
-      var slug='';
-      try{slug=decodeURIComponent(new URLSearchParams(location.search).get('slug')||'').trim()}catch(e){}
-      if(slug)p.chapter_slug=slug;
-      p.content_type='chapter';
-    }
     gtag('event','page_view',p);
   }
   function loadChapterNavigation(){
