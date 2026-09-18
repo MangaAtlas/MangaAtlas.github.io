@@ -266,6 +266,24 @@
       "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/the-exiled-heavy-knight-knows-how-to-game-the-system/1789576352003-91trbHF0bLL._UF1000_1000_QL80_.jpg",
       "slug": "the-exiled-heavy-knight-knows-how-to-game-the-system",
       "updated_at": "2026-09-16T16:32:32.000Z"
+    },
+    {
+      "id": "boruto-two-blue-vortex",
+      "title": "Boruto: Two Blue Vortex",
+      "native_title": "ボルト -TWO BLUE VORTEX-",
+      "country": "JP",
+      "language": "ja",
+      "slug": "boruto-two-blue-vortex",
+      "updated_at": "2026-09-18T15:00:00Z"
+    },
+    {
+      "id": "otona-taisen",
+      "title": "Otona Taisen",
+      "native_title": "大人大戦",
+      "country": "JP",
+      "language": "ja",
+      "slug": "otona-taisen",
+      "updated_at": "2026-09-18T15:00:00Z"
     }
   ],
   "chapters": [
