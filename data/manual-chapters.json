@@ -339,6 +339,17 @@
       ],
       "createdAt": "2026-09-20T13:55:34.397Z",
       "updatedAt": "2026-09-20T14:05:09.847Z"
+    },
+    {
+      "id": "manual-1789913367748",
+      "mangaId": "dead-account-raw",
+      "number": 151,
+      "title": "デッドアカウント raw ( Dead Account raw )第151話",
+      "slug": "dead-account-raw-151",
+      "country": "JP",
+      "pages": [],
+      "createdAt": "2026-09-20T14:09:26.776Z",
+      "updatedAt": "2026-09-20T14:09:26.776Z"
     }
   ]
 }
