@@ -347,9 +347,11 @@
       "title": "デッドアカウント raw ( Dead Account raw )第151話",
       "slug": "dead-account-raw-151",
       "country": "JP",
-      "pages": [],
+      "pages": [
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/dead-account-raw/chapter-dead-account-raw-151/.upload-1789913522997/0001-1.jpg"
+      ],
       "createdAt": "2026-09-20T14:09:26.776Z",
-      "updatedAt": "2026-09-20T14:09:26.776Z"
+      "updatedAt": "2026-09-20T14:12:12.213Z"
     }
   ]
 }
