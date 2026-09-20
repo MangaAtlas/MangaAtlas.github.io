@@ -286,6 +286,17 @@
       "slug": "otona-taisen",
       "updated_at": "2026-09-18T16:55:59.699Z",
       "cover": "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/manga-covers/otona-taisen/1789750559701-61AdhOYWu4L.jpg"
+    },
+    {
+      "id": "dead-account-raw",
+      "title": "デッドアカウント raw ( Dead Account raw )",
+      "slug": "dead-account-raw",
+      "native_title": "デッドアカウント",
+      "country": "JP",
+      "language": "ja",
+      "cover": "https://placehold.co/300x400",
+      "created_at": "2026-09-20T14:06:32.791Z",
+      "updated_at": "2026-09-20T14:06:32.791Z"
     }
   ],
   "chapters": [
