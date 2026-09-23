@@ -380,6 +380,17 @@
       ],
       "createdAt": "2026-09-22T12:46:40.872Z",
       "updatedAt": "2026-09-22T12:49:26.886Z"
+    },
+    {
+      "id": "manual-1790148248360",
+      "mangaId": "wind-breaker-raw",
+      "number": 230,
+      "title": "ウィンドブレーカー raw ( Wind Breaker raw ) 第230話",
+      "slug": "wind-breaker-raw-raw-230",
+      "country": "JP",
+      "pages": [],
+      "createdAt": "2026-09-23T07:24:06.826Z",
+      "updatedAt": "2026-09-23T07:24:06.826Z"
     }
   ]
 }
