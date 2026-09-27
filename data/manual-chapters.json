@@ -511,6 +511,17 @@
       ],
       "createdAt": "2026-09-27T17:51:32.793Z",
       "updatedAt": "2026-09-27T18:00:39.577Z"
+    },
+    {
+      "id": "manual-1790532372245",
+      "mangaId": "witch-watch",
+      "number": 263,
+      "title": "ウィッチウォッチ raw ( Witch Watch raw ) 第263話",
+      "slug": "witch-watch-raw-263",
+      "country": "JP",
+      "pages": [],
+      "createdAt": "2026-09-27T18:06:10.025Z",
+      "updatedAt": "2026-09-27T18:06:10.025Z"
     }
   ]
 }
