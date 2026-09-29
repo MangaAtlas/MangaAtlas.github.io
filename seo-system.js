@@ -46,7 +46,7 @@
       const number=c.number!=null?String(c.number):'';
       const seoTitle=(title+' | MangaAtlas').slice(0,70);
       const desc=(number?series+' chapter '+number+' raw release. ':'')+'Read '+title+' on MangaAtlas.';
-      const url=base+'/chapter.html?slug='+encodeURIComponent(slug);
+      const url=base+'/chapter.html?slug='+encodeURIComponent(slug);\n      const pages=Array.isArray(c.pages)?c.pages:[];\n      const image=pages.length?String(pages[0]):'';
       document.title=seoTitle;
       upsert('meta[name="description"]',{name:'description',content:desc.slice(0,155)});
       upsert('meta[property="og:title"]',{'property':'og:title',content:seoTitle});
@@ -65,7 +65,7 @@
         mainEntityOfPage:{'@type':'WebPage','@id':url},
         isPartOf:{'@type':'WebSite',name:'MangaAtlas',url:base+'/'},
         about:{'@type':'Thing',name:series},
-        keywords:[series,'manga raw','manga chapter','chapter '+number].filter(Boolean).join(', ')
+        keywords:[series,'manga raw','manga chapter','chapter '+number].filter(Boolean).join(', '),\n        image:image||undefined,\n        primaryImageOfPage:image?{'@type':'ImageObject',url:image}:undefined,\n        datePublished:c.createdAt||c.created_at||undefined,\n        dateModified:c.updatedAt||c.updated_at||c.createdAt||c.created_at||undefined
       });
       return;
     }
