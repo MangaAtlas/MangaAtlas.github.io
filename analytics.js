@@ -29,5 +29,5 @@
   }
   function boot(){loadSeoSystem();loadAdsSystem();pageView();loadChapterNavigation();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-  window.mangaAtlasAnalytics={pageView:function(extra){var p={page_title:document.title,page_location:location.href,page_path:location.pathname+location.search};if(extra)for(var k in extra)p[k]=String(extra[k]);gtag('event','page_view',p)},event:function(name,params){gtag('event',name,params||{})}};
+  window.mangaAtlasAnalytics={pageView:function(extra){var p={page_title:document.title,page_location:location.href,page_path:location.pathname+location.search,send_to:MEASUREMENT_ID};if(extra)for(var k in extra)p[k]=String(extra[k]);gtag('event','page_view',p);if(extra&&String(extra.content_type||'')==='chapter'){var cv={chapter_slug:String(extra.chapter_slug||''),chapter_number:String(extra.chapter_number||''),manga_title:String(extra.manga_title||''),page_title:document.title,page_location:location.href,send_to:MEASUREMENT_ID};gtag('event','chapter_view',cv)}},event:function(name,params){var p=params||{};if(typeof p.send_to==='undefined')p.send_to=MEASUREMENT_ID;gtag('event',name,p)}};
 })();
