@@ -652,6 +652,36 @@
       ],
       "createdAt": "2026-09-29T10:25:28.685Z",
       "updatedAt": "2026-09-29T10:50:42.587Z"
+    },
+    {
+      "id": "manual-legacy-kingdom-raw-889",
+      "mangaId": "kingdom",
+      "number": 889,
+      "title": "キングダム raw ( Kingdom Raw ) 第889話 | JAP",
+      "slug": "kingdom-raw-889",
+      "country": "JP",
+      "pages": [
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0001-1.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0002-2.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0003-3.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0004-4.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0005-5.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0006-6.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0007-7.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0008-8.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0009-9.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0010-10.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0011-11.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0012-12.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0013-13.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0014-14.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0015-15.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0016-16.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0017-17.jpg",
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-889-jap/.upload-1790677311742/0018-18.jpg"
+      ],
+      "createdAt": "2026-09-20T13:55:34.397Z",
+      "updatedAt": "2026-10-01T12:59:22.934Z"
     }
   ]
 }
