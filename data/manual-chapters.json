@@ -682,6 +682,17 @@
       ],
       "createdAt": "2026-09-20T13:55:34.397Z",
       "updatedAt": "2026-10-01T12:59:22.934Z"
+    },
+    {
+      "id": "manual-1790939453234",
+      "mangaId": "kagurabachi",
+      "number": 133,
+      "title": "カグラバチ raw ( Kagurabachi raw ) 第133話",
+      "slug": "kagurabac-jan-raw-133",
+      "country": "JP",
+      "pages": [],
+      "createdAt": "2026-10-02T11:10:51.727Z",
+      "updatedAt": "2026-10-02T11:10:51.727Z"
     }
   ]
 }
