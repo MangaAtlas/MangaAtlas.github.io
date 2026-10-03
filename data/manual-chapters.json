@@ -815,9 +815,11 @@
       "title": "キングダム raw ( Kingdom Raw ) 第890話 | ENG",
       "slug": "kingdom-raw-eng-890",
       "country": "US",
-      "pages": [],
+      "pages": [
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/kingdom/chapter-kingdom-raw-eng-890/.upload-1790998991374/0001-_877_2026_6_1_15_.jpg"
+      ],
       "createdAt": "2026-10-03T03:26:21.923Z",
-      "updatedAt": "2026-10-03T03:26:21.923Z"
+      "updatedAt": "2026-10-03T03:43:15.267Z"
     },
     {
       "id": "manual-pending-blue-lock-raw-jap-363",
