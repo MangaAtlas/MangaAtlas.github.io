@@ -101,13 +101,22 @@ jobs:
 
           img_root = OUT / "chapter-images"
           if img_root.exists():
+              # Keep only the top-level manga directories that contain selected chapters.
+              keep_top = {p.parts[1] for p in keep_dirs if len(p.parts) >= 2}
               for child in list(img_root.iterdir()):
-                  if child.is_dir():
-                      for manga_dir in list(child.iterdir()):
-                          if manga_dir.is_dir() and manga_dir not in keep_dirs:
-                              shutil.rmtree(manga_dir)
+                  if child.is_dir() and child.name not in keep_top:
+                      shutil.rmtree(child)
                   elif child.is_file() and child.name != "manifest.json":
                       child.unlink()
+              # Within kept manga folders, keep only the exact selected chapter folders.
+              for top in keep_top:
+                  base = img_root / top
+                  if not base.exists():
+                      continue
+                  wanted = {p for p in keep_dirs if len(p.parts) >= 3 and p.parts[1] == top}
+                  for d in list(base.iterdir()):
+                      if d.is_dir() and d not in wanted:
+                          shutil.rmtree(d)
 
           # Manifest contained only old archive records; keep it clean.
           manifest = OUT / "chapter-images/manifest.json"
