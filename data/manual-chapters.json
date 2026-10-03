@@ -880,9 +880,11 @@
       "title": "デッドアカウント raw ( Dead Account raw )第152話",
       "slug": "dead-account-raw-152",
       "country": "JP",
-      "pages": [],
+      "pages": [
+        "https://raw.githubusercontent.com/MangaAtlas/MangaAtlas.github.io/main/chapter-images/dead-account-raw/chapter-dead-account-raw-152/.upload-1791001031656/0001-_877_2026_6_1_16_.jpg"
+      ],
       "createdAt": "2026-10-03T03:26:21.923Z",
-      "updatedAt": "2026-10-03T03:26:21.923Z"
+      "updatedAt": "2026-10-03T04:17:18.611Z"
     }
   ]
 }
