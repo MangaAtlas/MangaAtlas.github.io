@@ -1,0 +1,204 @@
+name: Build JPMangaatlas ZIP
+
+on:
+  push:
+    branches:
+      - build-jpmangaatlas-zip-20261003
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Prune package to exactly 9 chapters and rename site
+        shell: python
+        run: |
+          import json, os, re, shutil, zipfile
+          from pathlib import Path
+          from urllib.parse import urlparse, parse_qs, unquote
+          from datetime import datetime, timezone
+
+          ROOT = Path.cwd()
+          OUT = ROOT.parent / "JPMangaatlas"
+          if OUT.exists():
+              shutil.rmtree(OUT)
+          shutil.copytree(ROOT, OUT, ignore=shutil.ignore_patterns(".git", "JPMangaatlas"))
+
+          selected = [
+              "kingdom-raw-jap-890",
+              "kingdom-raw-eng-890",
+              "blue-lock-raw-jap-364",
+              "blue-lock-raw-eng-364",
+              "one-piece-raw-jap-1195",
+              "one-piece-raw-eng-1195",
+              "dead-account-raw-152",
+              "sakamoto-days-raw-jap-277",
+              "sakamoto-days-raw-eng-277",
+          ]
+          selected_set = set(selected)
+          wanted_mangas = {"kingdom", "blue-lock", "one-piece", "dead-account-raw", "days"}
+
+          def load_json(rel):
+              p = OUT / rel
+              with p.open("r", encoding="utf-8") as f:
+                  return json.load(f)
+
+          def save_json(rel, obj):
+              p = OUT / rel
+              p.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          content = load_json("data/content.json")
+          manual = load_json("data/manual-chapters.json")
+
+          base_chapters = [c for c in content.get("chapters", []) if c.get("slug") in selected_set]
+          manual_chapters = [c for c in manual.get("chapters", []) if c.get("slug") in selected_set]
+
+          found = {c.get("slug") for c in base_chapters + manual_chapters}
+          missing = [s for s in selected if s not in found]
+          if missing:
+              raise SystemExit("Missing selected chapters: " + ", ".join(missing))
+
+          # Keep each chapter exactly once. These 9 are the only published chapters in the package.
+          content["chapters"] = base_chapters
+          manual["chapters"] = manual_chapters
+
+          # Keep only manga records actually used by the 9 selected chapters.
+          ids = {c.get("mangaId") for c in base_chapters + manual_chapters if c.get("mangaId")}
+          content["mangas"] = [
+              m for m in content.get("mangas", [])
+              if m.get("id") in ids or m.get("slug") in wanted_mangas
+          ]
+          save_json("data/content.json", content)
+          save_json("data/manual-chapters.json", manual)
+
+          # No other chapter-like datasets in the package.
+          for rel in ["data/extra-chapters.json", "data/upcoming-chapters.json"]:
+              p = OUT / rel
+              if p.exists():
+                  key = "upcoming" if "upcoming" in rel else "chapters"
+                  p.write_text(json.dumps({"version": 1, key: []}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          # Remove historical chapter-date records; the nine selected records use manual data timestamps.
+          p = OUT / "data/chapter-dates.json"
+          if p.exists():
+              save_json("data/chapter-dates.json", {"version": 1, "generatedAt": datetime.now(timezone.utc).isoformat(), "chapters": {}})
+
+          # Keep only image directories referenced by the selected chapters.
+          keep_dirs = set()
+          for c in base_chapters + manual_chapters:
+              for page in c.get("pages", []) or []:
+                  s = str(page)
+                  marker = "/chapter-images/"
+                  if marker in s:
+                      rel = s.split(marker, 1)[1].split("?", 1)[0]
+                      parts = rel.split("/")
+                      if len(parts) >= 3:
+                          keep_dirs.add(Path("chapter-images") / parts[0] / parts[1])
+
+          img_root = OUT / "chapter-images"
+          if img_root.exists():
+              for child in list(img_root.iterdir()):
+                  if child.is_dir():
+                      for manga_dir in list(child.iterdir()):
+                          if manga_dir.is_dir() and manga_dir not in keep_dirs:
+                              shutil.rmtree(manga_dir)
+                  elif child.is_file() and child.name != "manifest.json":
+                      child.unlink()
+
+          # Manifest contained only old archive records; keep it clean.
+          manifest = OUT / "chapter-images/manifest.json"
+          if manifest.exists():
+              manifest.write_text(json.dumps({"archives": []}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          # Keep only covers for the five mangas used by the nine chapters.
+          covers = OUT / "manga-covers"
+          if covers.exists():
+              for d in list(covers.iterdir()):
+                  if d.is_dir() and d.name not in wanted_mangas:
+                      shutil.rmtree(d)
+
+          # Remove old downloadable/archive data.
+          for p in OUT.rglob("*"):
+              if p.is_file() and p.suffix.lower() == ".rar":
+                  p.unlink()
+
+          # Sitemap: preserve normal site URLs, but remove all old chapter/manga URLs.
+          sm = OUT / "sitemap.xml"
+          if sm.exists():
+              txt = sm.read_text(encoding="utf-8")
+              blocks = re.findall(r"<url>.*?</url>", txt, flags=re.S)
+              kept = []
+              for block in blocks:
+                  m = re.search(r"<loc>(.*?)</loc>", block, flags=re.S)
+                  if not m:
+                      continue
+                  loc = unquote(m.group(1))
+                  if "chapter.html?slug=" in loc:
+                      q = parse_qs(urlparse(loc).query)
+                      slug = q.get("slug", [""])[0]
+                      if slug not in selected_set:
+                          continue
+                  if "manga.html?slug=" in loc:
+                      q = parse_qs(urlparse(loc).query)
+                      slug = q.get("slug", [""])[0]
+                      if slug not in wanted_mangas:
+                          continue
+                  kept.append(block)
+              sm.write_text(
+                  '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+                  + "\n".join(kept) + "\n</urlset>\n",
+                  encoding="utf-8"
+              )
+
+          # Change visible site branding from MangaAtlas to JPMangaatlas without changing
+          # the original GitHub owner/repository paths; the migration prompt handles the
+          # destination account/repository URLs after the ZIP is uploaded.
+          text_ext = {".html",".js",".css",".json",".md",".txt",".xml"}
+          token = "MangaAtlas"
+          for p in OUT.rglob("*"):
+              if not p.is_file() or p.suffix.lower() not in text_ext:
+                  continue
+              try:
+                  s = p.read_text(encoding="utf-8")
+              except UnicodeDecodeError:
+                  continue
+              s = re.sub(r"(?<![A-Za-z0-9_/.-])MangaAtlas(?![A-Za-z0-9_/.-])", "JPMangaatlas", s)
+              p.write_text(s, encoding="utf-8")
+
+          # Remove the temporary packaging workflow from the ZIP.
+          wf = OUT / ".github" / "workflows" / "build-jpmangaatlas-zip.yml"
+          if wf.exists():
+              wf.unlink()
+
+          # Verification.
+          c2 = load_json("data/content.json")
+          m2 = load_json("data/manual-chapters.json")
+          all_ch = (c2.get("chapters", []) + m2.get("chapters", []))
+          slugs = [c.get("slug") for c in all_ch]
+          if len(slugs) != 9 or len(set(slugs)) != 9 or set(slugs) != selected_set:
+              raise SystemExit("Package verification failed: chapter set is not exactly the requested 9.")
+          if set(m.get("id") for m in c2.get("mangas", [])) - wanted_mangas:
+              raise SystemExit("Package verification failed: unrelated manga records remain.")
+
+          zip_path = ROOT.parent / "JPMangaatlas.zip"
+          if zip_path.exists():
+              zip_path.unlink()
+          with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6) as z:
+              for p in OUT.rglob("*"):
+                  if p.is_file():
+                      z.write(p, p.relative_to(OUT))
+          print("Created", zip_path)
+          print("Exactly 9 chapters:", slugs)
+          print("Mangas:", sorted(set(m.get("id") for m in c2.get("mangas", []))))
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JPMangaatlas
+          path: /home/runner/work/*/JPMangaatlas.zip
+          if-no-files-found: error
+          retention-days: 7
