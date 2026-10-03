@@ -113,9 +113,9 @@ jobs:
                   base = img_root / top
                   if not base.exists():
                       continue
-                  wanted = {p for p in keep_dirs if len(p.parts) >= 3 and p.parts[1] == top}
+                  wanted_names = {p.parts[2] for p in keep_dirs if len(p.parts) >= 3 and p.parts[1] == top}
                   for d in list(base.iterdir()):
-                      if d.is_dir() and d not in wanted:
+                      if d.is_dir() and d.name not in wanted_names:
                           shutil.rmtree(d)
 
           # Manifest contained only old archive records; keep it clean.
