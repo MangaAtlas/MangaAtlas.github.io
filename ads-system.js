@@ -174,14 +174,22 @@
         var reader = document.querySelector('.reader') || pages;
         var copy = reader.querySelector('.chapter-copy');
         var related = reader.querySelector('.related');
-        var existingSlots = reader.querySelectorAll('.manga-atlas-ad-slot').length;
+        var existingSlots = Array.prototype.filter.call(
+          reader.querySelectorAll('.manga-atlas-ad-slot'),
+          function (slot) {
+            var configured = sections.find(function (item) {
+              return String(item.id || '') === String(slot.dataset.maAdSection || '');
+            });
+            return configured && String(configured.placement || '').toLowerCase() === 'between';
+          }
+        ).length;
         if (existingSlots === 0 && copy && copy.parentNode) {
           copy.parentNode.insertBefore(box, copy.nextSibling);
         } else if (existingSlots === 1 && images[0].parentNode) {
           images[0].parentNode.insertBefore(box, images[0]);
         } else if (existingSlots === 2 && images[0].parentNode) {
           images[0].parentNode.insertBefore(box, images[0].nextSibling);
-        } else if (related && related.parentNode) {
+        } else if (existingSlots === 3 && related && related.parentNode) {
           related.parentNode.insertBefore(box, related);
         } else {
           reader.appendChild(box);
