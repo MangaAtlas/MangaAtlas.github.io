@@ -84,7 +84,7 @@
               }
               invoke.onload = finish;
               invoke.onerror = finish;
-              var fallback = setTimeout(finish, 5000);
+              var fallback = setTimeout(finish, 1500);
               var done = finish;
               invoke.onload = function () { clearTimeout(fallback); done(); };
               invoke.onerror = function () { clearTimeout(fallback); done(); };
