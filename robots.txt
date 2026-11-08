@@ -7,7 +7,10 @@ Disallow: /bluelocjp/admin/
 Disallow: /kingdomjp/admin/
 Disallow: /onepiecejpraw/admin/
 Disallow: /onepiecejp/admin/
-
+Disallow: /MangaAtlasJp.github.io/admin/
+Disallow: /MangaAtlasRawJp.github.io/admin/
+Disallow: /MangaAtlasjpjp.github.io/admin/
+Disallow: /Infinitemage/admin/
 Sitemap: https://mangaatlas.github.io/sitemap.xml
 Sitemap: https://mangaatlas.github.io/MangaAtlasJp.github.io/sitemap.xml
 Sitemap: https://mangaatlas.github.io/MangaAtlasRawJp.github.io/sitemap.xml
