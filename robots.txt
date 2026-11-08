@@ -9,9 +9,13 @@ Disallow: /onepiecejpraw/admin/
 Disallow: /onepiecejp/admin/
 
 Sitemap: https://mangaatlas.github.io/sitemap.xml
+Sitemap: https://mangaatlas.github.io/MangaAtlasJp.github.io/sitemap.xml
+Sitemap: https://mangaatlas.github.io/MangaAtlasRawJp.github.io/sitemap.xml
+Sitemap: https://mangaatlas.github.io/MangaAtlasjpjp.github.io/sitemap.xml
 Sitemap: https://mangaatlas.github.io/onepiecejp/sitemap.xml
 Sitemap: https://mangaatlas.github.io/onepiecejpraw/sitemap.xml
 Sitemap: https://mangaatlas.github.io/kingdomjp/sitemap.xml
 Sitemap: https://mangaatlas.github.io/bluelocjp/sitemap.xml
 Sitemap: https://mangaatlas.github.io/sakamotodaysjp/sitemap.xml
 Sitemap: https://mangaatlas.github.io/Kagurabachiraw/sitemap.xml
+Sitemap: https://mangaatlas.github.io/Infinitemage/sitemap.xml
