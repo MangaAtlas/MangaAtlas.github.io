@@ -8,10 +8,10 @@ Disallow: /kingdomjp/admin/
 Disallow: /onepiecejpraw/admin/
 Disallow: /onepiecejp/admin/
 
-Sitemap: https://mangaatlasjpraw.github.io/sitemap.xml
-Sitemap: https://mangaatlasjpraw.github.io/onepiecejp/sitemap.xml
-Sitemap: https://mangaatlasjpraw.github.io/onepiecejpraw/sitemap.xml
-Sitemap: https://mangaatlasjpraw.github.io/kingdomjp/sitemap.xml
-Sitemap: https://mangaatlasjpraw.github.io/bluelocjp/sitemap.xml
-Sitemap: https://mangaatlasjpraw.github.io/sakamotodaysjp/sitemap.xml
-Sitemap: https://mangaatlasjpraw.github.io/Kagurabachiraw/sitemap.xml
+Sitemap: https://mangaatlas.github.io/sitemap.xml
+Sitemap: https://mangaatlas.github.io/onepiecejp/sitemap.xml
+Sitemap: https://mangaatlas.github.io/onepiecejpraw/sitemap.xml
+Sitemap: https://mangaatlas.github.io/kingdomjp/sitemap.xml
+Sitemap: https://mangaatlas.github.io/bluelocjp/sitemap.xml
+Sitemap: https://mangaatlas.github.io/sakamotodaysjp/sitemap.xml
+Sitemap: https://mangaatlas.github.io/Kagurabachiraw/sitemap.xml
